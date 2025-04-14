@@ -4,12 +4,32 @@ import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuTrigger,
   NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
-import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+
 import { cn } from "../lib/utils";
+import { Button } from "./ui/button";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  BarChart3Icon,
+  SettingsIcon,
+  UserIcon,
+  LogOutIcon,
+  BellIcon,
+  MessageCircleIcon,
+} from "lucide-react";
 
 const menus = [
   {
@@ -122,7 +142,11 @@ const menus = [
   },
 ];
 
-export default function Navigation() {
+export default function Navigation({
+  isLoggedIn,
+  hasNotifications,
+  hasMessages,
+}) {
   return (
     <nav className='flex px-20 h-16 items-center justify-between backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50'>
       <div className='flex items-center gap-4'>
@@ -180,6 +204,81 @@ export default function Navigation() {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
+      {isLoggedIn ? (
+        <div className='flex items-center gap-2'>
+          <Button size='icon' variant='ghost' asChild className='relative'>
+            <Link to='/my/notifications'>
+              <BellIcon className='w-4 h-4' />
+              {hasNotifications && (
+                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
+                  {hasNotifications}
+                </span>
+              )}
+            </Link>
+          </Button>
+          <Button size='icon' variant='ghost' asChild className='relative'>
+            <Link to='/my/messages'>
+              <MessageCircleIcon className='w-4 h-4' />
+              {hasMessages && (
+                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
+                  {hasMessages}
+                </span>
+              )}
+            </Link>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar>
+                <AvatarImage src='https://github.com/shadcn.png' />
+                <AvatarFallback>N</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className='w-56'>
+              <DropdownMenuLabel className='flex flex-col'>
+                <span className='font-normal'>John Doe</span>
+                <span className='text-xs text-muted-foreground'>@username</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild className='cursor-pointer'>
+                  <Link to='/my/dashboard'>
+                    <BarChart3Icon className='w-4 h-4 mr-2' />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className='cursor-pointer'>
+                  <Link to='/my/profile'>
+                    <UserIcon className='w-4 h-4 mr-2' />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className='cursor-pointer'>
+                  <Link to='/my/settings'>
+                    <SettingsIcon className='w-4 h-4 mr-2' />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className='cursor-pointer'>
+                <Link to='/auth/logout'>
+                  <LogOutIcon className='w-4 h-4 mr-2' />
+                  Logout
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      ) : (
+        <div className='flex items-center gap-4'>
+          <Button asChild variant='outline'>
+            <Link to='/auth/login'>Login</Link>
+          </Button>
+          <Button asChild variant='default'>
+            <Link to='/auth/signup'>SignIn</Link>
+          </Button>
+        </div>
+      )}
     </nav>
   );
 }
