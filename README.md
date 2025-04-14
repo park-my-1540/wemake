@@ -1,87 +1,66 @@
-# Welcome to React Router!
+# 🛠 [노마드코더] Maker 마스터클래스 수강 기록
 
-A modern, production-ready template for building full-stack React applications using React Router.
+**Remix, Supabase, CursorAI로 시작하는 1인 개발**  
+실제 프로덕트를 직접 만들어보며 1인 개발자의 역량을 기르는 실전 중심 강의
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+---
+## 🚀 주요 학습 내용
 
-## Features
+### 🧱 1. 최신 기술 스택 기반 개발
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+| 기술 | 설명 |
+|------|------|
+| **Remix** | 웹 표준 기반의 풀스택 프레임워크 |
+| **Supabase** | 인증, DB, 스토리지, 실시간 기능을 포함한 오픈소스 백엔드 |
+| **Cursor AI** | AI 코드 어시스턴트. 개발 생산성 향상 |
+| **Tailwind / Shadcn** | 빠르고 일관된 UI 구성 |
+| **DrizzleORM** | 안정적인 타입 기반 DB ORM |
 
 ---
 
-Built with ❤️ using React Router.
+### 🛠 2. 실전 기능 구현
+
+- [x] GitHub / Kakao 소셜 로그인
+- [x] 매직 링크 / OTP 인증
+- [x] Toss Payments 결제 연동
+- [x] 실시간 DM, 댓글, 리뷰, 공감
+- [x] 게시판 / 유저 프로필 / 알림 시스템
+- [x] OpenAI 연동 아이디어 포럼
+- [x] 예약 작업 (CRON) 처리
+- [x] 파일 업로드 및 저장소 연결
+
+---
+
+### 🔐 3. 프로덕션 환경 적용
+
+- Cloudflare Firewall 보안 설정
+- 에러 추적 및 실시간 모니터링 도입
+- 자동화된 CI/CD 배포 전략
+- 비용 최적화 및 운영 전략 학습
+
+---
+
+## 💥 프로젝트: WeMake
+
+강의에서 제작한 완성도 높은 실전 프로덕트
+
+### 주요 기능 요약
+
+- **인증**: 소셜 로그인 (GitHub, Kakao), 이메일/OTP, 매직링크
+- **유저 시스템**: 로그인, 프로필 수정, 알림
+- **커뮤니티**: 게시판, 댓글, 공감, 필터링
+- **AI 기능**: OpenAI 기반 아이디어 생성기
+- **이커머스**: 상품 등록, 실시간 랭킹, Toss 결제
+- **실시간 채팅**: 팀 빌딩을 위한 DM 기능
+- **운영 기능**: CRON, 스케줄링, 배포, 보안 등
+
+---
+
+## ✍️ 수강 후 느낀 점
+
+> 
+
+## 📎 관련 링크
+
+- 🔗 [강의 페이지 바로가기](https://nomadcoders.co/maker)
+- 📹 [노마드코더 YouTube](https://www.youtube.com/c/NomadCoders)
