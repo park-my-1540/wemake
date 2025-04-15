@@ -1,4 +1,8 @@
-import type { Route } from "./+types";
+import type { Route } from "./+types/leaderboards-page";
+import { HeroSection } from "~/common/components/hero-section";
+import { Button } from "~/components/ui/button";
+import { ProductCard } from "../components/product-card";
+import { Link } from "react-router";
 
 export function loader({ request }: Route.LoaderArgs) {
   return {
@@ -6,47 +10,124 @@ export function loader({ request }: Route.LoaderArgs) {
   };
 }
 
-export function action({ request, formData }: Route.ActionArgs) {
+export function action({ request }: Route.ActionArgs) {
   return {};
 }
 
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Leaderboards | WeMake" },
-    { name: "description", content: "Top products on WeMake" },
-  ];
-}
+export const meta: Route.MetaFunction = () => {
+  return [{ name: "description", content: "Top products leaderboards" }];
+};
 
-export default function LeaderboardsPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function LeaderboardsPage() {
   return (
-    <div className='container mx-auto py-8'>
-      <h1 className='text-4xl font-bold mb-8'>Leaderboards</h1>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div className='border rounded-lg p-6'>
-          <h2 className='text-2xl font-semibold mb-4'>Yearly</h2>
-          <ul className='space-y-2'>
-            {loaderData.leaderboards.map((item: any) => (
-              <li key={item.id} className='flex justify-between items-center'>
-                <span>{item.title}</span>
-                <span className='text-gray-600'>{item.score}</span>
-              </li>
-            ))}
-          </ul>
+    <div className='space-y-20'>
+      <HeroSection
+        title='Leaderboards'
+        description='The most popular products on wemake'
+      />
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-3xl font-bold leading-tight tracking-tight'>
+            Daily Leaderboard
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            The most popular products made by day
+          </p>
         </div>
-        <div className='border rounded-lg p-6'>
-          <h2 className='text-2xl font-semibold mb-4'>Monthly</h2>
-          <ul className='space-y-2'>
-            {loaderData.leaderboards.map((item: any) => (
-              <li key={item.id} className='flex justify-between items-center'>
-                <span>{item.title}</span>
-                <span className='text-gray-600'>{item.score}</span>
-              </li>
-            ))}
-          </ul>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id='productsId'
+            name='Product Name'
+            description='Product Description'
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
+        ))}
+        <Button variant='link' asChild className='text-lg self-center'>
+          <Link to='/products/leaderboards/daily'>
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-3xl font-bold leading-tight tracking-tight'>
+            Weekly Leaderboard
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            The most popular products made by week
+          </p>
         </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id='productsId'
+            name='Product Name'
+            description='Product Description'
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
+        ))}
+        <Button variant='link' asChild className='text-lg self-center'>
+          <Link to='/products/leaderboards/weekly'>
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-3xl font-bold leading-tight tracking-tight'>
+            Monthly Leaderboard
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            The most popular products made by month
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id='productsId'
+            name='Product Name'
+            description='Product Description'
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
+        ))}
+        <Button variant='link' asChild className='text-lg self-center'>
+          <Link to='/products/leaderboards/monthly'>
+            Explore all products &rarr;
+          </Link>
+        </Button>
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-3xl font-bold leading-tight tracking-tight'>
+            Yearly Leaderboard
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            The most popular products made by year
+          </p>
+        </div>
+        {Array.from({ length: 7 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id='productsId'
+            name='Product Name'
+            description='Product Description'
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
+        ))}
+        <Button variant='link' asChild className='text-lg self-center'>
+          <Link to='/products/leaderboards/yearly'>
+            Explore all products &rarr;
+          </Link>
+        </Button>
       </div>
     </div>
   );

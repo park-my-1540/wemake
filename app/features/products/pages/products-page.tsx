@@ -1,20 +1,8 @@
+import { redirect } from "react-router";
 import type { Route } from "./+types";
 
-export function loader({ request }: Route.LoaderArgs) {
-  return {
-    products: [],
-  };
-}
-
-export function action({ request, formData }: Route.ActionArgs) {
-  return {};
-}
-
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Products Home | WeMake" },
-    { name: "description", content: "Welcome to WeMake Products" },
-  ];
+export function loader() {
+  return redirect("/products/leaderboards");
 }
 
 export default function ProductsHomePage({
