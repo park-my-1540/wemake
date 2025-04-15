@@ -2,6 +2,9 @@ import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { ProductCard } from "~/features/products/components/product-card";
 import { PostCard } from "~/features/community/components/post-card";
+import { IdeaCard } from "~/features/ideas/components/idea-card";
+import { JobCard } from "~/features/jobs/components/job-card";
+import { TeamCard } from "~/features/teams/components/team-card";
 
 export function meta() {
   return [
@@ -57,6 +60,78 @@ export default function Home() {
             authorAvatarUrl='https://github.com/apple.png'
             category='productivity'
             postedAt='12 hours ago'
+          />
+        ))}
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
+            IdeasGPT
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            Find ideas for your next project
+          </p>
+          <Button variant='link' asChild className='text-lg p-0'>
+            <Link to='/community'>Explore all discussions &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <IdeaCard
+            key={index}
+            id='ideaId'
+            title='A startup that creates an AI-powered personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business'
+            viewCount={123}
+            postedAt='12 hours ago'
+            claimed={index % 2 === 0}
+          />
+        ))}
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
+            Latest Jobs
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            Find jobs for your dream job
+          </p>
+          <Button variant='link' asChild className='text-lg p-0'>
+            <Link to='/job'>Explore all discussions &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <JobCard
+            key={index}
+            id='jobId'
+            companyName='Tesla'
+            companyLogoUrl='https://github.com/facebook.png'
+            jobTitle='Frontend Engineer'
+            postedAt='12 hours ago'
+            jobType='Full-time'
+            locationType='Remote'
+            salaryRange='$100,000 - $120,000'
+            location='Seoul'
+          />
+        ))}
+      </div>
+      <div className='grid grid-cols-3 gap-4'>
+        <div>
+          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
+            Find a team mate
+          </h2>
+          <p className='text-xl font-light text-foreground'>
+            Join a team looking for a team mate
+          </p>
+          <Button variant='link' asChild className='text-lg p-0'>
+            <Link to='/teams'>Explore all teams &rarr;</Link>
+          </Button>
+        </div>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <TeamCard
+            id='teamId'
+            username='sia'
+            userAvatarUrl='https://github.com/inthetiger.png'
+            positions={["React Developer", "Backend Developer"]}
+            projectDescription='a new social media platform'
           />
         ))}
       </div>
