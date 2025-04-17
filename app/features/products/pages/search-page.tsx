@@ -1,18 +1,42 @@
+import { z } from "zod";
 import type { Route } from "./+types";
+import { HeroSection } from "~/common/components/hero-section";
+import ProductPagination from "~/components/product-pagination";
+import { ProductCard } from "../components/product-card";
+import { Form } from "react-router";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Link } from "react-router";
+import { ChevronRightIcon } from "lucide-react";
 
 export function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const query = url.searchParams.get("q") || "";
-
+  const { success, data } = paramsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw new Error("Invalid params");
+  }
   return {
-    query,
-    results: [],
+    ...data,
   };
 }
 
 export function action({ request, formData }: Route.ActionArgs) {
   return {};
 }
+
+const paramsSchema = z.object({
+  query: z.string().optional().default(""),
+  page: z.coerce.number().optional().default(1),
+});
 
 export function meta(): Route.MetaFunction {
   return [
@@ -26,53 +50,36 @@ export default function SearchPage({
   actionData,
 }: Route.ComponentProps) {
   return (
-    <div className='container mx-auto py-8'>
-      <h1 className='text-4xl font-bold mb-8'>Search Products</h1>
-
-      <form method='get' className='mb-8'>
-        <div className='flex gap-4'>
-          <input
-            type='text'
-            name='q'
-            defaultValue={loaderData.query}
-            placeholder='Search products...'
-            className='flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-          />
-          <button
-            type='submit'
-            className='px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          >
-            Search
-          </button>
-        </div>
-      </form>
-
-      {loaderData.query && (
-        <div>
-          <h2 className='text-2xl font-semibold mb-4'>
-            Results for "{loaderData.query}"
-          </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {loaderData.results.map((product: any) => (
-              <div key={product.id} className='border rounded-lg p-4'>
-                <h3 className='text-xl font-semibold mb-2'>{product.title}</h3>
-                <p className='text-gray-600 mb-4'>{product.description}</p>
-                <div className='flex justify-between items-center'>
-                  <div className='text-sm text-gray-500'>
-                    {product.votes} votes
-                  </div>
-                  <a
-                    href={`/product/${product.id}`}
-                    className='text-blue-600 hover:text-blue-800'
-                  >
-                    View Details
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    <div className='space-y-20'>
+      <HeroSection title='Search for Products by title or description' />
+      <Form className='flex justify-center gap-2 max-w-screen-sm items-center mx-auto'>
+        <Input
+          name='query'
+          placeholder='Search for products'
+          className='text-lg'
+        />
+        <Button type='submit'>Search</Button>
+      </Form>
+      <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
+        <Link to='/products/categories/15321' className='block'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center justify-between'>
+                ㅁㄴㅁㄴㅇㄹ
+                <ChevronRightIcon className='size-6' />
+              </CardTitle>
+              <CardDescription className='text-base'>
+                ㅁㄴㅇㄹㅁㄴㄹ
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </Link>
+      </div>
+      <ProductPagination
+        totalPages={10}
+        currentPage={1}
+        onPageChange={() => {}}
+      />
     </div>
   );
 }

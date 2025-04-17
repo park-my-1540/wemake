@@ -1,108 +1,85 @@
-import type { Route } from "./+types";
+import { HeroSection } from "~/common/components/hero-section";
+import type { Route } from "./+types/submit-page";
+import { Form } from "react-router";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import InputPair from "~/common/components/input-pair";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import SelectPair from "~/common/components/select-pair";
 
-export function loader({ request }: Route.LoaderArgs) {
-  return {
-    categories: [],
-  };
-}
-
-export function action({ request, formData }: Route.ActionArgs) {
-  return {};
-}
-
-export function meta(): Route.MetaFunction {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "Submit Product | WeMake" },
     { name: "description", content: "Submit your product to WeMake" },
   ];
-}
+};
 
-export default function SubmitPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function SubmitPage({ actionData }: Route.ComponentProps) {
   return (
-    <div className='container mx-auto py-8'>
-      <h1 className='text-4xl font-bold mb-8'>Submit Your Product</h1>
-
-      <form method='post' className='max-w-2xl space-y-6'>
-        <div>
-          <label
-            htmlFor='title'
-            className='block text-sm font-medium text-gray-700 mb-1'
-          >
-            Product Title
-          </label>
-          <input
+    <div>
+      <HeroSection
+        title='Submit Your Product'
+        subtitle='Share your product with the world'
+      />
+      <Form className='grid grid-cols-2 gap-10 max-w-screen-lg mx-auto'>
+        <div className='space-y-5'>
+          <InputPair
+            label='name'
+            description='This is the name of your product'
+            name='name'
             type='text'
-            id='title'
-            name='title'
+            id='name'
             required
-            className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Name of your product'
           />
-        </div>
-
-        <div>
-          <label
-            htmlFor='description'
-            className='block text-sm font-medium text-gray-700 mb-1'
-          >
-            Description
-          </label>
-          <textarea
-            id='description'
+          <InputPair
+            label='Product Name'
+            description='60 characters or less'
+            name='tagline'
+            type='text'
+            id='tagline'
+            required
+            placeholder='A concise description of your product'
+          />
+          <InputPair
+            label='URL'
+            description='The URL of your product'
+            name='url'
+            type='text'
+            id='url'
+            required
+            placeholder='https://example.com'
+          />
+          <InputPair
+            textArea
+            label='Description'
+            description='A detailed description of your product'
             name='description'
+            type='text'
+            id='description'
             required
-            rows={4}
-            className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='A detailed description of your product'
           />
-        </div>
-
-        <div>
-          <label
-            htmlFor='category'
-            className='block text-sm font-medium text-gray-700 mb-1'
-          >
-            Category
-          </label>
-          <select
-            id='category'
+          <SelectPair
+            label='Category'
+            description='Select the category of your product'
             name='category'
             required
-            className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-          >
-            <option value=''>Select a category</option>
-            {loaderData.categories.map((category: any) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor='url'
-            className='block text-sm font-medium text-gray-700 mb-1'
-          >
-            Product URL
-          </label>
-          <input
-            type='url'
-            id='url'
-            name='url'
-            required
-            className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Select the category of your product'
+            options={[
+              { label: "Category 1", value: "category1" },
+              { label: "Category 2", value: "category2" },
+              { label: "Category 3", value: "category3" },
+            ]}
           />
         </div>
-
-        <button
-          type='submit'
-          className='w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
-        >
-          Submit Product
-        </button>
-      </form>
+      </Form>
     </div>
   );
 }

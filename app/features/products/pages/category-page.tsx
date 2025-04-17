@@ -1,22 +1,14 @@
-import type { Route } from "./+types";
-
-export function loader({ request, params }: Route.LoaderArgs) {
-  return {
-    category: {
-      name: "",
-      description: "",
-      products: [],
-    },
-  };
-}
-
-export function action({ request, formData }: Route.ActionArgs) {
-  return {};
-}
+import { ProductCard } from "../components/product-card";
+import { HeroSection } from "~/common/components/hero-section";
+import { Form } from "react-router";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import ProductPagination from "~/components/product-pagination";
+import type { Route } from "./+types/category-page";
 
 export function meta(): Route.MetaFunction {
   return [
-    { title: "Category | WeMake" },
+    { title: "Developer Tools | WeMake" },
     { name: "description", content: "Browse products in this category" },
   ];
 }
@@ -26,26 +18,37 @@ export default function CategoryPage({
   actionData,
 }: Route.ComponentProps) {
   return (
-    <div className='container mx-auto py-8'>
-      <h1 className='text-4xl font-bold mb-4'>{loaderData.category.name}</h1>
-      <p className='text-gray-600 mb-8'>{loaderData.category.description}</p>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {loaderData.category.products.map((product: any) => (
-          <div key={product.id} className='border rounded-lg p-4'>
-            <h2 className='text-xl font-semibold mb-2'>{product.title}</h2>
-            <p className='text-gray-600 mb-4'>{product.description}</p>
-            <div className='flex justify-between items-center'>
-              <div className='text-sm text-gray-500'>{product.votes} votes</div>
-              <a
-                href={`/product/${product.id}`}
-                className='text-blue-600 hover:text-blue-800'
-              >
-                View Details
-              </a>
-            </div>
-          </div>
+    <div className='space-y-20'>
+      <HeroSection
+        title='Developer Tools'
+        subtitle='Tools for developers to build products faster'
+      />
+      <Form className='flex justify-center gap-2 max-w-screen-sm items-center mx-auto'>
+        <Input
+          name='query'
+          placeholder='Search for products'
+          className='text-lg'
+        />
+        <Button type='submit'>Search</Button>
+      </Form>
+      <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <ProductCard
+            key={index}
+            id='productsId'
+            name='Product Name'
+            description='Product Description'
+            commentCount={12}
+            viewCount={12}
+            upvoteCount={120}
+          />
         ))}
       </div>
+      <ProductPagination
+        totalPages={10}
+        currentPage={1}
+        onPageChange={() => {}}
+      />
     </div>
   );
 }

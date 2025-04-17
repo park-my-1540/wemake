@@ -34,7 +34,7 @@ export default [
       ),
     ]),
     ...prefix("categories", [
-      route("/", "features/products/pages/categories-page.tsx"),
+      index("features/products/pages/categories-page.tsx"),
       route("/:category", "features/products/pages/category-page.tsx"),
     ]),
     route("/search", "features/products/pages/search-page.tsx"),

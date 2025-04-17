@@ -13,6 +13,22 @@ const paramsSchema = z.object({
   day: z.coerce.number(),
 });
 
+export const meta: Route.MetaFunction = ({ params }) => {
+  const { success, data: parsedData } = paramsSchema.safeParse(params);
+  let title = "Daily Leaderboard";
+  if (success) {
+    const date = DateTime.fromObject({
+      year: parsedData.year,
+      month: parsedData.month,
+      day: parsedData.day,
+    })
+      .setZone("Asia/Seoul")
+      .setLocale("ko-KR");
+    title = `The best products of ${date.toLocaleString(DateTime.DATE_MED)}`;
+  }
+
+  return [{ title: `${title} | wmake` }];
+};
 export const loader = ({ params }: Route.LoaderArgs) => {
   const { success, data: parseData } = paramsSchema.safeParse(params);
   if (!success) {
@@ -76,7 +92,7 @@ export default function DailyLeaderboardPage({
           </Button>
         )}
       </div>
-      <div className='space-y-5 w-full max-w-screen-md mx-auto'>
+      <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
         {Array.from({ length: 10 }).map((_, index) => (
           <ProductCard
             key={index}
