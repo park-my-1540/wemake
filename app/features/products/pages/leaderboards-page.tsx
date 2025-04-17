@@ -46,7 +46,7 @@ export default function LeaderboardsPage() {
           />
         ))}
         <Button variant='link' asChild className='text-lg self-center'>
-          <Link to='/products/leaderboard/daily'>
+          <Link to='/products/leaderboards/daily'>
             Explore all products &rarr;
           </Link>
         </Button>
