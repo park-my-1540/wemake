@@ -1,42 +1,38 @@
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import type { Route } from "./+types/product-reviews-page.types";
-
-export function loader({ params }: Route.LoaderArgs) {
-  const { productId } = params;
-  return {
-    productId,
-  };
-}
-
-export function meta(): Route.MetaFunction {
+import { ReviewCard } from "../components/review-card";
+import { Dialog, DialogTrigger } from "~/components/ui/dialog";
+import { CreateReviewDialog } from "../components/create-review-dialog";
+export function meta() {
   return [
     { title: "Product Reviews" },
     { name: "description", content: "View all reviews for this product" },
   ];
 }
 
-export default function ProductReviewsPage({
-  loaderData,
-}: Route.ComponentProps) {
-  const { productId } = loaderData;
-
+export default function ProductReviewsPage({}) {
   return (
-    <div className='container mx-auto py-8'>
-      <Card>
-        <CardHeader className='flex flex-row items-center justify-between'>
-          <CardTitle>Product Reviews</CardTitle>
-          <Button asChild>
-            <a href={`/products/${productId}/reviews/new`}>Write a Review</a>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className='space-y-4'>
-            <p>Product ID: {productId}</p>
-            {/* 리뷰 목록이 여기에 들어갈 예정입니다 */}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Dialog>
+      <div className='space-y-10 max-w-xl'>
+        <div className='flex justify-between items-center'>
+          <h2 className='text-2xl font-bold'>10 Reviews</h2>
+          <DialogTrigger asChild>
+            <Button variant='secondary'>리뷰쓰기</Button>
+          </DialogTrigger>
+        </div>
+        <div className='space-y-20'>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <ReviewCard
+              username='John Doe'
+              userHandle='username'
+              avatarUrl='https://github.com/elonmusk.png'
+              rating={2}
+              content='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.'
+              postedAt='10 days ago'
+            />
+          ))}
+        </div>
+      </div>
+      <CreateReviewDialog />
+    </Dialog>
   );
 }
