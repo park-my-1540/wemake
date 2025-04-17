@@ -91,6 +91,7 @@ export default function Home({
             id='ideaId'
             title='A startup that creates an AI-powered personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business'
             viewCount={123}
+            likesCount={123}
             postedAt='12 hours ago'
             claimed={index % 2 === 0}
           />

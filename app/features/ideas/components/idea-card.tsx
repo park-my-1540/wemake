@@ -14,6 +14,7 @@ interface IdeaCardProps {
   id: string;
   title: string;
   viewCount: number;
+  likesCount: number;
   postedAt: string;
   claimed: boolean;
 }
@@ -22,6 +23,7 @@ export function IdeaCard({
   id,
   title,
   viewCount,
+  likesCount,
   postedAt,
   claimed,
 }: IdeaCardProps) {
@@ -43,16 +45,17 @@ export function IdeaCard({
         </Link>
       </CardHeader>
       <CardContent className='flex items-center text-sm'>
-        <span className='flex items-center gap-2'>
+        <div className='flex items-center gap-2'>
           <EyeIcon className='w-4 h-4' />
           <span>{viewCount} views</span>
-        </span>
+        </div>
         <DotIcon className='w-4 h-4' />
         <span>{postedAt}</span>
       </CardContent>
       <CardFooter className='flex justify-end gap-2'>
         <Button variant='outline'>
           <HeartIcon className='w-4 h-4' />
+          <span>{likesCount}</span>
         </Button>
         {!claimed ? (
           <Button asChild>
