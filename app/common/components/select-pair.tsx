@@ -29,9 +29,9 @@ export default function SelectPair({
 
   return (
     <div className='space-y-2 flex flex-col'>
-      <Label className='flex flex-col' onClick={() => setOpen(!open)}>
+      <Label className='flex flex-col gap-1' onClick={() => setOpen(!open)}>
         {label}
-        <small>{description}</small>
+        <small className='text-muted-foreground'>{description}</small>
       </Label>
       <Select
         name={name}

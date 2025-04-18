@@ -1,76 +1,104 @@
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import type { Route } from "./+types/jobs-page.types";
+import { HeroSection } from "~/common/components/hero-section";
+import { JobCard } from "../components/job-card";
+import { JOB_TYPES, JOB_LOCATIONS, SALARY_RANGES } from "../constants";
+import { useSearchParams } from "react-router";
+import { cn } from "~/lib/utils";
 
-export function loader({}: Route.LoaderArgs) {
-  return {
-    jobs: [
-      {
-        id: "1",
-        title: "프론트엔드 개발자",
-        company: "테크 스타트업",
-        location: "서울",
-        type: "풀타임",
-        description: "React와 TypeScript를 사용한 웹 애플리케이션 개발",
-        postedAt: "2024-04-17",
-      },
-      {
-        id: "2",
-        title: "백엔드 개발자",
-        company: "핀테크 기업",
-        location: "부산",
-        type: "풀타임",
-        description: "Node.js와 PostgreSQL을 사용한 백엔드 시스템 개발",
-        postedAt: "2024-04-16",
-      },
-    ],
-  };
-}
-
-export function meta(): Route.MetaFunction {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: "채용 목록" },
     { name: "description", content: "최신 채용 정보를 확인하세요" },
   ];
-}
+};
 
-export default function JobsPage({ loaderData }: Route.ComponentProps) {
-  const { jobs } = loaderData;
+export default function JobsPage() {
+  const [searchParams, setSearchParams] = useSearchParams(); // 쿼리 파라미터를 관리하는 훅
+  const onFilterClick = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams);
+  };
 
   return (
-    <div className='container mx-auto py-8'>
-      <div className='flex justify-between items-center mb-8'>
-        <h1 className='text-3xl font-bold'>채용 목록</h1>
-        <Button asChild>
-          <a href='/jobs/submit'>채용 공고 등록</a>
-        </Button>
-      </div>
-      <div className='grid gap-6 md:grid-cols-2'>
-        {jobs.map((job: Route.Job) => (
-          <Card key={job.id}>
-            <CardHeader>
-              <CardTitle>{job.title}</CardTitle>
-              <div className='flex gap-2 text-sm text-muted-foreground'>
-                <span>{job.company}</span>
-                <span>•</span>
-                <span>{job.location}</span>
-                <span>•</span>
-                <span>{job.type}</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className='text-muted-foreground mb-4'>{job.description}</p>
-              <div className='flex justify-between items-center'>
-                <span className='text-sm text-muted-foreground'>
-                  등록일: {job.postedAt}
-                </span>
-                <Button variant='outline' asChild>
-                  <a href={`/jobs/${job.id}`}>자세히 보기</a>
+    <div className='space-y-20'>
+      <HeroSection title='Jobs' subTitle='Looking for a job' />
+      <div className='grid grid-cols-6 gap-20 items-start'>
+        <div className='grid grid-cols-3 col-span-4 gap-5'>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <JobCard
+              key={index}
+              id='jobId'
+              companyName='Tesla'
+              companyLogoUrl='https://github.com/facebook.png'
+              jobTitle='Frontend Engineer'
+              postedAt='12 hours ago'
+              jobType='Full-time'
+              locationType='Remote'
+              salaryRange='$100,000 - $120,000'
+              location='Seoul'
+            />
+          ))}
+        </div>
+        <div className='col-span-2 flex flex-col gap-10 sticky top-20'>
+          <div className='flex flex-col items-start gap-2.5'>
+            <h4 className='text-sm text-muted-foreground font-bold'>Type</h4>
+            <div className='flex flex-wrap gap-2'>
+              {JOB_TYPES.map((jobType) => (
+                <Button
+                  className={cn(
+                    jobType.id === searchParams.get("type") ? "bg-accent" : ""
+                  )}
+                  key={jobType.id}
+                  variant='outline'
+                  onClick={() => onFilterClick("type", jobType.id)}
+                >
+                  {searchParams.get("type")}
+                  {jobType.name}
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              ))}
+            </div>
+          </div>
+          <div className='flex flex-col items-start gap-2.5'>
+            <h4 className='text-sm text-muted-foreground font-bold'>
+              Location
+            </h4>
+            <div className='flex flex-wrap gap-2'>
+              {JOB_LOCATIONS.map((jobLocation) => (
+                <Button
+                  className={cn(
+                    searchParams.get("location") === jobLocation.id &&
+                      "bg-accent"
+                  )}
+                  key={jobLocation.id}
+                  variant='outline'
+                  onClick={() => onFilterClick("location", jobLocation.id)}
+                >
+                  {jobLocation.name}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className='flex flex-col items-start gap-2.5'>
+            <h4 className='text-sm text-muted-foreground font-bold'>
+              Salary Range
+            </h4>
+            <div className='flex flex-wrap gap-2'>
+              {SALARY_RANGES.map((salaryRange) => (
+                <Button
+                  className={cn(
+                    searchParams.get("salary") === salaryRange && "bg-accent"
+                  )}
+                  key={salaryRange}
+                  variant='outline'
+                  onClick={() => onFilterClick("salary", salaryRange)}
+                >
+                  {salaryRange}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
