@@ -211,7 +211,7 @@ export default function Navigation({
       {isLoggedIn ? (
         <div className='flex items-center gap-2'>
           <Button size='icon' variant='ghost' asChild className='relative'>
-            <Link to='/my/notifications'>
+            <Link to='/users/notifications'>
               <BellIcon className='w-4 h-4' />
               {hasNotifications && (
                 <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
@@ -221,7 +221,7 @@ export default function Navigation({
             </Link>
           </Button>
           <Button size='icon' variant='ghost' asChild className='relative'>
-            <Link to='/my/messages'>
+            <Link to='/users/messages'>
               <MessageCircleIcon className='w-4 h-4' />
               {hasMessages && (
                 <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
@@ -245,19 +245,19 @@ export default function Navigation({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/my/dashboard'>
+                  <Link to='/users/dashboard'>
                     <BarChart3Icon className='w-4 h-4 mr-2' />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/my/profile'>
+                  <Link to='/users/profile'>
                     <UserIcon className='w-4 h-4 mr-2' />
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/my/settings'>
+                  <Link to='/users/settings'>
                     <SettingsIcon className='w-4 h-4 mr-2' />
                     Settings
                   </Link>

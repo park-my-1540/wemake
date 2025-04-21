@@ -2,20 +2,13 @@ import type { Route } from "./+types/post-page";
 import { Button } from "~/components/ui/button";
 import { Form, Link } from "react-router";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { ChevronUpIcon, DotIcon, MessageCircleIcon } from "lucide-react";
+import { ChevronUpIcon, DotIcon } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
