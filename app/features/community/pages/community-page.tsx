@@ -82,7 +82,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
               </Form>
             </div>
             <Button asChild>
-              <Link to='/community/new'>토론 생성하기</Link>
+              <Link to='/community/submit'>토론 생성하기</Link>
             </Button>
           </div>
           <div className='space-y-5'>

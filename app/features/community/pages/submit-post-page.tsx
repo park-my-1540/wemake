@@ -4,47 +4,51 @@ import { Form } from "react-router";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-
-export const meta: Route.MetaFunction = () => [
-  { title: "게시글 작성" },
-  { name: "description", content: "새로운 게시글을 작성합니다" },
-];
-
-export function action({ request }: Route.ActionArgs) {
-  // 게시글 작성 로직
-  return {};
-}
+import { HeroSection } from "~/common/components/hero-section";
+import InputPair from "~/common/components/input-pair";
+import SelectPair from "~/common/components/select-pair";
+export const meta: Route.MetaFunction = () => [{ title: "게시글 작성" }];
 
 export default function SubmitPostPage() {
   return (
-    <div className='container mx-auto py-8'>
-      <div className='max-w-2xl mx-auto'>
-        <h1 className='text-3xl font-bold mb-8'>게시글 작성</h1>
-        <Form method='post' className='space-y-6'>
-          <div className='space-y-2'>
-            <Label htmlFor='title'>제목</Label>
-            <Input
-              id='title'
-              name='title'
-              placeholder='게시글 제목을 입력하세요'
-              required
-            />
-          </div>
-          <div className='space-y-2'>
-            <Label htmlFor='content'>내용</Label>
-            <Textarea
-              id='content'
-              name='content'
-              placeholder='게시글 내용을 입력하세요'
-              className='min-h-[200px]'
-              required
-            />
-          </div>
-          <div className='flex justify-end gap-4'>
-            <Button type='submit'>작성하기</Button>
-          </div>
-        </Form>
-      </div>
+    <div className='space-y-20'>
+      <HeroSection
+        title='게시글 작성'
+        description='게시글을 작성하면 모든 사용자가 볼 수 있습니다.'
+      />
+      <Form className='flex flex-col gap-10 max-w-screen-md mx-auto'>
+        <InputPair
+          label='제목'
+          name='title'
+          id='title'
+          description='제목을 입력하세요'
+          required
+          placeholder='ex) 협업툴 어떤게 좋은가?'
+        />
+        <SelectPair
+          label='카테고리'
+          name='category'
+          description='카테고리를 선택하세요'
+          placeholder='ex) 협업툴'
+          options={[
+            { label: "협업툴", value: "collaboration" },
+            { label: "개발", value: "development" },
+            { label: "디자인", value: "design" },
+          ]}
+        />
+        <InputPair
+          label='내용'
+          name='content'
+          id='content'
+          textArea
+          description='1000자 이내로 작성'
+          required
+          placeholder='내용을 작성해주세요.'
+        />
+        <Button type='submit' className='mx-auto'>
+          게시글 작성
+        </Button>
+      </Form>
     </div>
   );
 }
