@@ -211,22 +211,18 @@ export default function Navigation({
       {isLoggedIn ? (
         <div className='flex items-center gap-2'>
           <Button size='icon' variant='ghost' asChild className='relative'>
-            <Link to='/users/notifications'>
+            <Link to='/my/notifications'>
               <BellIcon className='w-4 h-4' />
               {hasNotifications && (
-                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
-                  {hasNotifications}
-                </span>
+                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '></span>
               )}
             </Link>
           </Button>
           <Button size='icon' variant='ghost' asChild className='relative'>
-            <Link to='/users/messages'>
+            <Link to='/my/messages'>
               <MessageCircleIcon className='w-4 h-4' />
               {hasMessages && (
-                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '>
-                  {hasMessages}
-                </span>
+                <span className='absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full '></span>
               )}
             </Link>
           </Button>
@@ -245,19 +241,19 @@ export default function Navigation({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/users/dashboard'>
+                  <Link to='/my/dashboard'>
                     <BarChart3Icon className='w-4 h-4 mr-2' />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/users/profile'>
+                  <Link to='/my/profile'>
                     <UserIcon className='w-4 h-4 mr-2' />
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className='cursor-pointer'>
-                  <Link to='/users/settings'>
+                  <Link to='/my/settings'>
                     <SettingsIcon className='w-4 h-4 mr-2' />
                     Settings
                   </Link>
