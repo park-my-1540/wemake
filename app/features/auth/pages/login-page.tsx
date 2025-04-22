@@ -8,7 +8,7 @@ import AuthButtons from "../components/auth-buttons";
 export const meta: Route.MetaFunction = () => [{ title: "로그인" }];
 export default function LoginPage() {
   return (
-    <div className='flex flex-col relative items-center justify-center h-full'>
+    <div className='flex flex-col relative items-center justify-center h-full px-5'>
       <Button variant={"ghost"} asChild className='absolute right-8 top-8 '>
         <Link to='/auth/join'>Join</Link>
       </Button>

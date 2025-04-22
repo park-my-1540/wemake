@@ -51,7 +51,7 @@ export default function App() {
   const { pathname } = useLocation();
 
   return (
-    <div className={pathname.includes("/auth/") ? "" : "py-28 px-20"}>
+    <div className={pathname.includes("/auth/") ? "" : "py-28 px-5 lg:px-20"}>
       {pathname.includes("/auth") ? null : (
         <Navigation isLoggedIn={true} hasNotifications={1} hasMessages={1} />
       )}

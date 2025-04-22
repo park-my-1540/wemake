@@ -23,8 +23,8 @@ export default function JobsPage() {
   return (
     <div className='space-y-20'>
       <HeroSection title='Jobs' subTitle='Looking for a job' />
-      <div className='grid grid-cols-6 gap-20 items-start'>
-        <div className='grid grid-cols-3 col-span-4 gap-5'>
+      <div className='grid grid-cols-1 xl:grid-cols-6 gap-20 items-start'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 col-span-4 gap-5'>
           {Array.from({ length: 10 }).map((_, index) => (
             <JobCard
               key={index}

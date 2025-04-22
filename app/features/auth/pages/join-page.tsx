@@ -11,7 +11,7 @@ export const meta: Route.MetaFunction = () => [
 
 export default function JoinPage() {
   return (
-    <div className='flex flex-col relative items-center justify-center h-full'>
+    <div className='flex flex-col relative items-center justify-center h-full px-5'>
       <div className='flex items-center flex-col justify-center w-full max-w-md gap-10'>
         <h1 className='text-2xl font-semibold'>회원가입</h1>
         <Form className='w-full space-y-4'>
