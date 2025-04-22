@@ -45,6 +45,15 @@ export default function SettingsPage() {
               ]}
             />
             <InputPair
+              label='Headline'
+              description='프로필에 대한 소개글.'
+              required
+              id='headline'
+              name='headline'
+              placeholder='John Doe'
+              textArea
+            />
+            <InputPair
               label='Bio'
               description='공개 소개글 - 프로플 페이지에 표시됩니다.'
               required

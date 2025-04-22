@@ -64,6 +64,7 @@ export default function Home({
         </div>
         {Array.from({ length: 10 }).map((_, index) => (
           <PostCard
+            key={index}
             id='postId'
             title='What is the best way to learn React?'
             author='Sia'
