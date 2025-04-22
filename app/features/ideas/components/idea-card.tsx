@@ -13,7 +13,7 @@ import { cn } from "~/lib/utils";
 interface IdeaCardProps {
   id: string;
   title: string;
-  viewCount: number;
+  viewsCount: number;
   likesCount: number;
   postedAt: string;
   claimed: boolean;
@@ -22,7 +22,7 @@ interface IdeaCardProps {
 export function IdeaCard({
   id,
   title,
-  viewCount,
+  viewsCount,
   likesCount,
   postedAt,
   claimed,
@@ -47,7 +47,7 @@ export function IdeaCard({
       <CardContent className='flex items-center text-sm'>
         <div className='flex items-center gap-2'>
           <EyeIcon className='w-4 h-4' />
-          <span>{viewCount} views</span>
+          <span>{viewsCount} views</span>
         </div>
         <DotIcon className='w-4 h-4' />
         <span>{postedAt}</span>
