@@ -23,7 +23,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
     <div>
       <HeroSection
         title='Community'
-        description='Ask questions, share ideas, and connect with others in the community.'
+        subTitle='Ask questions, share ideas, and connect with others in the community.'
       />
       <div className='grid grid-cols-6 gap-40'>
         <div className='col-span-4 space-y-10'>

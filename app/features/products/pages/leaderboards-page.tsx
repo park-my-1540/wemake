@@ -23,7 +23,7 @@ export default function LeaderboardsPage() {
     <div className='space-y-20'>
       <HeroSection
         title='Leaderboards'
-        description='The most popular products on wemake'
+        subTitle='The most popular products on wemake'
       />
       <div className='grid grid-cols-3 gap-4'>
         <div>

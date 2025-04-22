@@ -9,7 +9,7 @@ export default function TeamsPage() {
     <div className='space-y-20'>
       <HeroSection
         title='Teams'
-        description='Find a team looking for a new member'
+        subTitle='Find a team looking for a new member'
       />
       <div className='grid grid-cols-4 gap-4'>
         {Array.from({ length: 10 }).map((_, index) => (

@@ -21,7 +21,7 @@ export default function CategoryPage({
     <div className='space-y-20'>
       <HeroSection
         title='Categories'
-        subtitle='Browse products in this category'
+        subTitle='Browse products in this category'
       />
       <div className='grid grid-cols-4 gap-10'>
         {Array.from({ length: 10 }).map((_, index) => (

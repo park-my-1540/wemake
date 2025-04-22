@@ -21,7 +21,7 @@ export default function CategoryPage({
     <div className='space-y-20'>
       <HeroSection
         title='Developer Tools'
-        subtitle='Tools for developers to build products faster'
+        subTitle='Tools for developers to build products faster'
       />
       <Form className='flex justify-center gap-2 max-w-screen-sm items-center mx-auto'>
         <Input

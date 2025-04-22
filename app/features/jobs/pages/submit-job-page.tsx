@@ -15,7 +15,7 @@ export const meta: Route.MetaFunction = () => {
 export default function SubmitJobPage({ actionData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
-      <HeroSection title='Post a Job' description='Reach out to top talent' />
+      <HeroSection title='Post a Job' subTitle='Reach out to top talent' />
       <Form className='max-w-screen-xl mx-auto flex items-center flex-col gap-10'>
         <div className='grid grid-cols-3 gap-10 w-full'>
           <InputPair

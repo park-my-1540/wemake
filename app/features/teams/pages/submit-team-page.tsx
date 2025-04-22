@@ -11,7 +11,7 @@ export default function SubmitTeamPage() {
     <div className='space-y-20'>
       <HeroSection
         title='Create Team'
-        description='Create a team to find a team mate'
+        subTitle='Create a team to find a team mate'
       />
       <Form className='max-w-screen-xl mx-auto flex items-center flex-col gap-10'>
         <div className='grid grid-cols-3 gap-10 w-full'>

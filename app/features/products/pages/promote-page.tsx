@@ -30,7 +30,7 @@ export default function PromotePage({}: Route.ComponentProps) {
     <div>
       <HeroSection
         title='Promote Your Product'
-        description='Promote your product on WeMake'
+        subTitle='Promote your product on WeMake'
       />
       <Form className='max-w-screen-sm mx-auto flex flex-col gap-8'>
         <SelectPair

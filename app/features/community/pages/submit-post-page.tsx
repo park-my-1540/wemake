@@ -14,7 +14,7 @@ export default function SubmitPostPage() {
     <div className='space-y-20'>
       <HeroSection
         title='게시글 작성'
-        description='게시글을 작성하면 모든 사용자가 볼 수 있습니다.'
+        subTitle='게시글을 작성하면 모든 사용자가 볼 수 있습니다.'
       />
       <Form className='flex flex-col gap-10 max-w-screen-md mx-auto'>
         <InputPair
