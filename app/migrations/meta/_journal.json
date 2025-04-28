@@ -15,6 +15,27 @@
       "when": 1745809602344,
       "tag": "0001_real_plazm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745810842509,
+      "tag": "0002_marvelous_impossible_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1745811292296,
+      "tag": "0003_brave_lilith",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1745811983804,
+      "tag": "0004_gigantic_grim_reaper",
+      "breakpoints": true
     }
   ]
 }
