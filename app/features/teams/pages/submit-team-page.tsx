@@ -4,6 +4,9 @@ import { HeroSection } from "~/common/components/hero-section";
 import { Button } from "~/components/ui/button";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";
+
+import { PRODUCT_STAGES } from "../constants";
+
 export const meta: Route.MetaFunction = () => [{ title: "Submit Team" }];
 
 export default function SubmitTeamPage() {
@@ -29,12 +32,7 @@ export default function SubmitTeamPage() {
             description='제품의 단계를 선택하세요'
             name='product-stage'
             placeholder='제품의 단계를 선택하세요'
-            options={[
-              { label: "아이디어", value: "idea" },
-              { label: "프로토타입", value: "prototype" },
-              { label: "MVP", value: "mvp" },
-              { label: "Product", value: "product" },
-            ]}
+            options={PRODUCT_STAGES}
           />
           <InputPair
             id='size'
