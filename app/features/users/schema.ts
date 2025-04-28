@@ -22,12 +22,12 @@ export const roles = pgEnum("role", [
   "developer",
   "designer",
   "marketer",
-  "pm",
+  "product-manager",
 ]);
 
 // 즉, 유저가 자신의 계정을 삭제하면 프로필도 함께 삭제되도록
 export const profiles = pgTable("profiles", {
-  profile_id: uuid("id")
+  profile_id: uuid()
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
   avatar: text(),
@@ -47,11 +47,11 @@ export const profiles = pgTable("profiles", {
 
 // 이 설정은 이 기록이 어떻게 처리될지 설정할 수 있게 해줌
 // 즉, 유저가 프로필을 삭제하면 팔로워 기록도 함께 삭제되도록
-export const followers = pgTable("followers", {
-  follower_id: uuid("id").references(() => profiles.profile_id, {
+export const follows = pgTable("follows", {
+  follower_id: uuid().references(() => profiles.profile_id, {
     onDelete: "cascade",
   }),
-  following_id: uuid("id").references(() => profiles.profile_id, {
+  following_id: uuid().references(() => profiles.profile_id, {
     onDelete: "cascade",
   }),
   created_at: timestamp().notNull().defaultNow(),
@@ -59,7 +59,7 @@ export const followers = pgTable("followers", {
 
 export const notificationType = pgEnum("notification_type", [
   "follow",
-  "reviews",
+  "review",
   "reply",
   "mention",
 ]);
@@ -71,18 +71,35 @@ export const notifications = pgTable("notifications", {
   source_id: uuid().references(() => profiles.profile_id, {
     onDelete: "cascade",
   }), // 알림을 보낸 사람
-  target_id: uuid().references(() => profiles.profile_id, {
+  product_id: bigint({ mode: "number" }).references(() => products.product_id, {
     onDelete: "cascade",
   }),
   post_id: bigint({ mode: "number" }).references(() => posts.post_id, {
     onDelete: "cascade",
   }),
-  product_id: uuid()
-    .references(() => products.product_id, {
+  target_id: uuid()
+    .references(() => profiles.profile_id, {
       onDelete: "cascade",
     })
-    .notNull(), // 알림을 받는 사람
+    .notNull(),
   type: notificationType().notNull(),
+  created_at: timestamp().notNull().defaultNow(),
+});
+
+export const messages = pgTable("messages", {
+  message_id: bigint({ mode: "number" })
+    .primaryKey()
+    .generatedAlwaysAsIdentity(),
+  message_room_id: bigint({ mode: "number" }).references(
+    () => messageRooms.message_room_id,
+    {
+      onDelete: "cascade",
+    }
+  ),
+  sender_id: uuid().references(() => profiles.profile_id, {
+    onDelete: "cascade",
+  }),
+  content: text().notNull(),
   created_at: timestamp().notNull().defaultNow(),
 });
 
@@ -111,21 +128,3 @@ export const messagesRoomMembers = pgTable(
     primaryKey({ columns: [table.message_room_id, table.profile_id] }),
   ]
 );
-
-export const messages = pgTable("messages", {
-  message_id: bigint({ mode: "number" })
-    .primaryKey()
-    .generatedAlwaysAsIdentity(),
-  message_room_id: bigint({ mode: "number" }).references(
-    () => messageRooms.message_room_id,
-    {
-      onDelete: "cascade",
-    }
-  ),
-  sender_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
-  content: text().notNull(),
-  seen: boolean().notNull().default(false),
-  created_at: timestamp().notNull().defaultNow(),
-});
