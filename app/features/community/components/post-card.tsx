@@ -45,7 +45,7 @@ export function PostCard({
               <span>{author} on</span>
               <span>{category}</span>
               <DotIcon className='w-4 h-4' />
-              <span>{DateTime.fromJSDate(postedAt).toRelative()}</span>
+              <span>{DateTime.fromISO(postedAt).toRelative()}</span>
             </div>
           </div>
         </CardHeader>

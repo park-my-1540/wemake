@@ -17,6 +17,7 @@ import { getPosts, getTopics } from "../queries";
 export const loader = async () => {
   const topics = await getTopics();
   const posts = await getPosts();
+  console.log(posts);
   return { topics, posts };
 };
 
@@ -95,14 +96,14 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
           <div className='space-y-5'>
             {loaderData.posts.map((post) => (
               <PostCard
-                id={post.id}
-                key={post.id}
+                id={post.post_id}
+                key={post.post_id}
                 title={post.title}
-                author={post.author}
-                authorAvatarUrl={post.avatar}
-                category={post.topic}
-                postedAt={post.createdAt}
-                upvoteCount={post.upvotes}
+                author={post.author.name}
+                authorAvatarUrl={post.author.avatar}
+                category={post.topic.name}
+                postedAt={post.created_at}
+                upvoteCount={post.upvotes[0].count}
                 expanded={true}
               />
             ))}
