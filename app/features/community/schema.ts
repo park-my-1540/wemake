@@ -6,8 +6,8 @@ import {
   integer,
   uuid,
   primaryKey,
-  AnyPgColumn,
 } from "drizzle-orm/pg-core";
+
 import { profiles } from "../users/schema";
 
 export const topics = pgTable("topics", {
@@ -55,7 +55,7 @@ export const postReplies = pgTable("post_replies", {
     onDelete: "cascade",
   }),
   parent_id: bigint({ mode: "number" }).references(
-    (): AnyPgColumn => postReplies.post_reply_id,
+    () => postReplies.post_reply_id,
     {
       onDelete: "cascade",
     }

@@ -7,12 +7,18 @@ export namespace Route {
   };
   export type ComponentProps = {
     loaderData: {
+      topics: Array<{
+        name: string;
+        slug: string;
+      }>;
       posts: Array<{
-        id: string;
+        id: number;
         title: string;
-        description: string;
-        author: string;
         createdAt: string;
+        topic: string;
+        avatar: string;
+        author: string;
+        upvotes: number;
       }>;
     };
   };

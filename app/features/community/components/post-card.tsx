@@ -4,12 +4,12 @@ import { Link } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-
+import { DateTime } from "luxon";
 interface PostCardProps {
-  id: string;
+  id: number;
   title: string;
   author: string;
-  authorAvatarUrl: string;
+  authorAvatarUrl?: string;
   category: string;
   postedAt: string;
   expanded?: boolean;
@@ -37,7 +37,7 @@ export function PostCard({
         <CardHeader className='flex flex-row gap-2 items-center'>
           <Avatar className='size-14'>
             <AvatarImage src={authorAvatarUrl} />
-            <AvatarFallback>N</AvatarFallback>
+            <AvatarFallback>{author[0]}</AvatarFallback>
           </Avatar>
           <div className='space-y-2'>
             <CardTitle>{title}</CardTitle>
@@ -45,7 +45,7 @@ export function PostCard({
               <span>{author} on</span>
               <span>{category}</span>
               <DotIcon className='w-4 h-4' />
-              <span>{postedAt}</span>
+              <span>{DateTime.fromJSDate(postedAt).toRelative()}</span>
             </div>
           </div>
         </CardHeader>

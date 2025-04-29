@@ -6,13 +6,20 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuCheckboxItem,
 } from "~/components/ui/dropdown-menu";
-import { ChevronDownIcon, FilterIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constants";
 import { Input } from "~/components/ui/input";
 import { PostCard } from "../components/post-card";
+import { getPosts, getTopics } from "../queries";
+
+export const loader = async () => {
+  const topics = await getTopics();
+  const posts = await getPosts();
+  return { topics, posts };
+};
+
 export const meta: Route.MetaFunction = () => [{ title: "커뮤니티" }];
 
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
@@ -86,14 +93,16 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
             </Button>
           </div>
           <div className='space-y-5'>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {loaderData.posts.map((post) => (
               <PostCard
-                id='postId'
-                title='What is the best way to learn React?'
-                author='Sia'
-                authorAvatarUrl='https://github.com/apple.png'
-                category='productivity'
-                postedAt='12 hours ago'
+                id={post.id}
+                key={post.id}
+                title={post.title}
+                author={post.author}
+                authorAvatarUrl={post.avatar}
+                category={post.topic}
+                postedAt={post.createdAt}
+                upvoteCount={post.upvotes}
                 expanded={true}
               />
             ))}
@@ -104,24 +113,15 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
             Topics
           </span>
           <div className='flex flex-col gap-4 items-start'>
-            {[
-              "AI Tools",
-              "Design Tools",
-              "Web Tools",
-              "Mobile Tools",
-              "Game Tools",
-              "Other",
-            ].map((category) => (
-              <h3>
-                <Button variant='link' asChild className='p-0'>
-                  <Link
-                    className='font-semibold'
-                    to={`/community?topic=${category}`}
-                  >
-                    {category}
-                  </Link>
-                </Button>
-              </h3>
+            {loaderData.topics.map((topic) => (
+              <Button
+                asChild
+                variant={"link"}
+                key={topic.slug}
+                className='pl-0'
+              >
+                <Link to={`/community?topic=${topic.slug}`}>{topic.name}</Link>
+              </Button>
             ))}
           </div>
         </aside>
