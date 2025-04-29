@@ -1,6 +1,6 @@
 import { HeroSection } from "~/common/components/hero-section";
 import type { Route } from "./+types/community-page";
-import { Form, Link, useSearchParams } from "react-router";
+import { Await, Form, Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -13,11 +13,16 @@ import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constants";
 import { Input } from "~/components/ui/input";
 import { PostCard } from "../components/post-card";
 import { getPosts, getTopics } from "../queries";
+import { Suspense } from "react";
 
 export const loader = async () => {
-  const topics = await getTopics();
-  const posts = await getPosts();
-  console.log(posts);
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
+
+  // const topics = getTopics();
+  // const posts = getPosts();
+
   return { topics, posts };
 };
 
