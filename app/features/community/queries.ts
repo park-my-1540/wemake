@@ -48,23 +48,32 @@ export const getTopics = async () => {
   return data;
 };
 
+// export const getPosts = async () => {
+//   const { data, error } = await client.from("posts").select(`
+//     post_id,
+//     title,
+//     created_at,
+//     topic:topics!inner(
+//       name
+//     ),
+//     author:profiles!inner(
+//       name,
+//       username,
+//       avatar
+//     ),
+//     upvotes:post_upvotes(
+//       count
+//     )
+//   `);
+//   if (error) throw new Error(error.message);
+//   return data;
+// };
+
+// view이기 때문에 : 필터링 + 재사용 등등..가능
 export const getPosts = async () => {
-  const { data, error } = await client.from("posts").select(`
-    post_id, 
-    title, 
-    created_at, 
-    topic:topics!inner(
-      name
-    ), 
-    author:profiles!inner(
-      name, 
-      username, 
-      avatar
-    ),
-    upvotes:post_upvotes(
-      count
-    )
-  `);
+  const { data, error } = await client
+    .from("community_post_list_view")
+    .select(`*`);
   if (error) throw new Error(error.message);
   return data;
 };

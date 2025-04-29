@@ -12,12 +12,13 @@ export namespace Route {
         slug: string;
       }>;
       posts: Array<{
-        id: number;
+        post_id: number;
         title: string;
-        createdAt: string;
+        created_at: string;
         topic: string;
         avatar: string;
         author: string;
+        author_url: string;
         upvotes: number;
       }>;
     };
