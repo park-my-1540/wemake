@@ -1,6 +1,6 @@
 import { HeroSection } from "~/common/components/hero-section";
 import type { Route } from "./+types/community-page";
-import { Await, Form, Link, useSearchParams } from "react-router";
+import { data, Form, Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -9,19 +9,47 @@ import {
   DropdownMenuCheckboxItem,
 } from "~/components/ui/dropdown-menu";
 import { ChevronDownIcon } from "lucide-react";
-import { SORT_OPTIONS, PERIOD_OPTIONS } from "../constants";
+import { SORT_OPTIONS_MAP, PERIOD_OPTIONS_MAP } from "../constants";
 import { Input } from "~/components/ui/input";
 import { PostCard } from "../components/post-card";
 import { getPosts, getTopics } from "../queries";
-import { Suspense } from "react";
+import { z } from "zod";
 
-export const loader = async () => {
+const searchParamsSchema = z.object({
+  sorting: z.enum(["newest", "popular"]).optional().default("newest"),
+  period: z
+    .enum(["all", "today", "week", "month", "year"])
+    .optional()
+    .default("all"),
+  keyword: z.string().optional(),
+  topic: z.string().optional(),
+});
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
   // await new Promise((resolve) => setTimeout(resolve, 10000));
-
-  const [topics, posts] = await Promise.all([getTopics(), getPosts()]);
-
-  // const topics = getTopics();
-  // const posts = getPosts();
+  const url = new URL(request.url);
+  const { success, data: parsedData } = searchParamsSchema.safeParse(
+    Object.fromEntries(url.searchParams)
+  );
+  if (!success) {
+    throw data(
+      {
+        error_code: "invalid_search_params",
+        message: "Invalid search params",
+      },
+      { status: 400 }
+    );
+  }
+  const [topics, posts] = await Promise.all([
+    getTopics(),
+    getPosts({
+      limit: 20,
+      sorting: parsedData.sorting,
+      period: parsedData.period,
+      keyword: parsedData.keyword,
+      topic: parsedData.topic,
+    }),
+  ]);
 
   return { topics, posts };
 };
@@ -30,7 +58,7 @@ export const meta: Route.MetaFunction = () => [{ title: "커뮤니티" }];
 
 export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sorting = searchParams.get("sorting") || "최신순";
+  const sorting = searchParams.get("sorting") || "newest";
   const period = searchParams.get("period") || "전체";
   return (
     <div>
@@ -45,22 +73,24 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
               <div className='flex items-center gap-5'>
                 <DropdownMenu>
                   <DropdownMenuTrigger className='flex items-center gap-2'>
-                    <span className='text-sm capitalize'>{sorting}</span>
+                    <span className='text-sm capitalize'>
+                      {SORT_OPTIONS_MAP.get(sorting)}
+                    </span>
                     <ChevronDownIcon className='w-4 h-4' />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    {SORT_OPTIONS.map((option) => (
+                    {[...SORT_OPTIONS_MAP.entries()].map(([key, value]) => (
                       <DropdownMenuCheckboxItem
                         className='capitalize cursor-pointer'
                         onCheckedChange={(checked: boolean) => {
                           if (checked) {
-                            searchParams.set("sorting", option);
+                            searchParams.set("sorting", key);
                             setSearchParams(searchParams);
                           }
                         }}
-                        key={option}
+                        key={key}
                       >
-                        {option}
+                        {value}
                       </DropdownMenuCheckboxItem>
                     ))}
                   </DropdownMenuContent>
@@ -68,22 +98,24 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 {sorting === "popular" && (
                   <DropdownMenu>
                     <DropdownMenuTrigger className='flex items-center gap-2'>
-                      <span className='text-sm capitalize'>{period}</span>
+                      <span className='text-sm capitalize'>
+                        {PERIOD_OPTIONS_MAP.get(period)}
+                      </span>
                       <ChevronDownIcon className='w-4 h-4' />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      {PERIOD_OPTIONS.map((option) => (
+                      {[...PERIOD_OPTIONS_MAP.entries()].map(([key, value]) => (
                         <DropdownMenuCheckboxItem
                           className='capitalize cursor-pointer'
                           onCheckedChange={(checked: boolean) => {
                             if (checked) {
-                              searchParams.set("period", option);
+                              searchParams.set("period", key);
                               setSearchParams(searchParams);
                             }
                           }}
-                          key={option}
+                          key={key}
                         >
-                          {option}
+                          {value}
                         </DropdownMenuCheckboxItem>
                       ))}
                     </DropdownMenuContent>
@@ -91,7 +123,11 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 )}
               </div>
               <Form className='w-2/3'>
-                <Input type='text' name='search' placeholder='Search' />
+                <Input
+                  type='text'
+                  name='keyword'
+                  placeholder='검색어를 입력해주세요.'
+                />
               </Form>
             </div>
             <Button asChild>
@@ -108,7 +144,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 authorAvatarUrl={post.author_url}
                 category={post.topic}
                 postedAt={post.created_at}
-                upvoteCount={post.upvotes}
+                votesCount={post.upvotes}
                 expanded={true}
               />
             ))}

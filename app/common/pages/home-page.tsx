@@ -7,7 +7,7 @@ import { JobCard } from "~/features/jobs/components/job-card";
 import { TeamCard } from "~/features/teams/components/team-card";
 import { DateTime } from "luxon";
 import { getProductsByDateRange } from "~/features/products/queries";
-
+import { getPosts } from "~/features/community/queries";
 import type { Route } from "./+types";
 export function meta() {
   return [
@@ -22,7 +22,11 @@ export const loader = async () => {
     endDate: DateTime.now().endOf("day"),
     limit: 7,
   });
-  return { products };
+  const posts = await getPosts({
+    limit: 20,
+    sorting: "newest",
+  });
+  return { products, posts };
 };
 
 export default function Home({
@@ -69,15 +73,16 @@ export default function Home({
             <Link to='/community'>Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.posts.map((post) => (
           <PostCard
-            key={index}
-            id='postId'
-            title='What is the best way to learn React?'
-            author='Sia'
-            authorAvatarUrl='https://github.com/apple.png'
-            category='productivity'
-            postedAt='12 hours ago'
+            key={post.post_id}
+            id={post.post_id}
+            title={post.title}
+            author={post.author}
+            authorAvatarUrl={post.authorAvatarUrl}
+            category={post.category}
+            postedAt={post.created_at}
+            votesCount={post.created_at}
           />
         ))}
       </div>
@@ -98,7 +103,7 @@ export default function Home({
             key={index}
             id='ideaId'
             title='A startup that creates an AI-powered personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business'
-            viewCount={123}
+            viewsCount={123}
             likesCount={123}
             postedAt='12 hours ago'
             claimed={index % 2 === 0}

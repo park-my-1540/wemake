@@ -13,7 +13,7 @@ interface PostCardProps {
   category: string;
   postedAt: string;
   expanded?: boolean;
-  upvoteCount?: number;
+  votesCount?: number;
 }
 
 export function PostCard({
@@ -24,7 +24,7 @@ export function PostCard({
   category,
   postedAt,
   expanded = false,
-  upvoteCount = 0,
+  votesCount = 0,
 }: PostCardProps) {
   return (
     <Link to={`/community/${id}`} className='block'>
@@ -58,7 +58,7 @@ export function PostCard({
           <CardFooter className='flex justify-end pt-0 pb-0'>
             <Button variant='outline' className='flex flex-col h-14'>
               <ChevronUpIcon className='size-4 shrink-0' />
-              <span>{upvoteCount}</span>
+              <span>{votesCount}</span>
             </Button>
           </CardFooter>
         )}
