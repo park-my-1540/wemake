@@ -8,8 +8,10 @@ import { TeamCard } from "~/features/teams/components/team-card";
 import { DateTime } from "luxon";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { getPosts } from "~/features/community/queries";
-import type { Route } from "./+types";
+import type { Route } from "./+types/home-page";
 import { getGptIdeas } from "~/features/ideas/queries";
+import { getJobs } from "~/features/jobs/queries";
+
 export function meta() {
   return [
     { title: "Home | wemake" },
@@ -28,7 +30,8 @@ export const loader = async () => {
     sorting: "newest",
   });
   const ideas = await getGptIdeas({ limit: 7 });
-  return { products, posts, ideas };
+  const jobs = await getJobs({ limit: 7 });
+  return { products, posts, ideas, jobs };
 };
 
 export default function Home({
@@ -121,21 +124,21 @@ export default function Home({
             Find jobs for your dream job
           </p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/job'>Explore all discussions &rarr;</Link>
+            <Link to='/jobs'>Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.jobs.map((job) => (
           <JobCard
-            key={index}
-            id='jobId'
-            companyName='Tesla'
-            companyLogoUrl='https://github.com/facebook.png'
-            jobTitle='Frontend Engineer'
-            postedAt='12 hours ago'
-            jobType='Full-time'
-            locationType='Remote'
-            salaryRange='$100,000 - $120,000'
-            location='Seoul'
+            key={job.job_id}
+            id={job.job_id}
+            companyName={job.company_name}
+            companyLogoUrl={job.company_logo}
+            jobTitle={job.position}
+            postedAt={job.created_at}
+            jobType={job.job_type}
+            locationType={job.job_location}
+            salaryRange={job.salary_range}
+            location={job.company_location}
           />
         ))}
       </div>

@@ -2,12 +2,17 @@ import { Badge } from "~/components/ui/badge";
 import type { Route } from "./+types/job-page.types";
 import { DotIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { getJobs } from "~/features/jobs/queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
     { title: "채용 상세" },
     { name: "description", content: "채용 정보 상세 내용을 확인하세요" },
   ];
+};
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const idea = await getJobs({ limit: 40 });
+  return { idea };
 };
 
 export default function JobPage() {
@@ -116,7 +121,7 @@ export default function JobPage() {
             <DotIcon className='size-4' />
             <span className='text-sm text-muted-foreground'>395 views</span>
           </div>
-          <Button className='w-full'>Apply Now</Button>
+          <Button className='w-full'>지원하기</Button>
         </div>
       </div>
     </div>

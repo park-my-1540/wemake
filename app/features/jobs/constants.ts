@@ -1,34 +1,34 @@
 export const JOB_TYPES = [
   {
     id: "full-time",
-    name: "Full-time",
+    name: "정규직",
   },
   {
     id: "part-time",
-    name: "Part-time",
+    name: "아르바이트",
   },
   {
     id: "contract",
-    name: "Contract",
+    name: "계약직",
   },
   {
     id: "freelance",
-    name: "Freelance",
+    name: "프리랜서",
   },
 ] as const;
 
 export const JOB_LOCATIONS = [
   {
     id: "remote",
-    name: "Remote",
+    name: "재택근무",
   },
   {
     id: "onsite",
-    name: "Onsite",
+    name: "출근근무",
   },
   {
     id: "hybrid",
-    name: "Hybrid",
+    name: "혼합근무",
   },
 ] as const;
 
@@ -41,3 +41,15 @@ export const SALARY_RANGES = [
   "$250,000 - $300,000",
   "$300,000+",
 ] as const;
+
+export type JobTypeId = (typeof JOB_TYPES)[number]["id"];
+
+export const JOB_TYPE_MAP: Map<JobTypeId, string> = new Map(
+  JOB_TYPES.map((type) => [type.id, type.name])
+);
+
+export type JobLocationId = (typeof JOB_LOCATIONS)[number]["id"];
+
+export const JOB_LOCATION_MAP: Map<JobLocationId, string> = new Map(
+  JOB_LOCATIONS.map((loc) => [loc.id, loc.name])
+);

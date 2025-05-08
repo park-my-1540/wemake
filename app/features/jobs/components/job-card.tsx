@@ -8,9 +8,10 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { DateTime } from "luxon";
 
 interface JobCardProps {
-  id: string;
+  id: number;
   companyName: string;
   companyLogoUrl: string;
   jobTitle: string;
@@ -44,7 +45,9 @@ export function JobCard({
             />
             <div className='space-x-2'>
               <span className='text-accent-foreground'>{companyName}</span>
-              <span className='text-xs text-muted-foreground'>{postedAt}</span>
+              <span className='text-xs text-muted-foreground'>
+                {DateTime.fromISO(postedAt).toRelative()}
+              </span>
             </div>
           </div>
           <CardTitle>
@@ -65,7 +68,7 @@ export function JobCard({
             </span>
           </div>
           <Button variant='secondary' size='sm'>
-            Apply now
+            지원하기
           </Button>
         </CardFooter>
       </Card>
