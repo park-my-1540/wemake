@@ -9,6 +9,7 @@ import { DateTime } from "luxon";
 import { getProductsByDateRange } from "~/features/products/queries";
 import { getPosts } from "~/features/community/queries";
 import type { Route } from "./+types";
+import { getGptIdeas } from "~/features/ideas/queries";
 export function meta() {
   return [
     { title: "Home | wemake" },
@@ -26,7 +27,8 @@ export const loader = async () => {
     limit: 20,
     sorting: "newest",
   });
-  return { products, posts };
+  const ideas = await getGptIdeas({ limit: 7 });
+  return { products, posts, ideas };
 };
 
 export default function Home({
@@ -48,7 +50,7 @@ export default function Home({
             <Link to='/products/leaderboards'>Explore all products &rarr;</Link>
           </Button>
         </div>
-        {loaderData.products.map((product, index) => (
+        {loaderData.products.map((product) => (
           <ProductCard
             key={product.product_id}
             id={product.product_id.toString()}
@@ -95,18 +97,18 @@ export default function Home({
             Find ideas for your next project
           </p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/community'>Explore all discussions &rarr;</Link>
+            <Link to='/ideas'>Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.ideas.map((idea) => (
           <IdeaCard
-            key={index}
-            id='ideaId'
-            title='A startup that creates an AI-powered personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business'
-            viewsCount={123}
-            likesCount={123}
-            postedAt='12 hours ago'
-            claimed={index % 2 === 0}
+            key={idea.gpt_idea_id}
+            id={idea.gpt_idea_id}
+            title={idea.idea}
+            viewsCount={idea.views}
+            likesCount={idea.likes}
+            postedAt={idea.created_at}
+            claimed={idea.is_claimed}
           />
         ))}
       </div>

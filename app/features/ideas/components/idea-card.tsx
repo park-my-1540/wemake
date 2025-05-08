@@ -1,4 +1,5 @@
 import { DotIcon, EyeIcon, HeartIcon, CheckIcon, LockIcon } from "lucide-react";
+import { DateTime } from "luxon";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import {
@@ -50,7 +51,7 @@ export function IdeaCard({
           <span>{viewsCount} views</span>
         </div>
         <DotIcon className='w-4 h-4' />
-        <span>{postedAt}</span>
+        <span>{DateTime.fromISO(postedAt).toRelative()}</span>
       </CardContent>
       <CardFooter className='flex justify-end gap-2'>
         <Button variant='outline'>
@@ -59,7 +60,7 @@ export function IdeaCard({
         </Button>
         {!claimed ? (
           <Button asChild>
-            <Link to={`/ideas/${id}`}>Claim idea now &rarr;</Link>
+            <Link to={`/ideas/${id}`}>아이디어 선점하기 &rarr;</Link>
           </Button>
         ) : (
           <Button variant='outline' className='cursor-not-allowed'>
