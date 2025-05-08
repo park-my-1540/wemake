@@ -2,34 +2,32 @@ import { useSearchParams } from "react-router";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
+  PaginationEllipsis,
   PaginationNext,
   PaginationPrevious,
 } from "~/components/ui/pagination";
 
 type ProductPaginationProps = {
   totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
 };
 export default function ProductPagination({
   totalPages,
-  currentPage,
-  onPageChange,
 }: ProductPaginationProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get("page") ?? 1);
+
   const getUrlWithPage = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", String(page));
     return `?${params}`;
   };
 
-  const page = Number(searchParams.get("page")) ?? "1";
-  if (isNaN(page) || page < 1) {
-    return null;
-  }
+  const onClick = (page: number) => {
+    searchParams.set("page", page.toString());
+    setSearchParams(searchParams, { preventScrollReset: true });
+  };
 
   return (
     <div>
@@ -38,24 +36,49 @@ export default function ProductPagination({
           {page === 1 ? null : (
             <>
               <PaginationItem>
-                <PaginationPrevious to={getUrlWithPage(page - 1)} />
+                <PaginationPrevious
+                  to={`?page=${page - 1}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onClick(page - 1);
+                  }}
+                />
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink to={getUrlWithPage(page - 1)}>
+                <PaginationLink
+                  to={`?page=${page - 1}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onClick(page - 1);
+                  }}
+                >
                   {page - 1}
                 </PaginationLink>
               </PaginationItem>
             </>
           )}
           <PaginationItem>
-            <PaginationLink to={getUrlWithPage(page)} isActive>
+            <PaginationLink
+              to={`?page=${page}`}
+              onClick={(event) => {
+                event.preventDefault();
+                onClick(page);
+              }}
+              isActive
+            >
               {page}
             </PaginationLink>
           </PaginationItem>
           {page === totalPages ? null : (
             <>
               <PaginationItem>
-                <PaginationLink to={getUrlWithPage(page + 1)}>
+                <PaginationLink
+                  to={`?page=${page + 1}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onClick(page + 1);
+                  }}
+                >
                   {page + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -65,7 +88,13 @@ export default function ProductPagination({
                 </PaginationItem>
               )}
               <PaginationItem>
-                <PaginationNext to={getUrlWithPage(page + 1)} />
+                <PaginationNext
+                  to={`?page=${page + 1}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onClick(page + 1);
+                  }}
+                />
               </PaginationItem>
             </>
           )}

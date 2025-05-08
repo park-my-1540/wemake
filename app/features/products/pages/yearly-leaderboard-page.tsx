@@ -6,6 +6,10 @@ import { HeroSection } from "~/common/components/hero-section";
 import { ProductCard } from "../components/product-card";
 import { Button } from "~/components/ui/button";
 import ProductPagination from "~/components/product-pagination";
+import {
+  getProductsByDateRange,
+  getProductPagesByDateRange,
+} from "~/features/products/queries";
 
 const paramsSchema = z.object({
   year: z.coerce.number(),
@@ -26,7 +30,7 @@ export const meta: Route.MetaFunction = ({ params }) => {
   return [{ title: `${title} | wmake` }];
 };
 
-export const loader = ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
   const { success, data: parseData } = paramsSchema.safeParse(params);
   if (!success) {
     throw data(
@@ -52,7 +56,19 @@ export const loader = ({ params }: Route.LoaderArgs) => {
       { status: 500 }
     );
   }
+  const products = await getProductsByDateRange({
+    startDate: date.startOf("year"),
+    endDate: date.endOf("year"),
+    limit: 15,
+  });
+  const url = new URL(request.url);
+  const totalPages = await getProductPagesByDateRange({
+    startDate: date.startOf("year"),
+    endDate: date.endOf("year"),
+  });
   return {
+    products,
+    totalPages,
     ...parseData,
   };
 };
@@ -66,6 +82,7 @@ export default function WeeklyLeaderboardPage({
   const urlDate = DateTime.fromObject({
     year: loaderData.year,
   });
+
   const previousYear = urlDate.minus({ years: 1 });
   const nextYear = urlDate.plus({ years: 1 });
   const isToday = urlDate.equals(DateTime.now().startOf("year"));
@@ -92,23 +109,20 @@ export default function WeeklyLeaderboardPage({
         )}
       </div>
       <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.products.map((product, index) => (
           <ProductCard
-            key={index}
-            id='productsId'
-            name='Product Name'
-            description='Product Description'
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id}
+            id={product.product_id.toString()}
+            name={product.name}
+            description={product.description}
+            commentsCount={product.comments || 0}
+            reviewsCount={Number(product.reviews)}
+            viewsCount={product.views}
+            votesCount={Number(product.upvotes)}
           />
         ))}
       </div>
-      <ProductPagination
-        totalPages={10}
-        currentPage={1}
-        onPageChange={() => {}}
-      />
+      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }
