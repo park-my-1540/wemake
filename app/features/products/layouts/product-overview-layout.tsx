@@ -1,42 +1,62 @@
-import { Outlet, Link, NavLink } from "react-router";
+import { Outlet, NavLink } from "react-router";
 import { ChevronUpIcon, StarIcon } from "lucide-react";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import { getProductById } from "~/features/products/queries";
+import type { Route } from "../pages/+types/product-overview-page";
 
-export default function ProductOverviewLayout() {
+export function meta({ data }: Route.MetaArgs) {
+  return [
+    { title: `${data.product.name} Overview` },
+    { name: "description", content: "View product details and information" },
+  ];
+}
+
+export const loader = async ({
+  params,
+}: Route.LoaderArgs & { params: { productId: string } }) => {
+  const product = await getProductById(params.productId);
+  return { product };
+};
+
+export default function ProductOverviewLayout({
+  loaderData,
+}: Route.ComponentProps) {
   return (
     <div className='space-y-10'>
       <div className='flex justify-between'>
         <div className='flex gap-10'>
           <div className='size-40 rounded-xl shadow-xl bg-primary/50'></div>
           <div>
-            <h1 className='text-5xl font-bold'>Product Name</h1>
-            <p className='text-2xl font-light text-muted-foreground'>
-              Product Description
-            </p>
+            <h1 className='text-5xl font-bold'>{loaderData.product.name}</h1>
+            <p className=' text-2xl font-light'>{loaderData.product.tagline}</p>
             <div className='mt-5 flex items-center gap-2'>
               <div className='flex text-yellow-500'>
                 {Array.from({ length: 5 }).map((_, index) => (
                   <StarIcon
                     key={index}
                     className='size-4'
-                    fill='currentColor'
+                    fill={
+                      index < Math.floor(loaderData.product.average_rating)
+                        ? "currentColor"
+                        : "none"
+                    }
                   />
                 ))}
               </div>
               <span className='text-base text-muted-foreground'>
-                100 reviews
+                {loaderData.product.reviews}개의 리뷰
               </span>
             </div>
           </div>
         </div>
         <div className='flex gap-5'>
           <Button variant='secondary' size='lg' className='text-lg h-14 px-10'>
-            Visit Website
+            웹사이트 방문
           </Button>
           <Button size='lg' className='text-lg h-14 px-10'>
             <ChevronUpIcon className='size-4' />
-            Upvote (100)
+            추천 ({loaderData.product.upvotes})
           </Button>
         </div>
       </div>
@@ -45,20 +65,26 @@ export default function ProductOverviewLayout() {
           className={({ isActive }) =>
             cn(buttonVariants({ variant: "outline" }), isActive && "bg-accent")
           }
-          to={`/products/1/overview`}
+          to={`/products/${loaderData.product.product_id}/overview`}
         >
-          Overview
+          상세정보
         </NavLink>
         <NavLink
           className={({ isActive }) =>
             cn(buttonVariants({ variant: "outline" }), isActive && "bg-accent")
           }
-          to={`/products/1/reviews`}
+          to={`/products/${loaderData.product.product_id}/reviews`}
         >
-          Reviews
+          리뷰
         </NavLink>
       </div>
-      <Outlet />
+      <Outlet
+        context={{
+          product_id: loaderData.product.product_id,
+          description: loaderData.product.description,
+          how_it_works: loaderData.product.how_it_works,
+        }}
+      />
     </div>
   );
 }

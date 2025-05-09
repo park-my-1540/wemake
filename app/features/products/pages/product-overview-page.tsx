@@ -1,32 +1,20 @@
-import { ChevronUpIcon, Link, StarIcon } from "lucide-react";
-import type { Route } from "./+types/product-overview-page.types";
-import { Button } from "~/components/ui/button";
+import { useOutletContext } from "react-router";
 
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Product Overview" },
-    { name: "description", content: "View product details and information" },
-  ];
-}
+export default function ProductOverviewPage() {
+  const { description, how_it_works } = useOutletContext<{
+    description: string;
+    how_it_works: string;
+  }>();
 
-export default function ProductOverviewPage({
-  params: { productId },
-}: Route.ComponentProps) {
   return (
     <div className='space-y-10'>
       <div className='space-y-2'>
-        <h3 className='text-2xl font-bold'>What is this product?</h3>
-        <p className='text-muted-foreground'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quos.
-        </p>
+        <h3 className='text-2xl font-bold'>이 제품은 무엇인가요?</h3>
+        <p className='text-muted-foreground'>{description}</p>
       </div>
       <div className='space-y-2'>
-        <h3 className='text-2xl font-bold'>How does it work?</h3>
-        <p className='text-muted-foreground'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quos.
-        </p>
+        <h3 className='text-2xl font-bold'>어떻게 작동하나요?</h3>
+        <p className='text-muted-foreground'>{how_it_works}</p>
       </div>
     </div>
   );
