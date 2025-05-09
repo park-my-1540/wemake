@@ -26,6 +26,20 @@ export namespace Route {
         author_created_at: string;
         replies: string;
       };
+      replies: Replies[];
     };
   };
+}
+
+export interface Replies {
+  post_reply_id: number;
+  user: {
+    name: string;
+    avatar: string | null;
+    username: string;
+  };
+  reply: string;
+  created_at: string;
+  topLevel: boolean;
+  post_replies: Replies;
 }

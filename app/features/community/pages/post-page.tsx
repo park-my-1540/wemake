@@ -13,7 +13,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Reply } from "~/features/community/components/reply";
-import { getPostById } from "../queries";
+import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
 
 export const meta: Route.MetaFunction = ({ params }) => [
@@ -24,7 +24,8 @@ export const loader = async ({
   params,
 }: Route.LoaderArgs & { params: { postId: string } }) => {
   const post = await getPostById(params.postId);
-  return { post };
+  const replies = await getReplies(params.postId);
+  return { post, replies };
 };
 
 export default function PostPage({ loaderData }: Route.ComponentProps) {
@@ -53,6 +54,7 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
       <div className='grid grid-cols-6 gap-40 items-start'>
         <div className='col-span-4 space-y-10'>
           <div className='flex w-full items-start gap-10'>
@@ -60,7 +62,7 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
               <ChevronUpIcon className='size-4 shrink-0' />
               <span>{loaderData.post.upvotes}</span>
             </Button>
-            <div className='space-y-20'>
+            <div className='space-y-20 w-full'>
               <div className='space-y-2'>
                 <h2 className='text-3xl font-bold'>{loaderData.post.title}</h2>
                 <div className='flex items-center gap-2 text-sm text-muted-foreground'>
@@ -99,13 +101,16 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   {loaderData.post.replies}개의 댓글
                 </h4>
                 <div className='flex flex-col gap-5'>
-                  <Reply
-                    username='Sia'
-                    avatarUrl='https://github.com/microsoft.png'
-                    content='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-                    timestamp='10 hours ago'
-                    topLevel={true}
-                  />
+                  {loaderData.replies.map((reply) => (
+                    <Reply
+                      username={reply.user.name}
+                      avatarUrl={reply.user.avatar}
+                      content={reply.reply}
+                      timestamp={reply.created_at}
+                      topLevel={true}
+                      replies={reply.post_replies}
+                    />
+                  ))}
                 </div>
               </div>
             </div>

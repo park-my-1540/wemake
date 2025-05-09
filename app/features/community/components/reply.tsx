@@ -4,12 +4,23 @@ import { Button } from "~/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useState } from "react";
 import { Textarea } from "~/components/ui/textarea";
+import { DateTime } from "luxon";
 interface ReplyProps {
   username: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   content: string;
   timestamp: string;
   topLevel: boolean;
+  replies?: {
+    post_reply_id: number;
+    reply: string;
+    created_at: string;
+    user: {
+      name: string;
+      avatar: string | null;
+      username: string;
+    };
+  }[];
 }
 
 export function Reply({
@@ -18,23 +29,26 @@ export function Reply({
   content,
   timestamp,
   topLevel = false,
+  replies,
 }: ReplyProps) {
   const [replying, setReplying] = useState(false);
   const toggleReplying = () => setReplying((prev) => !prev);
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-2 w-full'>
       <div className='flex items-start gap-5 w-2/3'>
         <Avatar className='size-14'>
-          <AvatarImage src={avatarUrl} />
+          {avatarUrl ? <AvatarImage src={avatarUrl} /> : null}
           <AvatarFallback>{username.slice(0, 2)}</AvatarFallback>
         </Avatar>
-        <div className='flex flex-col gap-2 items-start'>
+        <div className='flex flex-col gap-2 items-start w-full'>
           <div className='flex items-center gap-2'>
             <Link to={`/users/@${username}`}>
               <h4 className='font-medium'>{username}</h4>
             </Link>
             <DotIcon className='size-5' />
-            <span className='text-xs text-muted-foreground'>{timestamp}</span>
+            <span className='text-xs text-muted-foreground'>
+              {DateTime.fromISO(timestamp).toRelative()}
+            </span>
           </div>
 
           <p className='text-muted-foreground'>{content}</p>
@@ -60,15 +74,17 @@ export function Reply({
           </div>
         </Form>
       )}
-      {topLevel && (
+      {topLevel && replies && (
         <div className='pl-20 w-full'>
-          <Reply
-            username='Sia'
-            avatarUrl='https://github.com/microsoft.png'
-            content='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-            timestamp='10 hours ago'
-            topLevel={false}
-          />
+          {replies.map((reply) => (
+            <Reply
+              username={reply.user.name}
+              avatarUrl={reply.user.avatar}
+              content={reply.reply}
+              timestamp={reply.created_at}
+              topLevel={false}
+            />
+          ))}
         </div>
       )}
     </div>
