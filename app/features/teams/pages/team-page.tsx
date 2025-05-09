@@ -7,32 +7,41 @@ import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Card } from "~/components/ui/card";
+import { getTeamById } from "../queries";
+
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `Team: ${params.teamId}` },
 ];
 
-export default function TeamPage() {
+export const loader = async ({ params }: Route.LoaderArgs) => {
+  const team = await getTeamById(params.teamId);
+  return { team };
+};
+
+export default function TeamPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
-      <HeroSection title='Join lynn`s team' />
+      <HeroSection
+        title={`${loaderData.team.team_leader.name}님 팀에 참여하세요`}
+      />
       <div className='grid grid-cols-6 gap-40 items-start'>
         <div className='col-span-4 grid grid-cols-4 gap-5'>
           {[
             {
-              title: "Product name",
-              value: "Doggie Social",
+              title: "프로덕트 이름",
+              value: loaderData.team.product_name,
             },
             {
-              title: "Stage",
-              value: "MVP",
+              title: "진행 단계",
+              value: loaderData.team.product_stage,
             },
             {
-              title: "Team size",
-              value: 3,
+              title: "팀 규모",
+              value: loaderData.team.team_size,
             },
             {
-              title: "Available equity",
-              value: 50,
+              title: "지분",
+              value: loaderData.team.equity_split,
             },
           ].map((item) => (
             <Card>
@@ -49,16 +58,11 @@ export default function TeamPage() {
           <Card className='col-span-2'>
             <CardHeader>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
-                Looking for
+                모집중인 직군
               </CardTitle>
               <CardContent className='p-0 font-bold text-2xl'>
                 <ul className='text-lg list-disc list-inside'>
-                  {[
-                    "React Developer",
-                    "Backend Developer",
-                    "Product Manager",
-                    "UI/UX Designer",
-                  ].map((item) => (
+                  {loaderData.team.roles.split(",").map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -68,13 +72,10 @@ export default function TeamPage() {
           <Card className='col-span-2'>
             <CardHeader>
               <CardTitle className='text-sm font-medium text-muted-foreground'>
-                Idea description
+                아이디어 소개
               </CardTitle>
               <CardContent className='p-0 font-medium text-xl'>
-                <p>
-                  Doggie Social is a social media platform for dogs. It allows
-                  dogs to connect with each other and share their experiences.
-                </p>
+                <p>{loaderData.team.product_description}</p>
               </CardContent>
             </CardHeader>
           </Card>
@@ -82,12 +83,20 @@ export default function TeamPage() {
         <aside className='col-span-2 space-y-5 border rounded-lg shadow-sm p-5'>
           <div className='flex gap-5'>
             <Avatar className='size-14'>
-              <AvatarImage src='https://github.com/intertiger.png' />
-              <AvatarFallback>N</AvatarFallback>
+              <AvatarFallback>
+                {loaderData.team.team_leader.name[0]}
+              </AvatarFallback>
+              {loaderData.team.team_leader.avatar ? (
+                <AvatarImage src={loaderData.team.team_leader.avatar} />
+              ) : null}
             </Avatar>
             <div className='flex flex-col'>
-              <h4 className='text-lg font-medium'>Lynn</h4>
-              <Badge variant='secondary'>Entreprenuer</Badge>
+              <h4 className='text-lg font-medium'>
+                {loaderData.team.team_leader.name}
+              </h4>
+              <Badge variant='secondary' className='capitalize'>
+                {loaderData.team.team_leader.role}
+              </Badge>
             </div>
           </div>
           <Form className='space-y-5'>
@@ -101,10 +110,10 @@ export default function TeamPage() {
               required
               textArea
             />
-            <Button className='w-full'>Get in touch</Button>
+            <Button className='w-full'>연락하기</Button>
           </Form>
           <Button variant='outline' className='w-full'>
-            Follow
+            팔로우
           </Button>
         </aside>
       </div>

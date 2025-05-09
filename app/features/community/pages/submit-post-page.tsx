@@ -1,9 +1,6 @@
 import type { Route } from "./+types/submit-post-page";
 import { Button } from "~/components/ui/button";
 import { Form } from "react-router";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import { HeroSection } from "~/common/components/hero-section";
 import InputPair from "~/common/components/input-pair";
 import SelectPair from "~/common/components/select-pair";

@@ -2,84 +2,69 @@ import { Badge } from "~/components/ui/badge";
 import type { Route } from "./+types/job-page.types";
 import { DotIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { getJobs } from "~/features/jobs/queries";
-
+import { getJobById } from "~/features/jobs/queries";
+import { DateTime } from "luxon";
+import { JOB_LOCATION_MAP, JOB_TYPE_MAP } from "../constants";
 export const meta: Route.MetaFunction = () => {
   return [
     { title: "채용 상세" },
     { name: "description", content: "채용 정보 상세 내용을 확인하세요" },
   ];
 };
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const idea = await getJobs({ limit: 40 });
-  return { idea };
+export const loader = async ({
+  params,
+}: Route.LoaderArgs & { params: { jobId: string } }) => {
+  const jobs = await getJobById(params.jobId);
+  return { jobs };
 };
 
-export default function JobPage() {
+export default function JobPage({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       <div className='bg-gradient-to-tr from-primary to-primary/80 to-primary/10 h-60 w-full rounded-lg'></div>
       <div className='grid grid-cols-6 -mt-20 gap-20 items-start'>
         <div className='col-span-4 space-y-10'>
-          <div className='relative size-40 rounded-full  overflow-hidden  relative left-10'>
-            <img src='https://github.com/facebook.png' alt='company logo' />
+          <div className='relative size-40 bg-white rounded-full  overflow-hidden  relative left-10'>
+            <img src={loaderData.jobs.company_logo} alt='company logo' />
           </div>
           <div>
-            <h1 className='text-4xl font-bold'>Frontend Engineer</h1>
-            <h4 className='text-lg text-muted-foreground'>Meta Inc.</h4>
+            <h1 className='text-4xl font-bold'>{loaderData.jobs.position}</h1>
+            <h4 className='text-lg text-muted-foreground'>
+              {loaderData.jobs.company_name}
+            </h4>
           </div>
-          <div className='flex items-center gap-2'>
-            <Badge variant='secondary'>Full-time</Badge>
-            <Badge variant='secondary'>Remote</Badge>
+          <div className='flex gap-2 capitalize'>
+            <Badge variant={"secondary"}>
+              {JOB_TYPE_MAP.get(loaderData.jobs.job_type)}
+            </Badge>
+            <Badge variant={"secondary"}>
+              {JOB_LOCATION_MAP.get(loaderData.jobs.job_location)}
+            </Badge>
           </div>
           <div className='space-y-2.5'>
-            <h4 className='text-2xl font-bold'>Overview</h4>
-            <p className='text-lg'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quos.
-            </p>
+            <h4 className='text-2xl font-bold'>상세</h4>
+            <p className='text-lg'>{loaderData.jobs.overview}</p>
           </div>
           <div className='space-y-2.5'>
-            <h4 className='text-2xl font-bold'>직무</h4>
+            <h4 className='text-2xl font-bold'>직무요건</h4>
             <ul className='text-lg list-disc list-inside'>
-              {[
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit  ",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-              ].map((item) => (
+              {loaderData.jobs.responsibilities.split(",").map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           </div>
           <div className='space-y-2.5'>
-            <h4 className='text-2xl font-bold'>자격</h4>
+            <h4 className='text-2xl font-bold'>자격요건</h4>
             <ul className='text-lg list-disc list-inside'>
-              {[
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit  ",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-              ].map((item) => (
+              {loaderData.jobs.qualifications.split(",").map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           </div>
           <div className='space-y-2.5'>
-            <h4 className='text-2xl font-bold'>복지</h4>
+            <h4 className='text-2xl font-bold'>혜택 및 복지</h4>
             <ul className='text-lg list-disc list-inside'>
-              {[
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit  ",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-              ].map((item) => (
+              {loaderData.jobs.benefits.split(",").map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -87,36 +72,36 @@ export default function JobPage() {
           <div className='space-y-2.5'>
             <h4 className='text-2xl font-bold'>스킬</h4>
             <ul className='text-lg list-disc list-inside'>
-              {[
-                "JavaScript",
-                "TypeScript",
-                "React",
-                "Next.js",
-                "Tailwind CSS",
-                "Node.js",
-                "Express",
-              ].map((item) => (
+              {loaderData.jobs.skills.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
           </div>
         </div>
-        <div className='col-span-2 sticky mt-32 top-20 border p-6 rounded-lg space-y-6'>
+        <div className='col-span-2 sticky mt-32 top-20 border p-6 rounded-lg space-y-2.5'>
           <div className='flex flex-col'>
-            <span className='text-2xl font-medium'>$100,000 - $120,000</span>
             <span className='text-sm text-muted-foreground'>Avg. Salary</span>
+            <span className='text-2xl font-medium'>
+              {loaderData.jobs.salary_range}
+            </span>
           </div>
+
           <div className='flex flex-col'>
-            <span className='text-2xl font-medium'>Remote</span>
             <span className='text-sm text-muted-foreground'>Location</span>
+            <span className='text-2xl font-medium'>
+              {loaderData.jobs.job_location}
+            </span>
           </div>
           <div className='flex flex-col'>
-            <span className='text-2xl font-medium'>Full-time</span>
             <span className='text-sm text-muted-foreground'>Type</span>
+            <span className='text-2xl font-medium'>
+              {loaderData.jobs.job_type}
+            </span>
           </div>
           <div className='flex'>
             <span className='text-sm text-muted-foreground'>
-              Posted 2 days ago
+              Posted
+              {DateTime.fromISO(loaderData.jobs.created_at).toRelative()}
             </span>
             <DotIcon className='size-4' />
             <span className='text-sm text-muted-foreground'>395 views</span>
