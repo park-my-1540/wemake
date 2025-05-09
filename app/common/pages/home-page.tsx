@@ -11,6 +11,7 @@ import { getPosts } from "~/features/community/queries";
 import type { Route } from "./+types/home-page";
 import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
+import { getTeams } from "~/features/teams/queries";
 
 export function meta() {
   return [
@@ -31,7 +32,8 @@ export const loader = async () => {
   });
   const ideas = await getGptIdeas({ limit: 7 });
   const jobs = await getJobs({ limit: 7 });
-  return { products, posts, ideas, jobs };
+  const teams = await getTeams({ limit: 7 });
+  return { products, posts, ideas, jobs, teams };
 };
 
 export default function Home({
@@ -154,13 +156,14 @@ export default function Home({
             <Link to='/teams'>Explore all teams &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.teams.map((team) => (
           <TeamCard
-            id='teamId'
-            username='sia'
-            userAvatarUrl='https://github.com/inthetiger.png'
-            positions={["React Developer", "Backend Developer"]}
-            projectDescription='a new social media platform'
+            key={team.team_id}
+            id={team.team_id}
+            username={team.team_leader.username}
+            userAvatarUrl={team.team_leader.avatar}
+            roles={team.roles.split(",")}
+            productDescription={team.team_id}
           />
         ))}
       </div>

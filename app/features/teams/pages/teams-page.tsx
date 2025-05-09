@@ -1,24 +1,34 @@
 import { TeamCard } from "../components/team-card";
 import type { Route } from "./+types/teams-page";
 import { HeroSection } from "~/common/components/hero-section";
+import { getTeams } from "~/features/teams/queries";
 
 export const meta: Route.MetaFunction = () => [{ title: "Teams" }];
+export const loader = async () => {
+  const teams = await getTeams({ limit: 7 });
+  return { teams };
+};
 
-export default function TeamsPage() {
+export default function TeamsPage({
+  loaderData,
+}: {
+  loaderData: Route.ComponentProps;
+}) {
   return (
     <div className='space-y-20'>
       <HeroSection
         title='Teams'
-        subTitle='Find a team looking for a new member'
+        subTitle='새 팀원을 모집 중인 팀을 찾아보세요'
       />
       <div className='grid grid-cols-4 gap-4'>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.teams.map((team) => (
           <TeamCard
-            id='teamId'
-            username='sia'
-            userAvatarUrl='https://github.com/inthetiger.png'
-            positions={["React Developer", "Backend Developer"]}
-            projectDescription='a new social media platform'
+            key={team.team_id}
+            id={team.team_id}
+            username={team.team_leader.username}
+            userAvatarUrl={team.team_leader.avatar}
+            roles={team.roles.split(",")}
+            productDescription={team.product_description}
           />
         ))}
       </div>
