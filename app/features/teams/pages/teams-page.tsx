@@ -9,11 +9,7 @@ export const loader = async () => {
   return { teams };
 };
 
-export default function TeamsPage({
-  loaderData,
-}: {
-  loaderData: Route.ComponentProps;
-}) {
+export default function TeamsPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
       <HeroSection

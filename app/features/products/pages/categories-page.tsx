@@ -1,22 +1,18 @@
 import { HeroSection } from "~/common/components/hero-section";
 import type { Route } from "./+types/categories-page";
-import { CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { Card } from "~/components/ui/card";
-import { ChevronRightIcon } from "lucide-react";
-import { Link } from "react-router";
+import { getCategories } from "~/features/products/queries";
 import { CategoryCard } from "../components/category/category-card";
 
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Category | WeMake" },
-    { name: "description", content: "Browse products in this category" },
-  ];
-}
+export const meta: Route.MetaFunction = () => [
+  { title: "Category | WeMake" },
+  { name: "description", content: "Browse products in this category" },
+];
 
-export default function CategoryPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export const loader = async () => {
+  const categories = await getCategories();
+  return { categories };
+};
+export default function CategoryPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
       <HeroSection
@@ -24,12 +20,12 @@ export default function CategoryPage({
         subTitle='Browse products in this category'
       />
       <div className='grid grid-cols-4 gap-10'>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.categories.map((category) => (
           <CategoryCard
-            key={`category-${index}`}
-            id={`categoryId-${index}`}
-            name={`Category Name`}
-            description={`Category Description`}
+            key={`category-${category.category_id}`}
+            id={category.category_id}
+            name={category.name}
+            description={category.description}
           />
         ))}
       </div>

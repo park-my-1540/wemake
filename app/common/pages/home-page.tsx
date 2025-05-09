@@ -21,26 +21,24 @@ export function meta() {
 }
 
 export const loader = async () => {
-  const products = await getProductsByDateRange({
-    startDate: DateTime.now().startOf("day"),
-    endDate: DateTime.now().endOf("day"),
-    limit: 7,
-  });
-  const posts = await getPosts({
-    limit: 20,
-    sorting: "newest",
-  });
-  const ideas = await getGptIdeas({ limit: 7 });
-  const jobs = await getJobs({ limit: 7 });
-  const teams = await getTeams({ limit: 7 });
+  const [products, posts, ideas, jobs, teams] = await Promise.all([
+    getProductsByDateRange({
+      startDate: DateTime.now().startOf("day"),
+      endDate: DateTime.now().endOf("day"),
+      limit: 7,
+    }),
+    getPosts({
+      limit: 20,
+      sorting: "newest",
+    }),
+    getGptIdeas({ limit: 7 }),
+    getJobs({ limit: 7 }),
+    getTeams({ limit: 7 }),
+  ]);
   return { products, posts, ideas, jobs, teams };
 };
 
-export default function Home({
-  loaderData,
-}: {
-  loaderData: Route.ComponentProps;
-}) {
+export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div className='px-20 space-y-40'>
       <div className='grid grid-cols-3 gap-4'>
@@ -58,10 +56,9 @@ export default function Home({
         {loaderData.products.map((product) => (
           <ProductCard
             key={product.product_id}
-            id={product.product_id.toString()}
+            id={product.product_id}
             name={product.name}
             description={product.description}
-            commentsCount={product.comments || 0}
             reviewsCount={Number(product.reviews)}
             viewsCount={product.views}
             votesCount={Number(product.upvotes)}
@@ -89,7 +86,6 @@ export default function Home({
             authorAvatarUrl={post.authorAvatarUrl}
             category={post.category}
             postedAt={post.created_at}
-            votesCount={post.created_at}
           />
         ))}
       </div>
@@ -163,7 +159,7 @@ export default function Home({
             username={team.team_leader.username}
             userAvatarUrl={team.team_leader.avatar}
             roles={team.roles.split(",")}
-            productDescription={team.team_id}
+            productDescription={team.productDescription}
           />
         ))}
       </div>

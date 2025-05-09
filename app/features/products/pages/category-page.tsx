@@ -5,23 +5,49 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import ProductPagination from "~/components/product-pagination";
 import type { Route } from "./+types/category-page";
+import {
+  getCategory,
+  getCategoryPages,
+  getProductsByCategory,
+} from "~/features/products/queries";
+import { z } from "zod";
 
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Developer Tools | WeMake" },
-    { name: "description", content: "Browse products in this category" },
-  ];
-}
+export const meta: Route.MetaFunction = () => [
+  { title: "Developer Tools | WeMake" },
+  { name: "description", content: "Browse products in this category" },
+];
 
-export default function CategoryPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+//하나뿐이어도 validate 하는건 좋은 습관임
+const paramsSchema = z.object({
+  category: z.coerce.number(),
+});
+
+export const loader = async ({ params, request }: Route.LoaderArgs) => {
+  const url = new URL(request.url);
+  const page = url.searchParams.get("page") || 1;
+  const { data, success } = paramsSchema.safeParse(params);
+
+  if (!success) {
+    throw new Response("Invalid category", { status: 400 });
+  }
+
+  const [category, products, totalPages] = await Promise.all([
+    getCategory(data.category),
+    getProductsByCategory({
+      categoryId: data.category,
+      page: Number(page),
+    }),
+    getCategoryPages(data.category),
+  ]);
+  return { category, products, totalPages };
+};
+
+export default function CategoryPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
       <HeroSection
-        title='Developer Tools'
-        subTitle='Tools for developers to build products faster'
+        title={loaderData.category.name}
+        subTitle={loaderData.category.description}
       />
       <Form className='flex justify-center gap-2 max-w-screen-sm items-center mx-auto'>
         <Input
@@ -32,23 +58,19 @@ export default function CategoryPage({
         <Button type='submit'>Search</Button>
       </Form>
       <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {loaderData.products.map((product) => (
           <ProductCard
-            key={index}
-            id='productsId'
-            name='Product Name'
-            description='Product Description'
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            key={product.product_id}
+            id={product.product_id}
+            name={product.name}
+            description={product.description}
+            reviewsCount={Number(product.reviews)}
+            viewsCount={Number(product.views)}
+            votesCount={Number(product.upvotes)}
           />
         ))}
       </div>
-      <ProductPagination
-        totalPages={10}
-        currentPage={1}
-        onPageChange={() => {}}
-      />
+      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }
