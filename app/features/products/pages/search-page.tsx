@@ -6,7 +6,10 @@ import { ProductCard } from "../components/product-card";
 import { Form } from "react-router";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-
+import {
+  getPagesBySearch,
+  getProductsBySearch,
+} from "~/features/products/queries";
 import {
   Card,
   CardDescription,
@@ -16,21 +19,27 @@ import {
 import { Link } from "react-router";
 import { ChevronRightIcon } from "lucide-react";
 
-export function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const { success, data } = paramsSchema.safeParse(
+  const { success, data: parsedData } = paramsSchema.safeParse(
     Object.fromEntries(url.searchParams)
   );
   if (!success) {
     throw new Error("Invalid params");
   }
-  return {
-    ...data,
-  };
-}
 
-export function action({ request, formData }: Route.ActionArgs) {
-  return {};
+  if (parsedData.query === "") {
+    return { products: [], totalPages: 1 };
+  }
+
+  const products = await getProductsBySearch({
+    query: parsedData.query,
+    page: parsedData.page,
+  });
+  const totalPages = await getPagesBySearch({
+    query: parsedData.query,
+  });
+  return { products, totalPages };
 }
 
 const paramsSchema = z.object({
@@ -38,17 +47,12 @@ const paramsSchema = z.object({
   page: z.coerce.number().optional().default(1),
 });
 
-export function meta(): Route.MetaFunction {
-  return [
-    { title: "Search Products | WeMake" },
-    { name: "description", content: "Search for products on WeMake" },
-  ];
-}
+export const meta: Route.MetaFunction = () => [
+  { title: "Search Products | WeMake" },
+  { name: "description", content: "Search for products on WeMake" },
+];
 
-export default function SearchPage({
-  loaderData,
-  actionData,
-}: Route.ComponentProps) {
+export default function SearchPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
       <HeroSection title='Search for Products by title or description' />
@@ -61,25 +65,19 @@ export default function SearchPage({
         <Button type='submit'>Search</Button>
       </Form>
       <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
-        <Link to='/products/categories/15321' className='block'>
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center justify-between'>
-                ㅁㄴㅁㄴㅇㄹ
-                <ChevronRightIcon className='size-6' />
-              </CardTitle>
-              <CardDescription className='text-base'>
-                ㅁㄴㅇㄹㅁㄴㄹ
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Link>
+        {loaderData.products.map((product) => (
+          <ProductCard
+            key={product.product_id}
+            id={product.product_id}
+            name={product.name}
+            description={product.tagline}
+            reviewsCount={Number(product.reviews)}
+            viewsCount={product.views}
+            votesCount={Number(product.upvotes)}
+          />
+        ))}
       </div>
-      <ProductPagination
-        totalPages={10}
-        currentPage={1}
-        onPageChange={() => {}}
-      />
+      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }

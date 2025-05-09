@@ -16,7 +16,7 @@ export default function ProductsHomePage({
         {loaderData.products.map((product: any) => (
           <div key={product.id} className='border rounded-lg p-4'>
             <h2 className='text-xl font-semibold'>{product.title}</h2>
-            <p className='text-gray-600'>{product.description}</p>
+            <p className='text-gray-600'>{product.tagline}</p>
           </div>
         ))}
       </div>
