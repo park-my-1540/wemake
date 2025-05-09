@@ -3,12 +3,12 @@ import { JOB_TYPES, JOB_LOCATIONS, SALARY_RANGES } from "./constants";
 
 export const jobTypes = pgEnum(
   "job_types",
-  JOB_TYPES.map((type) => type.name) as [string, ...string[]]
+  JOB_TYPES.map((type) => type.id) as [string, ...string[]]
 );
 
 export const jobLocations = pgEnum(
   "job_locations",
-  JOB_LOCATIONS.map((location) => location.name) as [string, ...string[]]
+  JOB_LOCATIONS.map((location) => location.id) as [string, ...string[]]
 );
 
 export const salaryRanges = pgEnum("salary_ranges", SALARY_RANGES);

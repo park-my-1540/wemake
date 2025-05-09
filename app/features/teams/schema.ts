@@ -6,9 +6,11 @@ import {
   integer,
   pgEnum,
   check,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { PRODUCT_STAGES } from "./constants";
 import { sql } from "drizzle-orm";
+import { profiles } from "../users/schema";
 
 export const productStage = pgEnum(
   "product_stage",
@@ -26,6 +28,11 @@ export const team = pgTable(
     product_stage: productStage().notNull(),
     roles: text().notNull(),
     product_description: text().notNull(),
+    team_leader_id: uuid()
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade", //프로필이 삭제되면 채택된 아이디어도 삭제됨
+      })
+      .notNull(),
     created_at: timestamp().notNull().defaultNow(),
     updated_at: timestamp().notNull().defaultNow(),
   },

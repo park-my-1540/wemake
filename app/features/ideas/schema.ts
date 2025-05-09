@@ -10,7 +10,9 @@ import {
 import { profiles } from "../users/schema";
 
 export const gptIdeas = pgTable("gpt_ideas", {
-  idea_id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+  gpt_idea_id: bigint({ mode: "number" })
+    .primaryKey()
+    .generatedAlwaysAsIdentity(),
   idea: text().notNull(),
   views: integer().notNull().default(0),
   claimed_at: timestamp(),
@@ -23,9 +25,12 @@ export const gptIdeas = pgTable("gpt_ideas", {
 export const gptIdeasLikes = pgTable(
   "gpt_ideas_likes",
   {
-    gpt_idea_id: bigint({ mode: "number" }).references(() => gptIdeas.idea_id, {
-      onDelete: "cascade",
-    }),
+    gpt_idea_id: bigint({ mode: "number" }).references(
+      () => gptIdeas.gpt_idea_id,
+      {
+        onDelete: "cascade",
+      }
+    ),
     profile_id: uuid().references(() => profiles.profile_id, {
       onDelete: "cascade",
     }),
