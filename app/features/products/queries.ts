@@ -145,3 +145,18 @@ export const getProductById = async (productId: string) => {
 
   return data;
 };
+
+export const getReviews = async (productId: string) => {
+  const { data, error } = await client.from("reviews").select(`
+    review_id,
+    rating,
+    review,
+    created_at,
+    user:profiles!inner(
+      name, username, avatar)
+    `);
+
+  if (error) throw error;
+
+  return data;
+};
