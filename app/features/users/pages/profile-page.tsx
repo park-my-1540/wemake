@@ -1,19 +1,24 @@
+import { useOutletContext } from "react-router";
 import type { Route } from "./+types/profile-page";
 
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `Profile: ${params.username}` },
 ];
 
-export default function ProfilePage() {
+export default function ProfilePage({}) {
+  const { headline, bio } = useOutletContext<{
+    headline: string;
+    bio: string;
+  }>();
   return (
-    <div className='flex flex-col gap-10 max-w-screen-md'>
+    <div className='flex flex-col space-y-10 max-w-screen-md'>
       <div className='space-y-2'>
         <h4 className='text-lg font-bold'>Headline</h4>
-        <p>나는 프로덕트 디자인입니다. 한국에 살구용</p>
+        <p>{headline}</p>
       </div>
       <div className='space-y-2'>
         <h4 className='text-lg font-bold'>About</h4>
-        <p>나는 프로덕트 디자인입니다. 한국에 살구용</p>
+        <p>{bio}</p>
       </div>
     </div>
   );

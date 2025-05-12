@@ -12,18 +12,32 @@ import {
 } from "~/components/ui/dialog";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
+import type { Route } from "./+types/dashboard-layout";
+import { getUserProfile } from "../queries";
 
-export default function ProfileLayout() {
+export const loader = async ({
+  params,
+}: Route.LoaderArgs & { params: { username: string } }) => {
+  const user = await getUserProfile(params.username);
+  return { user };
+};
+
+export default function ProfileLayout({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-10'>
       <div className='flex items-center gap-4'>
         <Avatar className='size-40'>
-          <AvatarImage src='https://github.com/nico.png' />
-          <AvatarFallback>N</AvatarFallback>
+          {loaderData.user.avatar ? (
+            <AvatarImage src={loaderData.user.avatar} />
+          ) : (
+            <AvatarFallback className='text-2xl'>
+              {loaderData.user.name.charAt(0)}
+            </AvatarFallback>
+          )}
         </Avatar>
         <div className='space-y-5'>
           <div className='flex gap-2'>
-            <h1 className='text-2xl font-semibold'>Nico</h1>
+            <h1 className='text-2xl font-semibold'>{loaderData.user.name}</h1>
             <Button variant='outline' asChild>
               <Link to='/my/settings'>프로필 편집하기</Link>
             </Button>
@@ -38,7 +52,7 @@ export default function ProfileLayout() {
                 </DialogHeader>
                 <DialogDescription className='space-y-4'>
                   <span className='text-sm text-muted-foreground'>
-                    Nico님에게 메세지를 보내세요.
+                    {loaderData.user.name}님에게 메세지를 보내세요.
                   </span>
                   <Form className='space-y-4'>
                     <Textarea
@@ -53,18 +67,23 @@ export default function ProfileLayout() {
             </Dialog>
           </div>
           <div className='flex gap-2 items-center'>
-            <span className='text-sm text-muted-foreground'>@sia</span>
-            <Badge variant='secondary'>Product Designer</Badge>
+            <span className='text-sm text-muted-foreground'>
+              @{loaderData.user.username}
+            </span>
+            <Badge variant='secondary'>{loaderData.user.role}</Badge>
             <Badge variant='secondary'>100 followers</Badge>
             <Badge variant='secondary'>100 following</Badge>
           </div>
         </div>
       </div>
-      <div className='flex gap-10'>
+      <div className='flex gap-5'>
         {[
-          { label: "About", to: "/users/username" },
-          { label: "Products", to: "/users/username/products" },
-          { label: "Posts", to: "/users/username/posts" },
+          { label: "About", to: `/users/${loaderData.user.username}` },
+          {
+            label: "Products",
+            to: `/users/${loaderData.user.username}/products`,
+          },
+          { label: "Posts", to: `/users/${loaderData.user.username}/posts` },
         ].map((item) => (
           <NavLink
             end
@@ -81,7 +100,12 @@ export default function ProfileLayout() {
         ))}
       </div>
       <div className='max-w-screen-md'>
-        <Outlet />
+        <Outlet
+          context={{
+            headline: loaderData.user.headline,
+            bio: loaderData.user.bio,
+          }}
+        />
       </div>
     </div>
   );

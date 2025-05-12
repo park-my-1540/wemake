@@ -1,5 +1,6 @@
 import {
   pgTable,
+  foreignKey,
   text,
   bigint,
   timestamp,
@@ -11,29 +12,38 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { profiles } from "../users/schema";
-export const products = pgTable("products", {
-  product_id: bigint({ mode: "number" })
-    .primaryKey()
-    .generatedAlwaysAsIdentity(),
-  name: text().notNull(),
-  tagline: text().notNull(),
-  description: text().notNull(),
-  how_it_works: text().notNull(),
-  icon: text().notNull(),
-  url: text().notNull(),
-  stats: jsonb().notNull().default({ views: 0, reviews: 0, upvotes: 0 }),
-  profile_id: uuid("id").references(() => profiles.profile_id, {
-    onDelete: "cascade", //이 프로필이 삭제되면 제품도 삭제됨
-  }),
-  category_id: bigint({ mode: "number" }).references(
-    () => categories.category_id,
-    {
-      onDelete: "set null", //카테고리를 삭제하면 null로 변경
-    }
-  ),
-  created_at: timestamp("created_at").notNull().defaultNow(),
-  updated_at: timestamp("updated_at").notNull().defaultNow(),
-});
+export const products = pgTable(
+  "products",
+  {
+    product_id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedAlwaysAsIdentity(),
+    name: text().notNull(),
+    tagline: text().notNull(),
+    description: text().notNull(),
+    how_it_works: text().notNull(),
+    icon: text().notNull(),
+    url: text().notNull(),
+    stats: jsonb().notNull().default({ views: 0, reviews: 0, upvotes: 0 }),
+    profile_id: uuid().notNull(),
+    category_id: bigint({ mode: "number" }).references(
+      () => categories.category_id,
+      {
+        onDelete: "set null", //카테고리를 삭제하면 null로 변경
+      }
+    ),
+    created_at: timestamp().notNull().defaultNow(),
+    updated_at: timestamp().notNull().defaultNow(),
+  },
+  (table) => [
+    foreignKey({
+      //foreign 키 이름 변경하는 방법
+      columns: [table.profile_id],
+      foreignColumns: [profiles.profile_id],
+      name: "products_to_profiles",
+    }).onDelete("cascade"),
+  ]
+);
 
 export const categories = pgTable("categories", {
   category_id: bigint({ mode: "number" })
