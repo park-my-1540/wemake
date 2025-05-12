@@ -6,14 +6,14 @@ import { Button } from "~/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { DateTime } from "luxon";
 interface PostCardProps {
-  id: number;
-  title: string;
-  author: string;
-  authorAvatarUrl?: string;
-  category: string;
-  postedAt: string;
-  expanded?: boolean;
-  votesCount?: number;
+  id: number | null;
+  title: string | null;
+  author: string | null;
+  authorAvatarUrl: string | null;
+  category: string | null;
+  postedAt: string | null;
+  expanded?: boolean | null;
+  votesCount?: number | null;
 }
 
 export function PostCard({
