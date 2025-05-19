@@ -36,6 +36,13 @@
       "when": 1747028354841,
       "tag": "0004_smooth_mordo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1747369932131,
+      "tag": "0005_salty_stryfe",
+      "breakpoints": true
     }
   ]
 }

@@ -33,6 +33,27 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_id: string
+          event_type: Database["public"]["Enums"]["event_type"] | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_id?: string
+          event_type?: Database["public"]["Enums"]["event_type"] | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_id?: string
+          event_type?: Database["public"]["Enums"]["event_type"] | null
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
@@ -612,14 +633,14 @@ export type Database = {
             referencedColumns: ["category_id"]
           },
           {
-            foreignKeyName: "products_id_profiles_profile_id_fk"
-            columns: ["id"]
+            foreignKeyName: "products_profile_id_fkey"
+            columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["profile_id"]
           },
           {
-            foreignKeyName: "products_profile_id_fkey"
+            foreignKeyName: "products_to_profiles"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -853,9 +874,16 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      track_event: {
+        Args: {
+          event_type: Database["public"]["Enums"]["event_type"]
+          event_data: Json
+        }
+        Returns: undefined
+      }
     }
     Enums: {
+      event_type: "product_view" | "product_visit" | "profile_view"
       job_locations: "remote" | "onsite" | "hybrid"
       job_types: "full-time" | "part-time" | "contract" | "freelance"
       notification_type: "follow" | "review" | "reply" | "mention"
@@ -984,6 +1012,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      event_type: ["product_view", "product_visit", "profile_view"],
       job_locations: ["remote", "onsite", "hybrid"],
       job_types: ["full-time", "part-time", "contract", "freelance"],
       notification_type: ["follow", "review", "reply", "mention"],

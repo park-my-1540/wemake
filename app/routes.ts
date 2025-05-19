@@ -53,6 +53,7 @@ export default [
         ]),
         index("features/products/pages/product-redirect-page.tsx"),
       ]),
+      route("/visit", "features/products/pages/product-visit-page.tsx"),
     ]),
   ]),
   ...prefix("/ideas", [

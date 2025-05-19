@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, Link } from "react-router";
 import { ChevronUpIcon, StarIcon } from "lucide-react";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -51,8 +51,15 @@ export default function ProductOverviewLayout({
           </div>
         </div>
         <div className='flex gap-5'>
-          <Button variant='secondary' size='lg' className='text-lg h-14 px-10'>
-            웹사이트 방문
+          <Button
+            variant='secondary'
+            size='lg'
+            className='text-lg h-14 px-10'
+            asChild
+          >
+            <Link to={`/products/${loaderData.product.product_id}/visit`}>
+              웹사이트 방문
+            </Link>
           </Button>
           <Button size='lg' className='text-lg h-14 px-10'>
             <ChevronUpIcon className='size-4' />
