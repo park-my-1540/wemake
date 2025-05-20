@@ -8,10 +8,10 @@ import { DateTime } from "luxon";
 interface PostCardProps {
   id: number | null;
   title: string | null;
-  author: string | null;
+  author: string;
   authorAvatarUrl: string | null;
   category: string | null;
-  postedAt: string | null;
+  postedAt: string;
   expanded?: boolean | null;
   votesCount?: number | null;
 }
@@ -36,7 +36,7 @@ export function PostCard({
       >
         <CardHeader className='flex flex-row gap-2 items-center'>
           <Avatar className='size-14'>
-            <AvatarImage src={authorAvatarUrl} />
+            {authorAvatarUrl ? <AvatarImage src={authorAvatarUrl} /> : null}
             <AvatarFallback>{author[0]}</AvatarFallback>
           </Avatar>
           <div className='space-y-2'>

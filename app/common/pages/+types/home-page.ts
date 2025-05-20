@@ -23,7 +23,7 @@ export namespace Route {
   interface ProductCardProps {
     product_id: number;
     name: string;
-    description: string;
+    tagline: string;
     comments?: number;
     reviews: number;
     views: number;
@@ -33,7 +33,7 @@ export namespace Route {
     post_id: number;
     title: string;
     author: string;
-    authorAvatarUrl?: string;
+    authorAvatarUrl: string;
     category: string;
     created_at: string;
   }

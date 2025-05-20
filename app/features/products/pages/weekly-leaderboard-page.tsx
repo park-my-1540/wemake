@@ -10,6 +10,7 @@ import {
   getProductsByDateRange,
   getProductPagesByDateRange,
 } from "~/features/products/queries";
+import { makeSSRClient } from "~/supa-client";
 
 const paramsSchema = z.object({
   year: z.coerce.number(),
@@ -18,6 +19,7 @@ const paramsSchema = z.object({
 
 export const meta: Route.MetaFunction = ({ params }) => {
   const { success, data: parsedData } = paramsSchema.safeParse(params);
+
   let title = "Weekly Leaderboard";
   if (success) {
     const date = DateTime.fromObject({
@@ -60,12 +62,14 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     );
   }
   const url = new URL(request.url);
-  const products = await getProductsByDateRange({
+  const { client, headers } = makeSSRClient(request);
+  const products = await getProductsByDateRange(client, {
     startDate: date.startOf("week"),
     endDate: date.endOf("week"),
     limit: 15,
+    page: Number(url.searchParams.get("page") || 1),
   });
-  const totalPages = await getProductPagesByDateRange({
+  const totalPages = await getProductPagesByDateRange(client, {
     startDate: date.startOf("day"),
     endDate: date.endOf("day"),
   });

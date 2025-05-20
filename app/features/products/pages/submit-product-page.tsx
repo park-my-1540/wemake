@@ -1,5 +1,5 @@
 import { HeroSection } from "~/common/components/hero-section";
-import type { Route } from "./+types/submit-page";
+import type { Route } from "./+types/submit-product-page";
 import { Form } from "react-router";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
@@ -16,7 +16,7 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export default function SubmitPage({ actionData }: Route.ComponentProps) {
+export default function SubmitPage() {
   const [icon, setIcon] = useState<string | null>(null); //url을 기억
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

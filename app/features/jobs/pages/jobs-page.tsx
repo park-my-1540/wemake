@@ -8,11 +8,14 @@ import {
   SALARY_RANGES,
   JOB_LOCATION_MAP,
   JOB_TYPE_MAP,
+  JOB_TYPE_IDS,
+  JOB_LOCATION_IDS,
 } from "../constants";
 import { useSearchParams, data } from "react-router";
 import { getJobs } from "~/features/jobs/queries";
 import { cn } from "~/lib/utils";
 import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -22,17 +25,15 @@ export const meta: Route.MetaFunction = () => {
 };
 
 const searchParamsSchema = z.object({
-  type: z
-    .enum(JOB_TYPES.map((type) => type.id) as [string, ...string[]])
-    .optional(),
-  location: z
-    .enum(JOB_LOCATIONS.map((loc) => loc.id) as [string, ...string[]])
-    .optional(),
+  type: z.enum(JOB_TYPE_IDS).optional(),
+  location: z.enum(JOB_LOCATION_IDS).optional(),
   salary: z.enum(SALARY_RANGES).optional(),
 });
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
+  const { client, headers } = makeSSRClient(request);
+
   const { success, data: parsedData } = searchParamsSchema.safeParse(
     Object.fromEntries(url.searchParams)
   );
@@ -46,7 +47,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       { status: 400 }
     );
   }
-  const jobs = await getJobs({
+  const jobs = await getJobs(client, {
     limit: 40,
     location: parsedData.location,
     type: parsedData.type,

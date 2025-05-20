@@ -1,6 +1,10 @@
-import client from "~/supa-client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "database.types";
 
-export const getTeams = async ({ limit }: { limit: number }) => {
+export const getTeams = async (
+  client: SupabaseClient,
+  { limit }: { limit: number }
+) => {
   const { data, error } = await client
     .from("team")
     .select(
@@ -20,7 +24,10 @@ export const getTeams = async ({ limit }: { limit: number }) => {
   return data;
 };
 
-export const getTeamById = async (teamId: string) => {
+export const getTeamById = async (
+  client: SupabaseClient,
+  { teamId }: { teamId: number }
+) => {
   const { data, error } = await client
     .from("team")
     .select(

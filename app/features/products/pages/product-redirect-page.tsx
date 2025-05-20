@@ -6,7 +6,7 @@ export function loader({ params }: Route.LoaderArgs) {
   return redirect(`/products/${productId}/overview`);
 }
 
-export function meta(): Route.MetaFunction {
+export function meta() {
   return [
     { title: "Product Redirect" },
     { name: "description", content: "Redirecting to product overview" },

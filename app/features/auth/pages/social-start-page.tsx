@@ -1,6 +1,6 @@
 import type { Route } from "./+types/social-start-page";
 
-export function meta(): Route.MetaFunction {
+export function meta() {
   return [
     { title: "소셜 로그인" },
     { name: "description", content: "소셜 로그인을 시작합니다" },

@@ -12,6 +12,7 @@ import type { Route } from "./+types/home-page";
 import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
 import { getTeams } from "~/features/teams/queries";
+import { makeSSRClient } from "~/supa-client";
 
 export function meta() {
   return [
@@ -20,21 +21,21 @@ export function meta() {
   ];
 }
 
-export const loader = async () => {
-  const [products, posts, ideas, jobs, teams] = await Promise.all([
-    getProductsByDateRange({
-      startDate: DateTime.now().startOf("day"),
-      endDate: DateTime.now().endOf("day"),
-      limit: 7,
-    }),
-    getPosts({
-      limit: 20,
-      sorting: "newest",
-    }),
-    getGptIdeas({ limit: 7 }),
-    getJobs({ limit: 7 }),
-    getTeams({ limit: 7 }),
-  ]);
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+
+  const products = await getProductsByDateRange(client, {
+    startDate: DateTime.now().startOf("day"),
+    endDate: DateTime.now().endOf("day"),
+    limit: 7,
+  });
+  const posts = await getPosts(client, {
+    limit: 7,
+    sorting: "newest",
+  });
+  const ideas = await getGptIdeas(client, { limit: 7 });
+  const jobs = await getJobs(client, { limit: 11 });
+  const teams = await getTeams(client, { limit: 7 });
   return { products, posts, ideas, jobs, teams };
 };
 

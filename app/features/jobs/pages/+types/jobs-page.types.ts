@@ -22,6 +22,7 @@ export namespace Route {
 
   export interface LoaderArgs {
     params: Record<string, never>;
+    request: Request;
   }
 
   export interface LoaderData {

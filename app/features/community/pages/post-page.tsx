@@ -1,6 +1,7 @@
 import type { Route } from "./+types/post-page";
 import { Button } from "~/components/ui/button";
 import { Form, Link } from "react-router";
+import { makeSSRClient } from "~/supa-client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,11 +21,10 @@ export const meta: Route.MetaFunction = ({ params }) => [
   { title: `title: ${params.postId}` },
 ];
 
-export const loader = async ({
-  params,
-}: Route.LoaderArgs & { params: { postId: string } }) => {
-  const post = await getPostById(params.postId);
-  const replies = await getReplies(params.postId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const post = await getPostById(client, { postId: params.postId });
+  const replies = await getReplies(client, { postId: params.postId });
   return { post, replies };
 };
 

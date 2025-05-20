@@ -17,7 +17,9 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export default function PromotePage({}: Route.ComponentProps) {
-  const [promotionPeriod, setPromotionPeriod] = useState<DateRange[]>([]);
+  const [promotionPeriod, setPromotionPeriod] = useState<
+    DateRange | undefined
+  >();
   const totalDays =
     promotionPeriod?.from && promotionPeriod?.to
       ? DateTime.fromJSDate(promotionPeriod.to).diff(
@@ -53,7 +55,6 @@ export default function PromotePage({}: Route.ComponentProps) {
             mode='range'
             selected={promotionPeriod}
             onSelect={setPromotionPeriod}
-            minDuration={3}
             disabled={{ before: new Date() }}
           />
         </div>

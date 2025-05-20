@@ -12,7 +12,7 @@ export namespace Route {
     type: string;
     description: string;
     requirements: string[];
-    benefits: string[];
+    benefits: string;
     skills: string[];
     postedAt: string;
     salary_range: string;
@@ -26,8 +26,9 @@ export namespace Route {
   }
 
   export interface LoaderArgs {
+    request: Request;
     params: {
-      jobId: string;
+      jobId: number;
     };
   }
 

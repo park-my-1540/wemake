@@ -1,11 +1,11 @@
-import type { MetaFunction } from "react-router";
+import type { MetaFunction as RouterMetaFunction } from "react-router";
 
 export namespace Route {
-  export type MetaFunction = MetaFunction;
+  export type MetaFunction = RouterMetaFunction;
   export type LoaderArgs = {
     request: Request;
     params: {
-      postId: string;
+      postId: number;
     };
   };
   export type ComponentProps = {
@@ -41,5 +41,5 @@ export interface Replies {
   reply: string;
   created_at: string;
   topLevel: boolean;
-  post_replies: Replies;
+  post_replies: Replies[];
 }

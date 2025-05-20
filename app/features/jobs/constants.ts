@@ -42,6 +42,7 @@ export const SALARY_RANGES = [
   "$300,000+",
 ] as const;
 
+export type SalaryType = (typeof SALARY_RANGES)[number];
 export type JobTypeId = (typeof JOB_TYPES)[number]["id"];
 
 export const JOB_TYPE_MAP: Map<JobTypeId, string> = new Map(
@@ -53,3 +54,12 @@ export type JobLocationId = (typeof JOB_LOCATIONS)[number]["id"];
 export const JOB_LOCATION_MAP: Map<JobLocationId, string> = new Map(
   JOB_LOCATIONS.map((loc) => [loc.id, loc.name])
 );
+
+export const JOB_TYPE_IDS = [
+  "full-time",
+  "part-time",
+  "contract",
+  "freelance",
+] as const;
+
+export const JOB_LOCATION_IDS = ["remote", "onsite", "hybrid"] as const;

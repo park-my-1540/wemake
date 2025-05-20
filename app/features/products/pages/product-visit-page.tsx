@@ -5,11 +5,12 @@
  * 해당 제품의 URL을 찾아서, 유저를 그 URL로 보낼것임.
  */
 
-import client from "~/supa-client";
+import { makeSSRClient } from "~/supa-client";
 import type { Route } from "./+types/product-visit-page";
 import { redirect } from "react-router";
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
   const { error, data } = await client
     .from("products")
     .select("url")

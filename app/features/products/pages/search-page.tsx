@@ -10,17 +10,11 @@ import {
   getPagesBySearch,
   getProductsBySearch,
 } from "~/features/products/queries";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Link } from "react-router";
-import { ChevronRightIcon } from "lucide-react";
+import { makeSSRClient } from "~/supa-client";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
+  const { client, headers } = makeSSRClient(request);
   const { success, data: parsedData } = paramsSchema.safeParse(
     Object.fromEntries(url.searchParams)
   );
@@ -32,11 +26,11 @@ export async function loader({ request }: Route.LoaderArgs) {
     return { products: [], totalPages: 1 };
   }
 
-  const products = await getProductsBySearch({
+  const products = await getProductsBySearch(client, {
     query: parsedData.query,
     page: parsedData.page,
   });
-  const totalPages = await getPagesBySearch({
+  const totalPages = await getPagesBySearch(client, {
     query: parsedData.query,
   });
   return { products, totalPages };
@@ -65,7 +59,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
         <Button type='submit'>Search</Button>
       </Form>
       <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
-        {loaderData.products.map((product) => (
+        {loaderData.products.map((product: any) => (
           <ProductCard
             key={product.product_id}
             id={product.product_id}

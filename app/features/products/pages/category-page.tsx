@@ -11,6 +11,7 @@ import {
   getProductsByCategory,
 } from "~/features/products/queries";
 import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => [
   { title: "Developer Tools | WeMake" },
@@ -30,14 +31,16 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
   if (!success) {
     throw new Response("Invalid category", { status: 400 });
   }
-
+  const { client, headers } = makeSSRClient(request);
   const [category, products, totalPages] = await Promise.all([
-    getCategory(data.category),
-    getProductsByCategory({
+    getCategory(client, { categoryId: data.category }),
+    getProductsByCategory(client, {
       categoryId: data.category,
       page: Number(page),
     }),
-    getCategoryPages(data.category),
+    getCategoryPages(client, {
+      categoryId: data.category,
+    }),
   ]);
   return { category, products, totalPages };
 };

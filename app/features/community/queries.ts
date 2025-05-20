@@ -4,8 +4,8 @@
 // import { profiles } from "../users/schema";
 
 import { DateTime } from "luxon";
-import client from "~/supa-client";
-
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "database.types";
 // export const getTopics = async () => {
 //   const allTopics = await db
 //     .select({
@@ -43,7 +43,7 @@ import client from "~/supa-client";
 // };
 
 //superbase 관점에서
-export const getTopics = async () => {
+export const getTopics = async (client: SupabaseClient) => {
   await new Promise((resolve) => setTimeout(resolve, 4000));
   const { data, error } = await client.from("topics").select("name, slug");
   if (error) throw new Error(error.message);
@@ -72,19 +72,22 @@ export const getTopics = async () => {
 // };
 
 // view이기 때문에 : 필터링 + 재사용 등등..가능
-export const getPosts = async ({
-  limit,
-  sorting,
-  period = "all",
-  keyword,
-  topic,
-}: {
-  limit: number;
-  sorting: "newest" | "popular";
-  period?: string;
-  keyword?: string;
-  topic?: string;
-}) => {
+export const getPosts = async (
+  client: SupabaseClient,
+  {
+    limit,
+    sorting,
+    period = "all",
+    keyword,
+    topic,
+  }: {
+    limit: number;
+    sorting: "newest" | "popular";
+    period?: string;
+    keyword?: string;
+    topic?: string;
+  }
+) => {
   await new Promise((resolve) => setTimeout(resolve, 4000));
   const baseQuery = client
     .from("community_post_list_view")
@@ -128,7 +131,10 @@ export const getPosts = async ({
   return data;
 };
 
-export const getPostById = async (postId: string) => {
+export const getPostById = async (
+  client: SupabaseClient,
+  { postId }: { postId: number }
+) => {
   const { data, error } = await client
     .from("community_post_detail")
     .select("*")
@@ -141,7 +147,10 @@ export const getPostById = async (postId: string) => {
   return data;
 };
 
-export const getReplies = async (postId: string) => {
+export const getReplies = async (
+  client: SupabaseClient,
+  { postId }: { postId: number }
+) => {
   const replyQuery = `
   post_reply_id,
   reply, 

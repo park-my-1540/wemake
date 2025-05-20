@@ -5,6 +5,7 @@ import { CreateReviewDialog } from "../components/create-review-dialog";
 import { useOutletContext } from "react-router";
 import { getReviews } from "../queries";
 import type { Route } from "./+types/product-reviews-page";
+import { makeSSRClient } from "~/supa-client";
 
 export function meta() {
   return [
@@ -13,12 +14,15 @@ export function meta() {
   ];
 }
 
-export const loader = async ({ params }: Route.ComponentProps) => {
-  const reviews = await getReviews(params.productId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const reviews = await getReviews(client, { productId: params.productId });
   return { reviews };
 };
 
-export default function ProductReviewsPage({ loaderData }: Route.LoaderArgs) {
+export default function ProductReviewsPage({
+  loaderData,
+}: Route.ComponentProps) {
   const { review_count } = useOutletContext<{
     review_count: number;
   }>();
@@ -38,7 +42,7 @@ export default function ProductReviewsPage({ loaderData }: Route.LoaderArgs) {
               key={review.review_id}
               username={review.user.name}
               userHandle={review.user.username}
-              avatarUrl={review.user.username}
+              avatarUrl={review.avatarUrl}
               rating={review.rating}
               content={review.review}
               postedAt={review.created_at}

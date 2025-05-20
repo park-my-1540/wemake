@@ -2,10 +2,12 @@ import { TeamCard } from "../components/team-card";
 import type { Route } from "./+types/teams-page";
 import { HeroSection } from "~/common/components/hero-section";
 import { getTeams } from "~/features/teams/queries";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => [{ title: "Teams" }];
-export const loader = async () => {
-  const teams = await getTeams({ limit: 7 });
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const teams = await getTeams(client, { limit: 7 });
   return { teams };
 };
 

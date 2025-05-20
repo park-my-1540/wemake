@@ -10,6 +10,7 @@ import {
   getProductsByDateRange,
   getProductPagesByDateRange,
 } from "~/features/products/queries";
+import { makeSSRClient } from "~/supa-client";
 
 const paramsSchema = z.object({
   year: z.coerce.number(),
@@ -60,12 +61,14 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     );
   }
   const url = new URL(request.url);
-  const products = await getProductsByDateRange({
+  const { client, headers } = makeSSRClient(request);
+  const products = await getProductsByDateRange(client, {
     startDate: date.startOf("month"),
     endDate: date.endOf("month"),
     limit: 15,
+    page: Number(url.searchParams.get("page") || 1),
   });
-  const totalPages = await getProductPagesByDateRange({
+  const totalPages = await getProductPagesByDateRange(client, {
     startDate: date.startOf("month"),
     endDate: date.endOf("month"),
   });

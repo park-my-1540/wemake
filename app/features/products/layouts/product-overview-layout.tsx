@@ -4,8 +4,9 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { getProductById } from "~/features/products/queries";
 import type { Route } from "../pages/+types/product-overview-page";
+import { makeSSRClient } from "~/supa-client";
 
-export function meta({ data }: Route.MetaArgs) {
+export function meta({ data }: Route.MetaFunction) {
   return [
     { title: `${data.product.name} Overview` },
     { name: "description", content: "View product details and information" },
@@ -13,9 +14,11 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export const loader = async ({
+  request,
   params,
 }: Route.LoaderArgs & { params: { productId: string } }) => {
-  const product = await getProductById(params.productId);
+  const { client, headers } = makeSSRClient(request);
+  const product = await getProductById(client, { productId: params.productId });
   return { product };
 };
 
@@ -88,7 +91,7 @@ export default function ProductOverviewLayout({
       <Outlet
         context={{
           product_id: loaderData.product.product_id,
-          description: loaderData.product.description,
+          description: loaderData.product.tagline,
           how_it_works: loaderData.product.how_it_works,
           review_count: loaderData.product.reviews,
         }}

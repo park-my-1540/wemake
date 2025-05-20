@@ -5,16 +5,17 @@ import { Button } from "~/components/ui/button";
 import { getJobById } from "~/features/jobs/queries";
 import { DateTime } from "luxon";
 import { JOB_LOCATION_MAP, JOB_TYPE_MAP } from "../constants";
+import { makeSSRClient } from "~/supa-client";
+
 export const meta: Route.MetaFunction = () => {
   return [
     { title: "채용 상세" },
     { name: "description", content: "채용 정보 상세 내용을 확인하세요" },
   ];
 };
-export const loader = async ({
-  params,
-}: Route.LoaderArgs & { params: { jobId: string } }) => {
-  const jobs = await getJobById(params.jobId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const jobs = await getJobById(client, { jobId: params.jobId });
   return { jobs };
 };
 

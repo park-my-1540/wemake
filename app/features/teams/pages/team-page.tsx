@@ -8,13 +8,15 @@ import InputPair from "~/common/components/input-pair";
 import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Card } from "~/components/ui/card";
 import { getTeamById } from "../queries";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `Team: ${params.teamId}` },
 ];
 
-export const loader = async ({ params }: Route.LoaderArgs) => {
-  const team = await getTeamById(params.teamId);
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client, headers } = makeSSRClient(request);
+  const team = await getTeamById(client, { teamId: params.teamId });
   return { team };
 };
 
@@ -62,7 +64,7 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
               </CardTitle>
               <CardContent className='p-0 font-bold text-2xl'>
                 <ul className='text-lg list-disc list-inside'>
-                  {loaderData.team.roles.split(",").map((item) => (
+                  {loaderData.team.roles.split(",").map((item: any) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>

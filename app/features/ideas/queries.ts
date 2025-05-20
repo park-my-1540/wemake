@@ -1,7 +1,10 @@
-import client from "~/supa-client";
-
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "database.types";
 // query는 항상 pagination
-export const getGptIdeas = async ({ limit }: { limit: number }) => {
+export const getGptIdeas = async (
+  client: SupabaseClient,
+  { limit }: { limit: number }
+) => {
   const { data, error } = await client
     .from("gpt_ideas_view")
     .select("*")
@@ -13,7 +16,10 @@ export const getGptIdeas = async ({ limit }: { limit: number }) => {
 };
 
 // column이 URL로부터 받은 ideaId의 값과 같은지 확인
-export const getGptIdea = async (ideaId: number) => {
+export const getGptIdea = async (
+  client: SupabaseClient,
+  { ideaId }: { ideaId: number }
+) => {
   const { data, error } = await client
     .from("gpt_ideas_view")
     .select("*")

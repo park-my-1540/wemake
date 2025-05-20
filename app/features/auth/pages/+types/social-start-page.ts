@@ -1,7 +1,7 @@
-import type { MetaFunction } from "react-router";
+import type { MetaFunction as RouterMetaFunction } from "react-router";
 
 export namespace Route {
-  export type MetaFunction = MetaFunction;
+  export type MetaFunction = RouterMetaFunction;
   export type LoaderArgs = {
     request: Request;
     params: {
