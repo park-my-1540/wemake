@@ -89,9 +89,10 @@ export default function ProfileLayout({ loaderData }: Route.ComponentProps) {
             to: `/users/${loaderData.user.username}/products`,
           },
           { label: "Posts", to: `/users/${loaderData.user.username}/posts` },
-        ].map((item) => (
+        ].map((item, index) => (
           <NavLink
             end
+            key={`${index}-${item}`}
             className={({ isActive }) =>
               cn(
                 buttonVariants({ variant: "outline" }),
