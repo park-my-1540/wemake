@@ -173,7 +173,7 @@ export const getProductById = async (
 
 export const getReviews = async (
   client: SupabaseClient,
-  { productId }: { productId: string }
+  { productId }: { productId: number }
 ) => {
   const { data, error } = await client.from("reviews").select(`
     review_id,

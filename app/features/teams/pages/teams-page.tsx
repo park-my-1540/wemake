@@ -23,8 +23,8 @@ export default function TeamsPage({ loaderData }: Route.ComponentProps) {
           <TeamCard
             key={team.team_id}
             id={team.team_id}
-            username={team.team_leader.username}
-            userAvatarUrl={team.team_leader.avatar}
+            username={team.team_leader[0].username}
+            userAvatarUrl={team.team_leader[0].avatar}
             roles={team.roles.split(",")}
             productDescription={team.product_description}
           />

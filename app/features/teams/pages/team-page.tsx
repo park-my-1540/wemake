@@ -16,7 +16,7 @@ export const meta: Route.MetaFunction = ({ params }) => [
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { client, headers } = makeSSRClient(request);
-  const team = await getTeamById(client, { teamId: params.teamId });
+  const team = await getTeamById(client, { teamId: Number(params.teamId) });
   return { team };
 };
 

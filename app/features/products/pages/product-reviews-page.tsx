@@ -16,7 +16,9 @@ export function meta() {
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { client, headers } = makeSSRClient(request);
-  const reviews = await getReviews(client, { productId: params.productId });
+  const reviews = await getReviews(client, {
+    productId: Number(params.productId),
+  });
   return { reviews };
 };
 
@@ -40,9 +42,9 @@ export default function ProductReviewsPage({
           {loaderData.reviews.map((review) => (
             <ReviewCard
               key={review.review_id}
-              username={review.user.name}
-              userHandle={review.user.username}
-              avatarUrl={review.avatarUrl}
+              username={review.user[0].name}
+              userHandle={review.user[0].username}
+              avatarUrl={review.user[0].avatar}
               rating={review.rating}
               content={review.review}
               postedAt={review.created_at}

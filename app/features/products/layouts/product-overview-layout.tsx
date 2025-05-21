@@ -6,7 +6,15 @@ import { getProductById } from "~/features/products/queries";
 import type { Route } from "../pages/+types/product-overview-page";
 import { makeSSRClient } from "~/supa-client";
 
-export function meta({ data }: Route.MetaFunction) {
+type dataType = {
+  data: {
+    product: {
+      name: string;
+    };
+  };
+};
+
+export function meta({ data }: dataType) {
   return [
     { title: `${data.product.name} Overview` },
     { name: "description", content: "View product details and information" },
@@ -22,9 +30,22 @@ export const loader = async ({
   return { product };
 };
 
+type ProductOverviewProps = {
+  loaderData: { product: Product };
+};
+interface Product {
+  product_id: number;
+  name: string;
+  tagline: string;
+  average_rating: number;
+  reviews: number;
+  upvotes: number;
+  how_it_works: string;
+}
+
 export default function ProductOverviewLayout({
   loaderData,
-}: Route.ComponentProps) {
+}: ProductOverviewProps) {
   return (
     <div className='space-y-10'>
       <div className='flex justify-between'>
@@ -32,7 +53,7 @@ export default function ProductOverviewLayout({
           <div className='size-40 rounded-xl shadow-xl bg-primary/50'></div>
           <div>
             <h1 className='text-5xl font-bold'>{loaderData.product.name}</h1>
-            <p className=' text-2xl font-light'>{loaderData.product.tagline}</p>
+            <p className='text-2xl font-light'>{loaderData.product.tagline}</p>
             <div className='mt-5 flex items-center gap-2'>
               <div className='flex text-yellow-500'>
                 {Array.from({ length: 5 }).map((_, index) => (

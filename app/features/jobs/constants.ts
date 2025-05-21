@@ -63,3 +63,11 @@ export const JOB_TYPE_IDS = [
 ] as const;
 
 export const JOB_LOCATION_IDS = ["remote", "onsite", "hybrid"] as const;
+
+type ObjectUnion<T extends { [key: string]: unknown }> = keyof T;
+type ArrayUnion<T extends ReadonlyArray<any>> = T[number];
+export type ValueOfUnion<T> = T extends { [key: string]: unknown }
+  ? ObjectUnion<T>
+  : T extends ReadonlyArray<any>
+    ? ArrayUnion<T>
+    : never;
