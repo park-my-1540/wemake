@@ -146,10 +146,16 @@ export default function Navigation({
   isLoggedIn,
   hasNotifications,
   hasMessages,
+  username,
+  avatar,
+  name,
 }: {
   isLoggedIn: boolean;
   hasNotifications: number;
   hasMessages: number;
+  username: string;
+  avatar: string;
+  name: string;
 }) {
   return (
     <nav className='flex px-20 h-16 items-center justify-between backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50'>
@@ -229,14 +235,19 @@ export default function Navigation({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar>
-                <AvatarImage src='https://github.com/shadcn.png' />
-                <AvatarFallback>N</AvatarFallback>
+                {avatar ? (
+                  <AvatarImage src={avatar} />
+                ) : (
+                  <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
+                )}
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56'>
               <DropdownMenuLabel className='flex flex-col'>
-                <span className='font-normal'>John Doe</span>
-                <span className='text-xs text-muted-foreground'>@username</span>
+                <span className='font-normal'>{name}</span>
+                <span className='text-xs text-muted-foreground'>
+                  @{username}
+                </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>

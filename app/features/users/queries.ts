@@ -24,6 +24,21 @@ export const getUserProfile = async (
   if (error) throw error;
   return data;
 };
+export const getUserProfileById = async (
+  client: SupabaseClient,
+  { id }: { id: string }
+) => {
+  const { data, error } = await client
+    .from("profiles")
+    .select(
+      `
+        profile_id,name,username,avatar`
+    )
+    .eq("profile_id", id)
+    .single();
+  if (error) throw error;
+  return data;
+};
 
 export const getUserProducts = async (
   client: SupabaseClient,

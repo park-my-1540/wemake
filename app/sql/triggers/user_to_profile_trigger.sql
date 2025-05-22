@@ -10,11 +10,16 @@ begin
   if new.raw_app_meta_data is not null then
     -- raw_app_meta_data칼럼을 가지고 있고 provider이 email이면 이메일로 계정이 생성되었을때
     if new.raw_app_meta_data ? 'provider' AND new.raw_app_meta_data ->> 'provider' = 'email' then
-      insert into public.profiles (profile_id, name, username, role) -- profile_id를 user_id와 동일하게 설정하기 위해
-      values (new.id, 'Anonymous', 'mr.' || substr(md5(random()::text), 1, 8), 'developer'); --랜덤 텍스트 생성
+            if new.raw_user_meta_data ? 'name' and new.raw_user_meta_data ? 'username' then
+                insert into public.profiles (profile_id, name, username, role)
+                values (new.id, new.raw_user_meta_data ->> 'name', new.raw_user_meta_data ->> 'username', 'developer');
+            else
+                insert into public.profiles (profile_id, name, username, role)
+                values (new.id, 'Anonymous', 'mr.' || substr(md5(random()::text), 1, 8), 'developer');
+            end if;
+        end if;
     end if;
-  end if;
-  return new;
+    return new;
 end;
 $$;
 
