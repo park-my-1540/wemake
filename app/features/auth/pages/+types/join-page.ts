@@ -9,7 +9,7 @@ export namespace Route {
     request: Request;
   };
   export type ComponentProps = {
-    loaderData: Record<string, unknown>;
-    actionData: Record<string, unknown>;
+    loaderData: Record<string, string | null>;
+    actionData: Record<string, string | null>;
   };
 }
