@@ -1,11 +1,52 @@
+import { LoaderCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import type { Route } from "./+types/join-page";
-import { Form } from "react-router";
+import { Form, redirect, useNavigation, useSearchParams } from "react-router";
 import InputPair from "~/common/components/input-pair";
+import { z } from "zod";
+import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => [{ title: "OTP 인증" }];
 
-export default function OtpCompletePage() {
+const formSchema = z.object({
+  email: z.string().email(),
+  otp: z.string().min(6).max(6),
+});
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  const formData = await request.formData();
+  const { data, success, error } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!success) {
+    return {
+      fieldErrors: error.flatten().fieldErrors,
+    };
+  }
+
+  const { email, otp } = data;
+  const { client, headers } = makeSSRClient(request);
+  const { error: verifyError } = await client.auth.verifyOtp({
+    email,
+    token: otp,
+    type: "email",
+  });
+
+  if (verifyError) {
+    return {
+      verifyError: verifyError.message,
+    };
+  }
+  return redirect("/", { headers });
+};
+
+export default function OtpCompletePage({ actionData }: Route.ComponentProps) {
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+  const navigation = useNavigation();
+  const isSubmitting =
+    navigation.state === "submitting" || navigation.state === "loading";
+
   return (
     <div className='flex flex-col relative items-center justify-center h-full'>
       <div className='flex items-center flex-col justify-center w-full max-w-md gap-10'>
@@ -15,15 +56,21 @@ export default function OtpCompletePage() {
             인증 코드를 입력해주세요.
           </p>
         </div>
-        <Form className='w-full space-y-4'>
+        <Form className='w-full space-y-4' method='post'>
           <InputPair
             id='email'
             label='Email'
             description='이메일을 입력해주세요'
             name='email'
+            defaultValue={email || ""}
             type='email'
             placeholder='ex) wemake@gmail.com'
           />
+          {actionData && actionData.fieldErrors && (
+            <p className='text-red-500 text-sm'>
+              {actionData.fieldErrors?.email?.join(",")}
+            </p>
+          )}
           <InputPair
             id='otp'
             label='OTP'
@@ -32,8 +79,21 @@ export default function OtpCompletePage() {
             type='text'
             placeholder='ex) 123456'
           />
-          <Button className='w-full' type='submit'>
-            Log in
+          {actionData && "fieldErrors" in actionData && (
+            <p className='text-red-500 text-sm'>
+              {actionData.fieldErrors?.otp?.join(",")}
+            </p>
+          )}
+
+          {actionData && "verifyError" in actionData && (
+            <p className='text-sm text-red-500'>{actionData.verifyError}</p>
+          )}
+          <Button className='w-full' type='submit' disabled={isSubmitting}>
+            {isSubmitting ? (
+              <LoaderCircle className='animate-spin' />
+            ) : (
+              "Verify OTP"
+            )}
           </Button>
         </Form>
       </div>
