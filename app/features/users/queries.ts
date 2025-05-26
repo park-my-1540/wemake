@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "database.types";
+import { redirect } from "react-router";
 
 const productListSelect = `
   product_id,
@@ -69,3 +70,15 @@ export const getUserPosts = async (
   if (error) throw error;
   return data;
 };
+
+export const getLoggedInUserId = async (client: SupabaseClient) => {
+  const { data, error } = await client.auth.getUser();
+  if (error || data.user === null) {
+    throw redirect("/auth/login");
+  }
+  return data.user.id;
+};
+
+/**
+ * DB에서 데이터를 가져오는것.
+ */

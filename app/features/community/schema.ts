@@ -25,12 +25,16 @@ export const posts = pgTable("posts", {
   upvotes: bigint({ mode: "number" }).default(0),
   created_at: timestamp().notNull().defaultNow(),
   updated_at: timestamp().notNull().defaultNow(),
-  topic_id: bigint({ mode: "number" }).references(() => topics.topic_id, {
-    onDelete: "cascade",
-  }),
-  profile_id: uuid().references(() => profiles.profile_id, {
-    onDelete: "cascade",
-  }),
+  topic_id: bigint({ mode: "number" })
+    .references(() => topics.topic_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  profile_id: uuid()
+    .references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
 });
 
 // 어떤 유저의 좋아요를 받은 post를 참조하고 좋아요를 누른 유저를 참조
