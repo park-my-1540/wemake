@@ -7,11 +7,8 @@ import { DateTime } from "luxon";
 import { JOB_LOCATION_MAP, JOB_TYPE_MAP } from "../constants";
 import { makeSSRClient } from "~/supa-client";
 
-export const meta: Route.MetaFunction = () => {
-  return [
-    { title: "채용 상세" },
-    { name: "description", content: "채용 정보 상세 내용을 확인하세요" },
-  ];
+export const meta: Route.MetaFunction = ({ data }) => {
+  return [{ title: `${data.jobs.position}` }];
 };
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { client, headers } = makeSSRClient(request);
@@ -73,7 +70,7 @@ export default function JobPage({ loaderData }: Route.ComponentProps) {
           <div className='space-y-2.5'>
             <h4 className='text-2xl font-bold'>스킬</h4>
             <ul className='text-lg list-disc list-inside'>
-              {loaderData.jobs.skills.map((item) => (
+              {loaderData.jobs.skills.split(",").map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>

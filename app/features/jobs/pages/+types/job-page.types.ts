@@ -13,7 +13,7 @@ export namespace Route {
     description: string;
     requirements: string[];
     benefits: string;
-    skills: string[];
+    skills: string;
     postedAt: string;
     salary_range: string;
     salary: string;
