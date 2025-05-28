@@ -3,25 +3,13 @@ import type { Route } from "./+types/profile-page";
 import { makeSSRClient } from "~/supa-client";
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  // const user = await getUserPosts(params.username);
   const { client, headers } = makeSSRClient(request);
-  try {
-    const { error } = await client.rpc("track_event", {
-      event_type: "profile_view",
-      event_data: {
-        username: params.username,
-      },
-    });
-
-    if (error) {
-      console.error("RPC 호출 에러:", error.message);
-    } else {
-      console.log("이벤트 기록 성공");
-    }
-  } catch (err) {
-    console.error("예상치 못한 에러:", err);
-  }
-
+  await client.rpc("track_event", {
+    event_type: "profile_view",
+    event_data: {
+      username: params.username,
+    },
+  });
   return null;
 };
 
