@@ -1,5 +1,4 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "database.types";
 import { z } from "zod";
 import type { formSchema } from "./pages/submit-team-page";
 
@@ -26,4 +25,29 @@ export const createTeam = async (
     throw error;
   }
   return data;
+};
+
+/**
+ * topLevelId
+ * o -> set parent_id === topLevelId
+ * x -> set post_id
+ */
+export const createReply = async (
+  client: SupabaseClient,
+  {
+    postId,
+    reply,
+    userId,
+    topLevelId,
+  }: { postId: number; reply: string; userId: string; topLevelId?: number }
+) => {
+  const { data, error } = await client.from("post_replies").insert({
+    ...(topLevelId ? { parent_id: topLevelId } : { post_id: Number(postId) }),
+    reply,
+    profile_id: userId,
+  });
+
+  if (error) {
+    throw error;
+  }
 };

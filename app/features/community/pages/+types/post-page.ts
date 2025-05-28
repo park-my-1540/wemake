@@ -1,8 +1,15 @@
+import { boolean } from "drizzle-orm/gel-core";
 import type { MetaFunction as RouterMetaFunction } from "react-router";
 
 export namespace Route {
   export type MetaFunction = RouterMetaFunction;
   export type LoaderArgs = {
+    request: Request;
+    params: {
+      postId: number;
+    };
+  };
+  export type ActionArgs = {
     request: Request;
     params: {
       postId: number;
@@ -27,6 +34,9 @@ export namespace Route {
         replies: string;
       };
       replies: Replies[];
+    };
+    actionData: {
+      ok: boolean;
     };
   };
 }

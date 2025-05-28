@@ -1,6 +1,6 @@
 import type { Route } from "./+types/post-page";
 import { Button } from "~/components/ui/button";
-import { Form, Link } from "react-router";
+import { Form, Link, useNavigation, useOutletContext } from "react-router";
 import { makeSSRClient } from "~/supa-client";
 import {
   Breadcrumb,
@@ -9,26 +9,82 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { ChevronUpIcon, DotIcon } from "lucide-react";
+import { ChevronUpIcon, DotIcon, LoaderCircle } from "lucide-react";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Reply } from "~/features/community/components/reply";
 import { getPostById, getReplies } from "../queries";
 import { DateTime } from "luxon";
+import { getLoggedInUserId } from "~/features/users/queries";
+import { z } from "zod";
+import { createReply } from "~/features/teams/mutations";
+import { useEffect, useRef } from "react";
 
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `title: ${params.postId}` },
 ];
 
+export const formSchema = z.object({
+  reply: z.string().min(1),
+  topLevelId: z.coerce.number().optional(),
+});
+
+export const action = async ({ request, params }: Route.ActionArgs) => {
+  const { client } = makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const formData = await request.formData();
+  const { success, error, data } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!success) {
+    return {
+      formErrors: error.flatten().fieldErrors,
+    };
+  }
+
+  const { reply, topLevelId } = data;
+  await createReply(client, {
+    postId: Number(params.postId),
+    reply,
+    userId,
+    topLevelId,
+  });
+  return {
+    ok: true,
+  };
+};
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { client, headers } = makeSSRClient(request);
-  const post = await getPostById(client, { postId: params.postId });
-  const replies = await getReplies(client, { postId: params.postId });
+  const { client } = makeSSRClient(request);
+
+  const [post, replies] = await Promise.all([
+    getPostById(client, { postId: params.postId }),
+    getReplies(client, { postId: params.postId }),
+  ]);
+
   return { post, replies };
 };
 
-export default function PostPage({ loaderData }: Route.ComponentProps) {
+export default function PostPage({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
+  const { isLoggedIn, name, username, avatar } = useOutletContext<{
+    isLoggedIn: boolean;
+    name?: string;
+    username?: string;
+    avatar?: string;
+  }>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const navigation = useNavigation();
+  const isSubmitting =
+    navigation.state === "submitting" || navigation.state === "loading";
+
+  useEffect(() => {
+    formRef.current?.reset();
+  }, [actionData?.ok]);
+
   return (
     <div className='space-y-10'>
       <Breadcrumb>
@@ -78,36 +134,54 @@ export default function PostPage({ loaderData }: Route.ComponentProps) {
                   {loaderData.post.content}
                 </p>
               </div>
-              <Form className='flex items-start gap-5 w-3/4'>
-                <Avatar className='size-14'>
-                  <AvatarFallback>
-                    {loaderData.post.author_name[0]}
-                  </AvatarFallback>
-                  {loaderData.post.author_avatar ? (
-                    <AvatarImage src={loaderData.post.author_avatar} />
-                  ) : null}
-                </Avatar>
-                <div className='w-full flex flex-col gap-5 items-end'>
-                  <Textarea
-                    placeholder='댓글을 입력하세요.'
-                    className='resize-none w-full'
-                    rows={5}
-                  />
-                  <Button type='submit'>댓글 작성</Button>
-                </div>
-              </Form>
+
+              {isLoggedIn ? (
+                <Form
+                  ref={formRef}
+                  className='flex items-start gap-5 w-3/4'
+                  method='post'
+                >
+                  <Avatar className='size-14'>
+                    <AvatarFallback>{name?.[0]}</AvatarFallback>
+                    {avatar ? <AvatarImage src={avatar} /> : null}
+                  </Avatar>
+                  <div className='w-full flex flex-col gap-5 items-end'>
+                    <Textarea
+                      name='reply'
+                      placeholder='댓글을 입력하세요.'
+                      className='resize-none w-full'
+                      rows={5}
+                    />
+                    <Button type='submit' disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <LoaderCircle className='animate-spin' />
+                      ) : (
+                        "댓글 작성"
+                      )}
+                    </Button>
+                  </div>
+                </Form>
+              ) : (
+                <p className='text-muted-foreground'>
+                  댓글을 달려면 로그인하세요.
+                </p>
+              )}
+
               <div className='space-y-10'>
                 <h4 className='font-semibold'>
                   {loaderData.post.replies}개의 댓글
                 </h4>
                 <div className='flex flex-col gap-5'>
-                  {loaderData.replies.map((reply) => (
+                  {loaderData.replies.map((reply, index) => (
                     <Reply
-                      username={reply.user.name}
+                      key={index}
+                      name={reply.user.name}
+                      username={reply.user.username}
                       avatarUrl={reply.user.avatar}
                       content={reply.reply}
                       timestamp={reply.created_at}
                       topLevel={true}
+                      topLevelId={reply.post_reply_id}
                       replies={reply.post_replies}
                     />
                   ))}

@@ -90,7 +90,14 @@ export default function App({ loaderData }: Route.ComponentProps) {
           hasMessages={1}
         />
       )}
-      <Outlet />
+      <Outlet
+        context={{
+          isLoggedIn,
+          username: loaderData.profile?.username,
+          name: loaderData.profile?.name,
+          avatar: loaderData.profile?.avatar,
+        }}
+      />
     </div>
   );
 }
