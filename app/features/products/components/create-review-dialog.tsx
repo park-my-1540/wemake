@@ -1,9 +1,7 @@
 import { Button } from "~/components/ui/button";
-
 import { Form } from "react-router";
 import InputPair from "~/common/components/input-pair";
 import {
-  Dialog,
   DialogTitle,
   DialogHeader,
   DialogContent,
@@ -12,16 +10,23 @@ import {
 import { Label } from "~/components/ui/label";
 import { StarIcon } from "lucide-react";
 import { useState } from "react";
+import { z } from "zod";
+
+export const formSchema = z.object({
+  rating: z.number().min(1).max(5),
+  reviews: z.string(),
+});
 
 export function CreateReviewDialog() {
   const [rating, setRating] = useState<number>(0);
   const [hoverStart, setHoverStar] = useState<number>(0);
+
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>이 상품에 대해서 어떻게 생각하세요?</DialogTitle>
       </DialogHeader>
-      <Form className='space-y-10'>
+      <Form className='space-y-10' method='post'>
         <div>
           <Label className='flex flex-col gap-2'>
             Rating{" "}
@@ -46,6 +51,8 @@ export function CreateReviewDialog() {
                   }
                 />
                 <input
+                  name='rating'
+                  value={star}
                   className='opacity-0 h-px w-px absolute'
                   onClick={() => setRating(Number(star))}
                 />
@@ -54,6 +61,7 @@ export function CreateReviewDialog() {
           </div>
         </div>
         <InputPair
+          name='review'
           required
           textArea
           label='Review'

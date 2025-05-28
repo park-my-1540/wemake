@@ -172,19 +172,24 @@ export const getProductById = async (
 };
 
 export const getReviews = async (
-  client: SupabaseClient,
+  client: SupabaseClient<Database>,
   { productId }: { productId: number }
 ) => {
-  const { data, error } = await client.from("reviews").select(`
-    review_id,
-    rating,
-    review,
-    created_at,
-    user:profiles!inner(
-      name, username, avatar)
-    `);
-
+  const { data, error } = await client
+    .from("reviews")
+    .select(
+      `
+        review_id,
+        rating,
+        review,
+        created_at,
+        user:profiles!inner (
+          name,username,avatar
+        )
+      `
+    )
+    .eq("product_id", productId)
+    .order("created_at", { ascending: false });
   if (error) throw error;
-
   return data;
 };
