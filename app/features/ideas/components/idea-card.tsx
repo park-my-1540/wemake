@@ -14,15 +14,17 @@ import { cn } from "~/lib/utils";
 interface IdeaCardProps {
   id: string;
   title: string;
-  viewsCount: number;
-  likesCount: number;
-  postedAt: string;
-  claimed: boolean;
+  viewsCount?: number;
+  likesCount?: number;
+  postedAt?: string;
+  claimed?: boolean;
+  owner: boolean;
 }
 
 export function IdeaCard({
   id,
   title,
+  owner,
   viewsCount,
   likesCount,
   postedAt,
@@ -31,7 +33,7 @@ export function IdeaCard({
   return (
     <Card className='bg-transparent hover:bg-card/50 transition-colors'>
       <CardHeader>
-        <Link to={`/ideas/${id}`}>
+        <Link to={claimed || owner ? "" : `/ideas/${id}`}>
           <CardTitle className='text-xl'>
             <span
               className={cn(
@@ -45,27 +47,33 @@ export function IdeaCard({
           </CardTitle>
         </Link>
       </CardHeader>
-      <CardContent className='flex items-center text-sm'>
-        <div className='flex items-center gap-2'>
-          <EyeIcon className='w-4 h-4' />
-          <span>{viewsCount} views</span>
-        </div>
-        <DotIcon className='w-4 h-4' />
-        <span>{DateTime.fromISO(postedAt).toRelative()}</span>
-      </CardContent>
+      {owner ? null : (
+        <CardContent className='flex items-center text-sm'>
+          <div className='flex items-center gap-2'>
+            <EyeIcon className='w-4 h-4' />
+            <span>{viewsCount} views</span>
+          </div>
+          <DotIcon className='w-4 h-4' />
+          {postedAt ? (
+            <span>{DateTime.fromISO(postedAt).toRelative()}</span>
+          ) : null}
+        </CardContent>
+      )}
       <CardFooter className='flex justify-end gap-2'>
-        <Button variant='outline'>
-          <HeartIcon className='w-4 h-4' />
-          <span>{likesCount}</span>
-        </Button>
-        {!claimed ? (
-          <Button asChild>
-            <Link to={`/ideas/${id}`}>아이디어 선점하기 &rarr;</Link>
-          </Button>
+        {!claimed && !owner ? (
+          <>
+            <Button variant='outline'>
+              <HeartIcon className='w-4 h-4' />
+              <span>{likesCount}</span>
+            </Button>
+            <Button asChild>
+              <Link to={`/ideas/${id}`}>아이디어 선점하기 &rarr;</Link>
+            </Button>
+          </>
         ) : (
-          <Button variant='outline' className='cursor-not-allowed'>
+          <Button variant='outline' className='cursor-not-allowed' disabled>
             <LockIcon className='w-4 h-4' />
-            Claimed
+            선점됨
           </Button>
         )}
       </CardFooter>

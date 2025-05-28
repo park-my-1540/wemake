@@ -19,6 +19,12 @@ export namespace Route {
       ideaId: number;
     };
   }
+  export interface ActionArgs {
+    request: Request;
+    params: {
+      ideaId: number;
+    };
+  }
 
   export interface LoaderData {
     ideas: Idea;
