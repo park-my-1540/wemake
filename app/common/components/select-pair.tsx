@@ -14,12 +14,14 @@ export default function SelectPair({
   description,
   placeholder,
   options,
+  defaultValue,
 }: {
   label: string;
   description: string;
   name: string;
   required?: boolean;
   placeholder: string;
+  defaultValue?: string;
   options: {
     label: string;
     value: string;
@@ -38,6 +40,7 @@ export default function SelectPair({
         required={required}
         open={open}
         onOpenChange={setOpen}
+        defaultValue={defaultValue}
       >
         <SelectTrigger>
           <SelectValue placeholder={placeholder} />

@@ -33,7 +33,7 @@ export const getUserProfileById = async (
     .from("profiles")
     .select(
       `
-        profile_id,name,username,avatar`
+        profile_id, name, username, avatar, headline, bio, role`
     )
     .eq("profile_id", id)
     .single();

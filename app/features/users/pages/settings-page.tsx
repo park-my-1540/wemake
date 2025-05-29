@@ -6,10 +6,58 @@ import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { useState } from "react";
+import { makeSSRClient } from "~/supa-client";
+import { getLoggedInUserId, getUserProfileById } from "../queries";
+import { z } from "zod";
+import { updateUser } from "../mutations";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 export const meta: Route.MetaFunction = () => [{ title: "Settings" }];
 
-export default function SettingsPage() {
+export const formSchema = z.object({
+  name: z.string().min(1),
+  role: z.string(),
+  headline: z.string().optional().default(""),
+  bio: z.string().optional().default(""),
+});
+export const action = async ({ request }: Route.ActionArgs) => {
+  const { client } = makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const formData = await request.formData();
+
+  const { success, data, error } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+
+  if (!success) {
+    return {
+      fieldErrors: error.flatten().fieldErrors,
+    };
+  }
+  const { name, role, headline, bio } = data;
+  await updateUser(client, {
+    id: userId,
+    name,
+    role: role as "developer" | "designer" | "marketer" | "product-manager",
+    headline,
+    bio,
+  });
+  return {
+    ok: true,
+  };
+};
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const { client } = makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const user = await getUserProfileById(client, { id: userId });
+
+  return { user };
+};
+export default function SettingsPage({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
   const [avatar, setAvatar] = useState<string | null>(null);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -21,8 +69,14 @@ export default function SettingsPage() {
     <div className='space-y-20 '>
       <div className='grid grid-cols-6 gap-40'>
         <div className='col-span-4 flex flex-col gap-10'>
+          {actionData?.ok ? (
+            <Alert>
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>프로필이 업데이트 되었습니다.</AlertDescription>
+            </Alert>
+          ) : null}
           <h2 className='text-2xl font-semibold'>Edit profile</h2>
-          <Form className='flex flex-col w-1/2 gap-5'>
+          <Form className='flex flex-col w-1/2 gap-5' method='post'>
             <InputPair
               label='Name'
               description='Your public name'
@@ -30,18 +84,20 @@ export default function SettingsPage() {
               id='name'
               name='name'
               placeholder='John Doe'
+              defaultValue={loaderData.user.name ?? ""}
             />
+            {}
             <SelectPair
               label='Role'
               description='어떤 역할이 가장 잘맞다고 생각하시나요?'
               name='role'
+              defaultValue={loaderData.user.role ?? ""}
               placeholder='Select a role'
               options={[
                 { label: "Developer", value: "developer" },
                 { label: "Designer", value: "designer" },
                 { label: "Product Manager", value: "product-manager" },
-                { label: "Founder", value: "founder" },
-                { label: "Other", value: "other" },
+                { label: "Marketer", value: "marketer" },
               ]}
             />
             <InputPair
@@ -49,6 +105,7 @@ export default function SettingsPage() {
               description='프로필에 대한 소개글.'
               required
               id='headline'
+              defaultValue={loaderData.user.headline ?? ""}
               name='headline'
               placeholder='John Doe'
               textArea
@@ -60,6 +117,7 @@ export default function SettingsPage() {
               id='bio'
               name='bio'
               placeholder='John Doe'
+              defaultValue={loaderData.user.bio ?? ""}
               textArea
             />
             <Button className='w-full'>프로필 수정하기</Button>
