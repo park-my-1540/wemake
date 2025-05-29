@@ -1,4 +1,5 @@
 import type { Route } from "./+types/post-page";
+import { useEffect, useRef } from "react";
 import { Button } from "~/components/ui/button";
 import { Form, Link, useNavigation, useOutletContext } from "react-router";
 import { makeSSRClient } from "~/supa-client";
@@ -19,13 +20,12 @@ import { DateTime } from "luxon";
 import { getLoggedInUserId } from "~/features/users/queries";
 import { z } from "zod";
 import { createReply } from "~/features/teams/mutations";
-import { useEffect, useRef } from "react";
 
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `title: ${params.postId}` },
 ];
 
-export const formSchema = z.object({
+const formSchema = z.object({
   reply: z.string().min(1),
   topLevelId: z.coerce.number().optional(),
 });

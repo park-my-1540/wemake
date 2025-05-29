@@ -22,7 +22,7 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-export const formSchema = z.object({
+const formSchema = z.object({
   name: z.string().min(1),
   tagline: z.string().min(1),
   url: z.string().min(1),

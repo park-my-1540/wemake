@@ -16,7 +16,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const { client, headers } = makeSSRClient(request);
   await getLoggedInUserId(client);
 };
-export const formSchema = z.object({
+const formSchema = z.object({
   name: z.string().min(1).max(20),
   stage: z.string(),
   size: z.coerce.number().min(1).max(100),

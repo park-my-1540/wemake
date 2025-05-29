@@ -12,7 +12,7 @@ import { StarIcon } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 
-export const formSchema = z.object({
+const formSchema = z.object({
   rating: z.number().min(1).max(5),
   reviews: z.string(),
 });

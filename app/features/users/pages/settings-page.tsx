@@ -14,7 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 export const meta: Route.MetaFunction = () => [{ title: "Settings" }];
 
-export const formSchema = z.object({
+const formSchema = z.object({
   name: z.string().min(1),
   role: z.string(),
   headline: z.string().optional().default(""),
@@ -25,7 +25,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const { client } = makeSSRClient(request);
   const userId = await getLoggedInUserId(client);
   const formData = await request.formData();
-
   const avatar = formData.get("avatar");
 
   if (avatar && avatar instanceof File) {

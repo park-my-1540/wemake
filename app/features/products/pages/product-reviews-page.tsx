@@ -18,7 +18,7 @@ export function meta() {
     { name: "description", content: "View all reviews for this product" },
   ];
 }
-export const formSchema = z.object({
+const formSchema = z.object({
   rating: z.coerce.number().min(1).max(5),
   review: z.string().min(1),
 });
