@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Textarea } from "~/components/ui/textarea";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { action } from "../pages/post-page";
+import type { action } from "../pages/post-page";
 interface ReplyProps {
   name: string;
   username: string;
