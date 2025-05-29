@@ -9,7 +9,7 @@ import { useState } from "react";
 import { makeSSRClient } from "~/supa-client";
 import { getLoggedInUserId, getUserProfileById } from "../queries";
 import { z } from "zod";
-import { updateUser } from "../mutations";
+import { updateUser, updateUserAvatar } from "../mutations";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 export const meta: Route.MetaFunction = () => [{ title: "Settings" }];
@@ -20,33 +20,55 @@ export const formSchema = z.object({
   headline: z.string().optional().default(""),
   bio: z.string().optional().default(""),
 });
+
 export const action = async ({ request }: Route.ActionArgs) => {
   const { client } = makeSSRClient(request);
   const userId = await getLoggedInUserId(client);
   const formData = await request.formData();
 
-  const { success, data, error } = formSchema.safeParse(
-    Object.fromEntries(formData)
-  );
+  const avatar = formData.get("avatar");
 
-  if (!success) {
+  if (avatar && avatar instanceof File) {
+    if (avatar.size <= 2097152 && avatar.type.startsWith("image/")) {
+      const { data, error } = await client.storage
+        .from("avatars")
+        .upload(`${userId}/${Date.now()}`, avatar, {
+          contentType: avatar.type,
+          upsert: false,
+        });
+      if (error) {
+        return { formErrors: { avatar: ["Failed to upload avatar"] } };
+      }
+      const {
+        data: { publicUrl },
+      } = await client.storage.from("avatars").getPublicUrl(data.path);
+      await updateUserAvatar(client, {
+        id: userId,
+        avatarUrl: publicUrl,
+      });
+    } else {
+      return { formErrors: { avatar: ["Invalid file size or type"] } };
+    }
+  } else {
+    const { success, error, data } = formSchema.safeParse(
+      Object.fromEntries(formData)
+    );
+    if (!success) {
+      return { formErrors: error.flatten().fieldErrors };
+    }
+    const { name, role, headline, bio } = data;
+    await updateUser(client, {
+      id: userId,
+      name,
+      role: role as "developer" | "designer" | "marketer" | "product-manager",
+      headline,
+      bio,
+    });
     return {
-      fieldErrors: error.flatten().fieldErrors,
+      ok: true,
     };
   }
-  const { name, role, headline, bio } = data;
-  await updateUser(client, {
-    id: userId,
-    name,
-    role: role as "developer" | "designer" | "marketer" | "product-manager",
-    headline,
-    bio,
-  });
-  return {
-    ok: true,
-  };
 };
-
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
   const userId = await getLoggedInUserId(client);
@@ -58,7 +80,7 @@ export default function SettingsPage({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(loaderData.user.avatar);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -123,7 +145,11 @@ export default function SettingsPage({
             <Button className='w-full'>프로필 수정하기</Button>
           </Form>
         </div>
-        <aside className='col-span-2 p-6 rounded-lg border shadow-md'>
+        <Form
+          className='col-span-2 p-6 rounded-lg border shadow-md'
+          method='post'
+          encType='multipart/form-data'
+        >
           <Label className='flex flex-col gap-1'>Avatar</Label>
           <div className='space-y-5'>
             <div className='size-40 rounded-full shadow-xl overflow-hidden '>
@@ -136,8 +162,16 @@ export default function SettingsPage({
               className='w-full'
               onChange={onChange}
               required
-              name='icon'
+              name='avatar'
             />
+            {actionData?.formErrors && "avatar" in actionData?.formErrors ? (
+              <Alert>
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  {actionData.formErrors.avatar.join(", ")}
+                </AlertDescription>
+              </Alert>
+            ) : null}
             <div className='flex flex-col text-xs'>
               <span className=' text-muted-foreground'>
                 Recommended size: 128x128px
@@ -149,7 +183,7 @@ export default function SettingsPage({
             </div>
             <Button className='w-full'>프로필 이미지 수정하기</Button>
           </div>
-        </aside>
+        </Form>
       </div>
     </div>
   );

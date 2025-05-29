@@ -20,3 +20,46 @@ export const createProductReview = async (
     throw error;
   }
 };
+
+export const updateProductIcon = async (
+  client: SupabaseClient,
+  {
+    id,
+    name,
+    tagline,
+    url,
+    description,
+    category_id,
+    how_it_works,
+    iconUrl,
+  }: {
+    id: string;
+    iconUrl: string;
+    name: string;
+    tagline: string;
+    url: string;
+    description: string;
+    category_id: number;
+    how_it_works: string;
+  }
+) => {
+  const { data, error } = await client
+    .from("products")
+    .insert({
+      profile_id: id,
+      icon: iconUrl,
+      name,
+      tagline,
+      url,
+      description,
+      category_id,
+      how_it_works,
+    })
+    .select("product_id")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data.product_id;
+};

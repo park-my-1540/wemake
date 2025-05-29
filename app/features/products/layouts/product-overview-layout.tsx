@@ -41,16 +41,24 @@ interface Product {
   reviews: number;
   upvotes: number;
   how_it_works: string;
+  icon: string;
 }
 
 export default function ProductOverviewLayout({
   loaderData,
 }: ProductOverviewProps) {
+  console.log(loaderData);
   return (
     <div className='space-y-10'>
       <div className='flex justify-between'>
         <div className='flex gap-10'>
-          <div className='size-40 rounded-xl shadow-xl bg-primary/50'></div>
+          <div className='size-40 rounded-xl shadow-xl bg-white overflow-hidden'>
+            <img
+              src={loaderData.product.icon}
+              alt={loaderData.product.name}
+              className='size-full object-cover'
+            />
+          </div>
           <div>
             <h1 className='text-5xl font-bold'>{loaderData.product.name}</h1>
             <p className='text-2xl font-light'>{loaderData.product.tagline}</p>
