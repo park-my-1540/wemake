@@ -18,7 +18,9 @@ export namespace Route {
         topic: string;
         avatar: string;
         author: string;
-        author_url: string;
+        author_avatar: string;
+        is_upvoted: boolean;
+        isUpvoted: boolean;
         upvotes: number;
       }>;
     };

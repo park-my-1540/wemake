@@ -62,6 +62,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const sorting = searchParams.get("sorting") || "newest";
   const period = searchParams.get("period") || "전체";
+
   return (
     <div>
       <HeroSection
@@ -143,10 +144,11 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
                 key={post.post_id}
                 title={post.title}
                 author={post.author}
-                authorAvatarUrl={post.author_url}
+                authorAvatarUrl={post.author_avatar}
                 category={post.topic}
                 postedAt={post.created_at}
                 votesCount={post.upvotes}
+                isUpvoted={post.is_upvoted}
                 expanded={true}
               />
             ))}
