@@ -1,7 +1,13 @@
 import type { Route } from "./+types/post-page";
 import { useEffect, useRef } from "react";
 import { Button } from "~/components/ui/button";
-import { Form, Link, useNavigation, useOutletContext } from "react-router";
+import {
+  Form,
+  Link,
+  useFetcher,
+  useNavigation,
+  useOutletContext,
+} from "react-router";
 import { makeSSRClient } from "~/supa-client";
 import {
   Breadcrumb,
@@ -80,7 +86,7 @@ export default function PostPage({
   const navigation = useNavigation();
   const isSubmitting =
     navigation.state === "submitting" || navigation.state === "loading";
-
+  const fetcher = useFetcher();
   useEffect(() => {
     formRef.current?.reset();
   }, [actionData?.ok]);
@@ -114,10 +120,15 @@ export default function PostPage({
       <div className='grid grid-cols-6 gap-40 items-start'>
         <div className='col-span-4 space-y-10'>
           <div className='flex w-full items-start gap-10'>
-            <Button variant='outline' className='flex flex-col h-14'>
-              <ChevronUpIcon className='size-4 shrink-0' />
-              <span>{loaderData.post.upvotes}</span>
-            </Button>
+            <fetcher.Form
+              method='post'
+              action={`/community/${loaderData.post.post_id}/upvote`}
+            >
+              <Button variant='outline' className='flex flex-col h-14'>
+                <ChevronUpIcon className='size-4 shrink-0' />
+                <span>{loaderData.post.upvotes}</span>
+              </Button>
+            </fetcher.Form>
             <div className='space-y-20 w-full'>
               <div className='space-y-2'>
                 <h2 className='text-3xl font-bold'>{loaderData.post.title}</h2>

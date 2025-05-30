@@ -1,20 +1,20 @@
 import { cn } from "~/lib/utils";
 import { ChevronUpIcon, DotIcon } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useFetcher } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { DateTime } from "luxon";
 interface PostCardProps {
-  id: number | null;
-  title: string | null;
+  id: number;
+  title: string;
   author: string;
-  authorAvatarUrl: string | null;
-  category: string | null;
+  authorAvatarUrl: string;
+  category: string;
   postedAt: string;
-  expanded?: boolean | null;
-  votesCount?: number | null;
-  isUpvoted?: boolean | null;
+  expanded?: boolean;
+  votesCount?: number;
+  isUpvoted?: boolean;
 }
 
 export function PostCard({
@@ -25,9 +25,28 @@ export function PostCard({
   category,
   postedAt,
   expanded = false,
-  isUpvoted,
+  isUpvoted = false,
   votesCount = 0,
 }: PostCardProps) {
+  const fetcher = useFetcher();
+
+  const optimisitcVotesCount =
+    fetcher.state === "idle"
+      ? votesCount
+      : isUpvoted
+        ? votesCount - 1
+        : votesCount + 1;
+
+  const optimisitcIsUpvoted = fetcher.state === "idle" ? isUpvoted : !isUpvoted;
+
+  const absorbClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    fetcher.submit(null, {
+      method: "POST",
+      action: `/community/${id}/upvote`,
+    });
+  };
+
   return (
     <Link to={`/community/${id}`} className='block'>
       <Card
@@ -59,14 +78,15 @@ export function PostCard({
         {expanded && (
           <CardFooter className='flex justify-end pt-0 pb-0'>
             <Button
+              onClick={absorbClick}
               variant='outline'
               className={cn(
                 "flex flex-col h-14",
-                isUpvoted ? "border-primary text-primary" : ""
+                optimisitcIsUpvoted ? "border-primary text-primary" : ""
               )}
             >
               <ChevronUpIcon className='size-4 shrink-0' />
-              <span>{votesCount}</span>
+              <span>{optimisitcVotesCount}</span>
             </Button>
           </CardFooter>
         )}
