@@ -6,37 +6,68 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Form } from "react-router";
+import { Form, useOutletContext } from "react-router";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { SendIcon } from "lucide-react";
 import { MessageBubble } from "../components/message-bubble";
+import { makeSSRClient } from "~/supa-client";
+import {
+  getLoggedInUserId,
+  getMessagesByMessagesRoomId,
+  getRoomsParticipants,
+} from "../queries";
+
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `Message: ${params.messageId}` },
 ];
 
-export default function MessagePage() {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
+  const { client } = await makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const messages = await getMessagesByMessagesRoomId(client, {
+    messageRoomId: params.messageRoomId,
+    userId,
+  });
+  const participants = await getRoomsParticipants(client, {
+    messageRoomId: params.messageRoomId,
+    userId,
+  });
+
+  return {
+    messages,
+    participants,
+  };
+};
+
+export default function MessagePage({ loaderData }: Route.ComponentProps) {
+  const { userId } = useOutletContext<{ userId: string }>();
   return (
     <div className='h-full flex flex-col justify-between'>
       <Card>
         <CardHeader className='flex flex-row items-center gap-4'>
           <Avatar className='size-12'>
-            <AvatarImage src='https://github.com/nico.png' />
-            <AvatarFallback>N</AvatarFallback>
+            <AvatarImage src={loaderData.participants?.profile?.avatar ?? ""} />
+            <AvatarFallback>
+              {loaderData.participants?.profile?.name?.charAt(0) ?? ""}
+            </AvatarFallback>
           </Avatar>
           <div className='flex flex-col gap-1'>
-            <CardTitle>Nico</CardTitle>
+            <CardTitle className='text-xl'>
+              {loaderData.participants?.profile?.name ?? ""}
+            </CardTitle>
             <CardDescription>2일전</CardDescription>
           </div>
         </CardHeader>
       </Card>
-      <div className='py-10 overflow-y-auto flex flex-col justify-start h-full'>
-        {Array.from({ length: 1 }).map((_, index) => (
+      <div className='py-10 overflow-y-auto space-y-4 flex flex-col justify-start h-full'>
+        {loaderData.messages.map((message) => (
           <MessageBubble
-            avatarUrl='https://github.com/nico.png'
-            name='Nico'
-            content='this is a message from Nico'
-            isCurrentUser={index % 2 === 0}
+            key={message.message_id}
+            avatarUrl={message.sender.avatar}
+            name={message.sender.name}
+            content={message.content}
+            isCurrentUser={message.sender.profile_id === userId}
           />
         ))}
       </div>

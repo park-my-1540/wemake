@@ -92,13 +92,14 @@ export default function App({ loaderData }: Route.ComponentProps) {
           avatar={loaderData.profile?.avatar}
           name={loaderData.profile?.name}
           isLoggedIn={isLoggedIn}
-          hasNotifications={loaderData.count > 0}
+          hasNotifications={Number(loaderData.count) > 0}
           hasMessages={Number(loaderData.count)}
         />
       )}
       <Outlet
         context={{
           isLoggedIn,
+          userId: loaderData.user?.id,
           username: loaderData.profile?.username,
           name: loaderData.profile?.name,
           avatar: loaderData.profile?.avatar,

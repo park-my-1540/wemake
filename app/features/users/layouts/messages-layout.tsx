@@ -5,7 +5,7 @@ import {
   SidebarMenu,
   SidebarProvider,
 } from "~/components/ui/sidebar";
-import { Outlet } from "react-router";
+import { Outlet, useOutletContext } from "react-router";
 import { MessageCard } from "../components/message-card";
 import type { Route } from "./+types/messages-layout";
 import { makeSSRClient } from "~/supa-client";
@@ -21,6 +21,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function MessagesLayout({ loaderData }: Route.ComponentProps) {
+  const { userId } = useOutletContext<{ userId: string }>();
   return (
     <SidebarProvider className='max-h-[calc(100vh-14rem)] h-[calc(100vh-14rem)] overflow-hidden min-h-full'>
       <Sidebar className='pt-16'>
@@ -41,7 +42,7 @@ export default function MessagesLayout({ loaderData }: Route.ComponentProps) {
         </SidebarContent>
       </Sidebar>
       <div className='w-full h-full'>
-        <Outlet />
+        <Outlet context={{ userId }} />
       </div>
     </SidebarProvider>
   );

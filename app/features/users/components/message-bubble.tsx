@@ -32,8 +32,8 @@ export function MessageBubble({
         className={cn(
           "rounded-md p-4 text-sm w-1/4",
           isCurrentUser
-            ? "bg-primary text-primary-foreground rounded-br-none"
-            : "bg-accent rounded-bl-none"
+            ? "bg-accent  rounded-bl-none"
+            : "bg-primary text-primary-foreground rounded-bl-none"
         )}
       >
         <p>{content}</p>
