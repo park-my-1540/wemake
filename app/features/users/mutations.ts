@@ -113,3 +113,17 @@ export const toggleUpvote = async (
       .eq("profile_id", userId);
   }
 };
+
+export const seeNotification = async (
+  client: SupabaseClient<Database>,
+  { userId, notificationId }: { userId: string; notificationId: string }
+) => {
+  const { error } = await client
+    .from("notifications")
+    .update({ seen: true })
+    .eq("notification_id", Number(notificationId))
+    .eq("target_id", userId);
+  if (error) {
+    throw error;
+  }
+};

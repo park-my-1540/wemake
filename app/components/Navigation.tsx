@@ -151,7 +151,7 @@ export default function Navigation({
   name,
 }: {
   isLoggedIn: boolean;
-  hasNotifications: number;
+  hasNotifications: boolean;
   hasMessages: number;
   username: string;
   avatar: string;

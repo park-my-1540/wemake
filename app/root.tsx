@@ -15,7 +15,11 @@ import Navigation from "./components/navigation";
 import { Settings } from "luxon";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
-import { getUserProfileById } from "./features/users/queries";
+import {
+  countNotifications,
+  getLoggedInUserId,
+  getUserProfileById,
+} from "./features/users/queries";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -53,13 +57,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
+
   const {
     data: { user },
   } = await client.auth.getUser();
 
-  if (user) {
-    const profile = await getUserProfileById(client, { id: user?.id });
-    return { user, profile };
+  if (user && user.id) {
+    const profile = await getUserProfileById(client, { id: user.id });
+    const count = await countNotifications(client, { userId: user.id });
+    return { user, profile, count };
   }
   return {
     user: null,
@@ -86,8 +92,8 @@ export default function App({ loaderData }: Route.ComponentProps) {
           avatar={loaderData.profile?.avatar}
           name={loaderData.profile?.name}
           isLoggedIn={isLoggedIn}
-          hasNotifications={1}
-          hasMessages={1}
+          hasNotifications={loaderData.count > 0}
+          hasMessages={Number(loaderData.count)}
         />
       )}
       <Outlet

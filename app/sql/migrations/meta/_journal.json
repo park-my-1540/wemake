@@ -43,6 +43,13 @@
       "when": 1747369932131,
       "tag": "0005_salty_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748588758388,
+      "tag": "0006_wild_devos",
+      "breakpoints": true
     }
   ]
 }
