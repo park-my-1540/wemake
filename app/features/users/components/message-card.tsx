@@ -36,7 +36,7 @@ export function MessageCard({
             <div className='flex flex-col'>
               <span className='text-sm font-medium'>{name}</span>
               <span className='text-xs text-muted-foreground'>
-                {lastMessage} 12
+                {lastMessage}
               </span>
             </div>
           </div>

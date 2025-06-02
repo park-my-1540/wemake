@@ -223,13 +223,21 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          message_room_id?: never
+          message_room_id?: number
         }
         Update: {
           created_at?: string
-          message_room_id?: never
+          message_room_id?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "message_rooms_message_room_id_fkey"
+            columns: ["message_room_id"]
+            isOneToOne: true
+            referencedRelation: "message_rooms"
+            referencedColumns: ["message_room_id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -287,6 +295,13 @@ export type Database = {
           profile_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "messages_room_members_message_room_id_fkey"
+            columns: ["message_room_id"]
+            isOneToOne: false
+            referencedRelation: "message_rooms"
+            referencedColumns: ["message_room_id"]
+          },
           {
             foreignKeyName: "messages_room_members_profile_id_profiles_profile_id_fk"
             columns: ["profile_id"]
@@ -860,6 +875,39 @@ export type Database = {
           views: number | null
         }
         Relationships: []
+      }
+      messages_view: {
+        Row: {
+          avatar: string | null
+          last_message: string | null
+          message_room_id: number | null
+          name: string | null
+          other_profile_id: string | null
+          profile_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_room_members_message_room_id_fkey"
+            columns: ["message_room_id"]
+            isOneToOne: false
+            referencedRelation: "message_rooms"
+            referencedColumns: ["message_room_id"]
+          },
+          {
+            foreignKeyName: "messages_room_members_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "messages_room_members_profile_id_profiles_profile_id_fk"
+            columns: ["other_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
       }
       product_overview_view: {
         Row: {
