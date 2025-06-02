@@ -179,3 +179,22 @@ export const sendMessage = async (
     return roomData.message_room_id;
   }
 };
+
+export const sendMessageToRoom = async (
+  client: SupabaseClient<Database>,
+  {
+    userId,
+    message,
+    messageRoomId,
+  }: {
+    userId: string;
+    message: string;
+    messageRoomId: number;
+  }
+) => {
+  await client.from("messages").insert({
+    message_room_id: messageRoomId,
+    sender_id: userId,
+    content: message,
+  });
+};

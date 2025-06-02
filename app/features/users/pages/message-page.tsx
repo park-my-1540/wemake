@@ -17,6 +17,9 @@ import {
   getMessagesByMessagesRoomId,
   getRoomsParticipants,
 } from "../queries";
+import { sendMessageToRoom } from "../mutations";
+import { z } from "zod";
+import { useEffect, useRef } from "react";
 
 export const meta: Route.MetaFunction = ({ params }) => [
   { title: `Message: ${params.messageId}` },
@@ -40,7 +43,44 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   };
 };
 
-export default function MessagePage({ loaderData }: Route.ComponentProps) {
+const formSchema = z.object({
+  message: z.string().min(1),
+});
+
+export const action = async ({ request, params }: Route.ActionArgs) => {
+  const { client } = await makeSSRClient(request);
+  const userId = await getLoggedInUserId(client);
+  const formData = await request.formData();
+
+  const { success, data, error } = formSchema.safeParse(
+    Object.fromEntries(formData)
+  );
+  if (!success) {
+    return { formErrors: error.flatten().fieldErrors };
+  }
+
+  await sendMessageToRoom(client, {
+    messageRoomId: Number(params.messageRoomId),
+    userId,
+    message: data.message,
+  });
+  return {
+    ok: true,
+  };
+};
+
+export default function MessagePage({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (actionData?.ok) {
+      formRef.current?.reset();
+    }
+  }, [actionData?.ok]);
+
   const { userId } = useOutletContext<{ userId: string }>();
   return (
     <div className='h-full flex flex-col justify-between'>
@@ -73,11 +113,22 @@ export default function MessagePage({ loaderData }: Route.ComponentProps) {
       </div>
       <Card>
         <CardHeader>
-          <Form className='relative flex justify-end '>
+          <Form
+            className='relative flex justify-end'
+            method='post'
+            ref={formRef}
+          >
             <Textarea
               className='resize-none'
               placeholder='메시지를 입력하세요'
               rows={2}
+              name='message'
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  formRef.current?.requestSubmit();
+                }
+              }}
             />
             <Button
               type='submit'
