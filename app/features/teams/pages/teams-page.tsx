@@ -6,7 +6,7 @@ import { makeSSRClient } from "~/supa-client";
 
 export const meta: Route.MetaFunction = () => [{ title: "Teams" }];
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { client, headers } = makeSSRClient(request);
+  const { client } = makeSSRClient(request);
   const teams = await getTeams(client, { limit: 7 });
   return { teams };
 };
@@ -23,8 +23,8 @@ export default function TeamsPage({ loaderData }: Route.ComponentProps) {
           <TeamCard
             key={team.team_id}
             id={team.team_id}
-            username={team.team_leader[0].username}
-            userAvatarUrl={team.team_leader[0].avatar}
+            username={team.team_leader.username}
+            userAvatarUrl={team.team_leader.avatar}
             roles={team.roles.split(",")}
             productDescription={team.product_description}
           />

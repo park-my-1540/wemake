@@ -101,12 +101,16 @@ export default function TeamPage({ loaderData }: Route.ComponentProps) {
               </Badge>
             </div>
           </div>
-          <Form className='space-y-5'>
+          <Form
+            className='space-y-5'
+            method='post'
+            action={`/users/${loaderData.team.team_leader.username}/messages`}
+          >
             <InputPair
               id='introduction'
               label='자신을 소개해주세요'
               description='당신에 대해서 설명해주세요'
-              name='introduction'
+              name='content'
               type='text'
               placeholder='ex) 저는 3년차 리액트 개발자입니다.'
               required
