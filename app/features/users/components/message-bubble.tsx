@@ -3,38 +3,34 @@ import { cn } from "~/lib/utils";
 
 interface MessageBubbleProps {
   avatarUrl: string;
-  name: string;
+  avatarFallback: string;
   content: string;
   isCurrentUser?: boolean;
-  className?: string;
 }
 
 export function MessageBubble({
   avatarUrl,
-  name,
+  avatarFallback,
   content,
   isCurrentUser = false,
-  className,
 }: MessageBubbleProps) {
   return (
     <div
       className={cn(
         "flex items-end gap-4",
-        isCurrentUser ? "flex-row-reverse" : "",
-        className
+        isCurrentUser ? "flex-row-reverse" : ""
       )}
     >
-      <Avatar className='size-12'>
+      <Avatar>
         <AvatarImage src={avatarUrl} />
-        <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+        <AvatarFallback>{avatarFallback}</AvatarFallback>
       </Avatar>
       <div
-        className={cn(
-          "rounded-md p-4 text-sm w-1/4",
-          isCurrentUser
-            ? "bg-accent  rounded-bl-none"
-            : "bg-primary text-primary-foreground rounded-bl-none"
-        )}
+        className={cn({
+          "rounded-md p-4 text-sm md:w-1/4": true,
+          "bg-accent rounded-br-none": isCurrentUser,
+          "bg-primary text-primary-foreground rounded-bl-none": !isCurrentUser,
+        })}
       >
         <p>{content}</p>
       </div>

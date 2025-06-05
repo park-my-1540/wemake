@@ -183,15 +183,7 @@ export const getMessagesByMessagesRoomId = async (
   }
   const { data, error } = await client
     .from("messages")
-    .select(
-      `*,
-      sender:profiles!sender_id!inner(
-        name,
-        profile_id,
-        avatar
-      )
-      `
-    )
+    .select("*")
     .eq("message_room_id", messageRoomId)
     .order("created_at", { ascending: true });
 
@@ -201,31 +193,37 @@ export const getMessagesByMessagesRoomId = async (
   return data;
 };
 
-export const getRoomsParticipants = async (
-  client: SupabaseClient,
-  { userId, messageRoomId }: { userId: string; messageRoomId: string }
+export const getRoomsParticipant = async (
+  client: SupabaseClient<Database>,
+  { messageRoomId, userId }: { messageRoomId: string; userId: string }
 ) => {
   const { count, error: countError } = await client
     .from("messages_room_members")
     .select("*", { count: "exact", head: true })
-    .eq("message_room_id", messageRoomId)
+    .eq("message_room_id", Number(messageRoomId))
     .eq("profile_id", userId);
-
   if (countError) {
     throw countError;
   }
-
   if (count === 0) {
     throw new Error("Message room not found");
   }
-  const { error } = await client
+  const { data, error } = await client
     .from("messages_room_members")
-    .select(`profile:profiles!profile_id!inner(name, avatar)`)
-    .eq("message_room_id", messageRoomId)
+    .select(
+      `
+      profile:profiles!profile_id!inner(
+        name,
+        profile_id,
+        avatar
+      )
+      `
+    )
+    .eq("message_room_id", Number(messageRoomId))
     .neq("profile_id", userId)
     .single();
-
   if (error) {
     throw error;
   }
+  return data;
 };
