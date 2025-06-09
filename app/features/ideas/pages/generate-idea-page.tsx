@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { insertIdeas } from "../mutations";
 import { adminClient } from "~/supa-client";
+import type { Route } from "./+types/generate-idea-page";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -23,7 +24,18 @@ const ResponseSchema = z.object({
   potato: z.array(IdeaSchema),
 });
 
-export const loader = async () => {
+export const action = async ({ request }: Route.ActionArgs) => {
+  // endpoint 보호
+  if (request.method !== "POST") {
+    return new Response(null, { status: 404 });
+  }
+
+  //필요한 헤더 있는지
+  const headers = request.headers.get("X-POTATO");
+  if (!headers) {
+    return new Response(null, { status: 401 });
+  }
+
   const prompt = `
 Give me 10 startup ideas that can be built by small teams.
 Each idea should be formatted in JSON like this:
@@ -59,7 +71,11 @@ Just return the JSON — no markdown, no explanation.
     return Response.json({ error: "No response from Gemini" }, { status: 400 });
   }
 
-  let jsonString = extractJsonFromText(text);
+  let jsonString: string | null = extractJsonFromText(text);
+
+  if (!jsonString) {
+    return null;
+  }
   // JSON 파싱
   let parsedJson;
   try {
