@@ -63,3 +63,21 @@ export const updateProductIcon = async (
   }
   return data.product_id;
 };
+
+export const recordPromotion = async (
+  client: SupabaseClient,
+  {
+    productId,
+    promotionFrom,
+    promotionTo,
+  }: { productId: number; promotionFrom: string; promotionTo: string }
+) => {
+  const { error } = await client
+    .from("products")
+    .update({
+      promoted_from: promotionFrom,
+      promoted_to: promotionTo,
+    })
+    .eq("product_id", productId);
+  if (error) throw error;
+};

@@ -16,8 +16,8 @@ import { getLoggedInUserId } from "~/features/users/queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
-    { title: "Promote Your Product | WeMake" },
-    { name: "description", content: "Promote your product on WeMake" },
+    { title: "상품 홍보하기 | WeMake" },
+    { name: "description", content: "WeMake에서 상품을 홍보해보세요" },
   ];
 };
 
@@ -102,6 +102,10 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
     const product = data?.product;
 
     if (!product || !promotionPeriod?.to || !promotionPeriod?.from) return;
+
+    const productName = loaderData.product.find(
+      (item) => item.product_id === Number(product)
+    )?.name;
     await widgets.current?.requestPayment({
       orderId: crypto.randomUUID(),
       orderName: `WeMake Promotion`,
@@ -111,6 +115,7 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
       metadata: {
         //Toss서버에서 결제정보를 확인하는건 필수!
         product,
+        productName,
         promotionFrom: DateTime.fromJSDate(promotionPeriod.from).toISO(),
         promotionTo: DateTime.fromJSDate(promotionPeriod.to).toISO(),
       },
@@ -123,14 +128,13 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
     <div>
       <HeroSection
         title='Promote Your Product'
-        subTitle='Promote your product on WeMake'
+        subTitle='상품의 노출을 높이세요'
       />
       <form className='grid grid-cols-6' onSubmit={handleSubmit}>
-        <div className='col-span-3 max-w-screen-sm mx-auto flex flex-col gap-8'>
+        <div className='col-span-3 max-w-screen-sm mx-auto flex flex-col gap-16'>
           <div className='space-y-2'>
             <SelectPair
-              label='Select a product'
-              description='원하는 상품을 선택하세요.'
+              label='홍보하고 싶은 상품을 선택해주세요.'
               name='product'
               placeholder='상품을 선택하세요.'
               options={loaderData.product.map((product) => ({
