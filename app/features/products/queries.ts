@@ -200,7 +200,7 @@ export const getProductByUserOwn = async (
 ) => {
   const { data, error } = await client
     .from("products")
-    .select("name")
+    .select("name, product_id")
     .eq("profile_id", userId)
     .order("created_at", { ascending: false });
 

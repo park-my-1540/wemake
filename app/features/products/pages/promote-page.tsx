@@ -1,10 +1,10 @@
 import { HeroSection } from "~/common/components/hero-section";
 import type { Route } from "./+types/promote-page";
-import { Form } from "react-router";
+import { z } from "zod";
 import SelectPair from "~/common/components/select-pair";
 import { Calendar } from "~/components/ui/calendar";
 import { Label } from "~/components/ui/label";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { DateTime } from "luxon";
 import { Button } from "~/components/ui/button";
@@ -20,6 +20,10 @@ export const meta: Route.MetaFunction = () => {
     { name: "description", content: "Promote your product on WeMake" },
   ];
 };
+
+const formSchema = z.object({
+  product: z.string().min(1, { message: "상품을 선택해주세요" }),
+});
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
@@ -69,13 +73,51 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
   }, []);
 
   useEffect(() => {
-    if (widgets.current) {
-      widgets.current.setAmount({
-        value: totalDays * PRICE,
-        currency: "KRW",
-      });
-    }
+    const updateAmount = async () => {
+      if (widgets.current) {
+        await widgets.current.setAmount({
+          value: totalDays * PRICE,
+          currency: "KRW",
+        });
+      }
+    };
+    updateAmount();
   }, [promotionPeriod]);
+
+  const [errorMsg, setErrorMsg] = useState("");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const { success, data, error } = formSchema.safeParse(
+      Object.fromEntries(formData)
+    );
+
+    if (!success) {
+      const msg = error.issues[0]?.message || "알 수 없는 오류가 발생했습니다.";
+      setErrorMsg(msg);
+      throw error;
+    } else {
+      setErrorMsg("");
+    }
+    const product = data?.product;
+
+    if (!product || !promotionPeriod?.to || !promotionPeriod?.from) return;
+    await widgets.current?.requestPayment({
+      orderId: crypto.randomUUID(),
+      orderName: `WeMake Promotion`,
+      customerEmail: "nico@nomadcoders.co",
+      customerName: "Nico",
+      customerMobilePhone: "01012345678",
+      metadata: {
+        //Toss서버에서 결제정보를 확인하는건 필수!
+        product,
+        promotionFrom: DateTime.fromJSDate(promotionPeriod.from).toISO(),
+        promotionTo: DateTime.fromJSDate(promotionPeriod.to).toISO(),
+      },
+      successUrl: `${window.location.href}/success`,
+      failUrl: `${window.location.href}/fail`,
+    });
+  };
 
   return (
     <div>
@@ -83,18 +125,22 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
         title='Promote Your Product'
         subTitle='Promote your product on WeMake'
       />
-      <div className='grid grid-cols-6'>
-        <Form className='col-span-3 max-w-screen-sm mx-auto flex flex-col gap-8'>
-          <SelectPair
-            label='Select a product'
-            description='원하는 상품을 선택하세요.'
-            name='category'
-            placeholder='상품을 선택하세요.'
-            options={loaderData.product.map((product) => ({
-              label: product.name,
-              value: product.name,
-            }))}
-          />
+      <form className='grid grid-cols-6' onSubmit={handleSubmit}>
+        <div className='col-span-3 max-w-screen-sm mx-auto flex flex-col gap-8'>
+          <div className='space-y-2'>
+            <SelectPair
+              label='Select a product'
+              description='원하는 상품을 선택하세요.'
+              name='product'
+              placeholder='상품을 선택하세요.'
+              options={loaderData.product.map((product) => ({
+                label: product.name,
+                value: String(product.product_id),
+              }))}
+            />
+
+            {errorMsg && <p className='text-red-500 text-sm'>{errorMsg}</p>}
+          </div>
           <div className='flex flex-col gap-3 items-center mx-auto'>
             <Label>프로모션 기간을 선택해주세요.</Label>
             <small className='text-muted-foreground'>
@@ -115,12 +161,12 @@ export default function PromotePage({ loaderData }: Route.ComponentProps) {
               currency: "KRW",
             })}
           </Button>
-        </Form>
+        </div>
         <aside className='col-span-3'>
           <div id='toss-payment-methods'></div>
           <div id='toss-payment-agreement'></div>
         </aside>
-      </div>
+      </form>
     </div>
   );
 }
