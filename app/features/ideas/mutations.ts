@@ -16,3 +16,14 @@ export const claimedIea = async (
     throw error;
   }
 };
+
+export const insertIdeas = async (client: SupabaseClient, ideas: string[]) => {
+  const { error } = await client.from("gpt_ideas").insert(
+    ideas.map((idea) => ({
+      idea,
+    }))
+  );
+  if (error) {
+    throw error;
+  }
+};

@@ -4,7 +4,15 @@ import {
   createServerClient,
   serializeCookieHeader,
 } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "database.types";
 
+/**
+ * 키가 노출됨.
+ * key와 url이 노출되어도 데이터베이스를 안전하게 보호하는 방법은 RLS
+ * db자체에 사용자가 어떤 행에 접근할 수 있는지 제한.
+ * 사용자가 무엇을 할수잇고 무엇을 볼수잇는지 제한 가능.
+ */
 export const browserClient = createBrowserClient<any>(
   "https://qjoeryjpfwehhavniipi.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqb2VyeWpwZndlaGhhdm5paXBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUyOTY1MzIsImV4cCI6MjA2MDg3MjUzMn0.NWmMSU_swrc5LyVxlI3OWxjTkL54UAwI4XeUtPJxxIg"
@@ -93,3 +101,12 @@ supabase SSC (cookies 에서는  유저의 쿠키를 주는것 뿐 아니라 사
 
 // 이 클라이언트는 자동으로 특정 쿠키를 찾고, 쿠키를 사용하여 supabase와 통신해서,
 //  쿠키를 사용하여 supabase와 통신해서, 누가 우리 애플리케이션을 사용하고 있는지 알아냄.
+
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // 서비스 롤 키
+
+export const adminClient = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    persistSession: false,
+  },
+});
