@@ -193,3 +193,17 @@ export const getReviews = async (
   if (error) throw error;
   return data;
 };
+
+export const getProductByUserOwn = async (
+  client: SupabaseClient<Database>,
+  { userId }: { userId: string }
+) => {
+  const { data, error } = await client
+    .from("products")
+    .select("name")
+    .eq("profile_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
