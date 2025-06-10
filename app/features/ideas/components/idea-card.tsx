@@ -18,7 +18,7 @@ interface IdeaCardProps {
   likesCount?: number;
   postedAt?: string;
   claimed?: boolean;
-  owner: boolean;
+  owner?: boolean;
 }
 
 export function IdeaCard({

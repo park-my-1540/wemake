@@ -9,7 +9,20 @@ export namespace Route {
     request: Request;
   };
   export type ComponentProps = {
-    actionData: Record<string, string>;
-    loaderData: Record<string, string>;
+    actionData: {
+      fieldErrors: fieldErrorsType | null;
+    };
+    loaderData: {
+      topics: topicType[];
+    };
   };
+  interface fieldErrorsType {
+    title: string[];
+    topic: string[];
+    content: string[];
+  }
+  interface topicType {
+    name: string;
+    slug: string;
+  }
 }

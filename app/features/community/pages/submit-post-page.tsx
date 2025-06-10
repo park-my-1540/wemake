@@ -72,7 +72,7 @@ export default function SubmitPostPage({
         />
         {actionData && "fieldErrors" in actionData && (
           <div className='text-red-500'>
-            {actionData.fieldErrors.title?.join(", ")}
+            {actionData.fieldErrors?.title?.join(", ")}
           </div>
         )}
         <SelectPair
@@ -96,7 +96,7 @@ export default function SubmitPostPage({
         />
         {actionData && "fieldErrors" in actionData && (
           <div className='text-red-500'>
-            {actionData.fieldErrors.content?.join(", ")}
+            {actionData.fieldErrors?.content?.join(", ")}
           </div>
         )}
         <Button type='submit' className='mx-auto'>

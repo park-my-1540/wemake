@@ -7,11 +7,12 @@ import { DateTime } from "luxon";
 import { JOB_LOCATION_MAP, JOB_TYPE_MAP } from "../constants";
 import { makeSSRClient } from "~/supa-client";
 
-export const meta: Route.MetaFunction = ({ data }) => {
-  return [{ title: `${data.jobs.position}` }];
-};
+export const meta = ({ data }: Route.MetaArgs) => [
+  { title: `${data.jobs.position}` },
+];
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  const { client, headers } = makeSSRClient(request);
+  const { client } = makeSSRClient(request);
   const jobs = await getJobById(client, { jobId: params.jobId });
   return { jobs };
 };

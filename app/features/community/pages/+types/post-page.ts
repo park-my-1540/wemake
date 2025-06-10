@@ -18,7 +18,8 @@ export namespace Route {
   export type ComponentProps = {
     loaderData: {
       post: {
-        id: string;
+        post_id: number;
+        id: number;
         title: string;
         content: string;
         author: string;

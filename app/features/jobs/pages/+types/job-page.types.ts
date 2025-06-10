@@ -25,6 +25,10 @@ export namespace Route {
     qualifications: string;
   }
 
+  export interface MetaArgs {
+    data: { jobs: Job };
+  }
+
   export interface LoaderArgs {
     request: Request;
     params: {

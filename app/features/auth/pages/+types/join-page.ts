@@ -10,6 +10,25 @@ export namespace Route {
   };
   export type ComponentProps = {
     loaderData: Record<string, string | null>;
-    actionData: Record<string, string | null>;
+    actionData: ActionData;
   };
+
+  export interface ActionData {
+    formErrors: {
+      name: string | null;
+      username: string | null;
+      password: string | null;
+      email: string | null;
+    };
+    fieldErrors: {
+      name: string | null;
+      username: string | null;
+      password: string | null;
+      email: string[] | null;
+      otp: string[] | null;
+    };
+    signUpError: string | null;
+    loginError: string | null;
+    verifyError: string | null;
+  }
 }

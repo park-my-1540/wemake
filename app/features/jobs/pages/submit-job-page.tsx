@@ -17,7 +17,7 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-const formSchema = z.object({
+export const formSchema = z.object({
   position: z.string().max(40),
   overview: z.string().max(400),
   responsibilities: z.string().max(400),

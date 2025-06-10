@@ -4,29 +4,11 @@ import { makeSSRClient } from "~/supa-client";
 import { getLoggedInUserId, getNotifications } from "../queries";
 import { DateTime } from "luxon";
 
-type Notification = {
-  seen: boolean;
-  created_at: string;
-  type: "review" | "follow" | "reply";
-  source?: {
-    name?: string;
-    avatar?: string;
-  };
-  product?: {
-    product_id: string;
-    name: string;
-  };
-  post?: {
-    post_id: string;
-    title: string;
-  };
-};
-
 export const meta: Route.MetaFunction = () => [{ title: "Notifications" }];
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const { client } = makeSSRClient(request);
   const userId = await getLoggedInUserId(client);
-  const notifications: Notification[] = await getNotifications(client, {
+  const notifications = await getNotifications(client, {
     userId,
   });
   return { notifications };
@@ -51,7 +33,11 @@ export default function NotificationsPage({
             productName={notification.product?.name ?? ""}
             postTitle={notification.post?.title ?? ""}
             payloadId={
-              notification.product?.product_id ?? notification.post?.post_id
+              notification.product?.product_id
+                ? Number(notification.product?.product_id)
+                : notification.post?.post_id
+                  ? Number(notification.post?.post_id)
+                  : undefined
             }
           />
         ))}
