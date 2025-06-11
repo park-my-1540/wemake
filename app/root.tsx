@@ -11,7 +11,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import Navigation from "./components/navigation";
+import Navigation from "~/components/navigation";
 import { Settings } from "luxon";
 import { cn } from "./lib/utils";
 import { makeSSRClient } from "./supa-client";
