@@ -1,4 +1,10 @@
-import { Outlet, NavLink, Link } from "react-router";
+import {
+  Outlet,
+  NavLink,
+  Link,
+  useFetcher,
+  useOutletContext,
+} from "react-router";
 import { ChevronUpIcon, StarIcon } from "lucide-react";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -47,7 +53,8 @@ interface Product {
 export default function ProductOverviewLayout({
   loaderData,
 }: ProductOverviewProps) {
-  console.log(loaderData);
+  const fetcher = useFetcher();
+  const { isLoggedIn } = useOutletContext<{ isLoggedIn: boolean }>();
   return (
     <div className='space-y-10'>
       <div className='flex justify-between'>
@@ -83,20 +90,23 @@ export default function ProductOverviewLayout({
           </div>
         </div>
         <div className='flex gap-5'>
-          <Button
-            variant='secondary'
-            size='lg'
-            className='text-lg h-14 px-10'
-            asChild
+          <fetcher.Form
+            method='post'
+            action={`/products/${loaderData.product.product_id}/upvote`}
           >
-            <Link to={`/products/${loaderData.product.product_id}/visit`}>
-              웹사이트 방문
-            </Link>
-          </Button>
-          <Button size='lg' className='text-lg h-14 px-10'>
-            <ChevronUpIcon className='size-4' />
-            추천 ({loaderData.product.upvotes})
-          </Button>
+            <Button
+              size='lg'
+              className={cn({
+                "md:text-lg w-full md:w-auto h-10 md:h-14 px-10 flex items-center gap-2":
+                  true,
+                "border-white bg-white text-primary hover:bg-white/90":
+                  loaderData.product.is_upvoted,
+              })}
+            >
+              <ChevronUpIcon className='size-4' />
+              추천 ({loaderData.product.upvotes})
+            </Button>
+          </fetcher.Form>
         </div>
       </div>
       <div className='flex gap-2'>
@@ -123,6 +133,7 @@ export default function ProductOverviewLayout({
           description: loaderData.product.tagline,
           how_it_works: loaderData.product.how_it_works,
           review_count: loaderData.product.reviews,
+          isLoggedIn: isLoggedIn,
         }}
       />
     </div>

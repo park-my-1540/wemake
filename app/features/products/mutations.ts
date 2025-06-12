@@ -81,3 +81,14 @@ export const recordPromotion = async (
     .eq("product_id", productId);
   if (error) throw error;
 };
+
+export const updatePromotion = async (client: SupabaseClient) => {
+  const { error } = await client
+    .from("products")
+    .update({
+      is_promoted: true,
+    })
+    .lte("promoted_from", new Date().toISOString().split("T")[0])
+    .gte("promoted_to", new Date().toISOString().split("T")[0]);
+  if (error) throw error;
+};

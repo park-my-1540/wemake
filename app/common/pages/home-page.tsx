@@ -60,8 +60,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
+            reviewsCount={Number(product.stats.reviews)}
             viewsCount={product.views}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}

@@ -47,6 +47,7 @@ export default [
       "/promote/success",
       "features/products/pages/promote-success-page.tsx"
     ),
+    route("/promote/update", "features/products/api/update-promote.tsx"),
 
     ...prefix("/:productId", [
       layout("features/products/layouts/product-overview-layout.tsx", [

@@ -32,6 +32,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         limit: 7,
       }),
     ]);
+
   return { dailyProducts, weeklyProducts, monthlyProducts, yearlyProducts };
 };
 
@@ -65,8 +66,10 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
-            viewsCount={Number(product.views)}
+            reviewsCount={Number(product.stats.reviews)}
+            viewsCount={Number(product.stats.views)}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}
@@ -91,8 +94,10 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
-            viewsCount={Number(product.views)}
+            reviewsCount={Number(product.stats.reviews)}
+            viewsCount={Number(product.stats.views)}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}
@@ -117,8 +122,10 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
-            viewsCount={Number(product.views)}
+            reviewsCount={Number(product.stats.reviews)}
+            viewsCount={Number(product.stats.views)}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}
@@ -143,8 +150,10 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
-            viewsCount={Number(product.views)}
+            reviewsCount={Number(product.stats.reviews)}
+            viewsCount={Number(product.stats.views)}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}

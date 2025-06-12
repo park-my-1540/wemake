@@ -18,7 +18,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function IdeasPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
-      <HeroSection title='IdeasGPT' subTitle='Find your next great idea' />
+      <HeroSection
+        title='IdeasGPT'
+        subTitle='gpt가 추천해주는 아이디어를 선점하세요.'
+      />
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
         {loaderData.ideas.map((idea) => (
           <IdeaCard

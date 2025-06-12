@@ -28,6 +28,13 @@ export namespace Route {
     reviews: number;
     views: number;
     upvotes: number;
+    promoted_from: string;
+    is_upvoted: boolean;
+    stats: {
+      views: number;
+      reviews: number;
+      upvotes: number;
+    };
   }
   interface PostCardProps {
     post_id: number;

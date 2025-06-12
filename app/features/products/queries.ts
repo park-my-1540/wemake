@@ -3,13 +3,8 @@ import { PAGE_SIZE } from "./constant";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "database.types";
 
-const productListSelect = `
-  product_id,
-  name, 
-  tagline, 
-  upvotes:stats->>upvotes,
-  views:stats->>views,
-  reviews:stats->>reviews
+export const productListSelect = `
+*
 `;
 
 export const getProductsByDateRange = async (
@@ -29,6 +24,7 @@ export const getProductsByDateRange = async (
   const { data, error } = await client
     .from("products")
     .select(productListSelect)
+    .order("promoted_from", { ascending: true })
     .order("stats->>upvotes", { ascending: false })
     .gte("created_at", startDate)
     .lte("created_at", endDate)
@@ -101,6 +97,8 @@ export const getProductsByCategory = async (
     .from("products")
     .select(productListSelect)
     .eq("category_id", categoryId)
+    .order("promoted_from", { ascending: true })
+    .order("stats->>upvotes", { ascending: false })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 
   if (error) throw error;

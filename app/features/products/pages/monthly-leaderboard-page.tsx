@@ -119,15 +119,17 @@ export default function WeeklyLeaderboardPage({
           </Button>
         )}
       </div>
-      <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
+      <div className='w-full max-w-screen-md mx-auto mt-10'>
         {loaderData.products.map((product, index) => (
           <ProductCard
             key={product.product_id}
             id={product.product_id}
             name={product.name}
             description={product.tagline}
-            reviewsCount={Number(product.reviews)}
-            viewsCount={Number(product.views)}
+            reviewsCount={Number(product.stats.reviews)}
+            viewsCount={Number(product.stats.views)}
+            isPromoted={product.is_promoted}
+            isUpvoted={product.is_upvoted}
             votesCount={Number(product.upvotes)}
           />
         ))}

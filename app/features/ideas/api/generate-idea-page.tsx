@@ -27,14 +27,13 @@ const ResponseSchema = z.object({
 export const action = async ({ request }: Route.ActionArgs) => {
   //   endpoint 보호
   if (request.method !== "POST") {
-    console.log("Rejected non-POST method");
     return new Response(null, { status: 404 });
   }
 
   //   필요한 헤더 있는지
   const headers = request.headers.get("X-POTATO");
-  if (!headers) {
-    return new Response(null, { status: 401 });
+  if (!headers || headers !== "X-TOMATO") {
+    return new Response("Unauthorized", { status: 401 });
   }
 
   const prompt = `
