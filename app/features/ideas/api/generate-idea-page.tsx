@@ -25,30 +25,31 @@ const ResponseSchema = z.object({
 });
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  // endpoint 보호
+  //   endpoint 보호
   if (request.method !== "POST") {
+    console.log("Rejected non-POST method");
     return new Response(null, { status: 404 });
   }
 
-  //필요한 헤더 있는지
+  //   필요한 헤더 있는지
   const headers = request.headers.get("X-POTATO");
   if (!headers) {
     return new Response(null, { status: 401 });
   }
 
   const prompt = `
-Give me 10 startup ideas that can be built by small teams.
-Each idea should be formatted in JSON like this:
+작은 팀이 만들 수 있는 스타트업 아이디어 10개를 알려주세요.
+각 아이디어는 JSON 형식으로 작성해주세요:
 {
-  "title": "string",
-  "description": "string, max 100 characters",
-  "problem": "string",
-  "solution": "string",
+  "title": "문자열",
+  "description": "문자열, 최대 100자",
+  "problem": "문자열",
+  "solution": "문자열",
   "category": "tech | business | health | education | finance | other"
 }
 
-Wrap them in an object like: { "potato": [ ... ] }
-Just return the JSON — no markdown, no explanation.
+아이디어들을 { "potato": [ ... ] } 형태의 객체로 감싸서 반환해주세요.
+오직 JSON만 반환하고, 마크다운이나 설명은 포함하지 마세요.
 `;
 
   const res = await fetch(
