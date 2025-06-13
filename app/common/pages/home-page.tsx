@@ -80,7 +80,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className='pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-background'></div>
       </div>
 
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-3 gap-4 items-start'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>
             Today's Products
@@ -106,7 +106,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           />
         ))}
       </div>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-3 gap-4 items-center'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>
             Latest Discussions
@@ -176,30 +176,107 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           </Marquee>
         </div>
       </div>
-      <div className='grid grid-cols-3 gap-4'>
-        <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
-            IdeasGPT
-          </h2>
-          <p className='text-xl font-light text-foreground'>
-            Find ideas for your next project
-          </p>
-          <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/ideas'>Explore all discussions &rarr;</Link>
-          </Button>
+
+      <BlurFade delay={0.25} duration={1} inView>
+        <div className='space-y-10 relative md:h-[50vh] flex flex-col justify-center items-center overflow-hidden '>
+          <div className='relative flex  flex-col justify-center items-center  md:p-64 z-50 md:bg-[radial-gradient(circle,hsl(var(--background))_40%,transparent_100%)] text-center md:text-left'>
+            <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
+              IdeasGPT
+            </h2>
+
+            <p className='max-w-2xl md:text-xl font-light text-foreground'>
+              AI generated startup ideas you can build.
+            </p>
+
+            <Button variant='link' asChild className='text-lg pl-0'>
+              <Link to='/ideas'>View all ideas &rarr;</Link>
+            </Button>
+          </div>
+          <div className='md:absolute w-full flex justify-between md:h-full h-[75vh]  top-0 left-0'>
+            <Marquee
+              pauseOnHover
+              vertical
+              className='[--duration:40s] flex z-50  gap-5'
+            >
+              {loaderData.ideas.map((idea) => (
+                <div key={idea.gpt_idea_id}>
+                  <IdeaCard
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewsCount={idea.views}
+                    likesCount={idea.likes}
+                    postedAt={idea.created_at}
+                    claimed={idea.is_claimed}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              pauseOnHover
+              reverse
+              vertical
+              className='[--duration:40s] hidden md:flex  md:gap-5'
+            >
+              {loaderData.ideas.map((idea) => (
+                <div key={idea.gpt_idea_id}>
+                  <IdeaCard
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewsCount={idea.views}
+                    postedAt={idea.created_at}
+                    likesCount={idea.likes}
+                    claimed={idea.is_claimed}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              pauseOnHover
+              vertical
+              className='[--duration:40s] hidden md:flex  gap-5'
+            >
+              {loaderData.ideas.map((idea) => (
+                <div key={idea.gpt_idea_id}>
+                  <IdeaCard
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewsCount={idea.views}
+                    postedAt={idea.created_at}
+                    likesCount={idea.likes}
+                    claimed={idea.is_claimed}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              pauseOnHover
+              reverse
+              vertical
+              className='[--duration:40s] hidden md:flex  gap-5'
+            >
+              {loaderData.ideas.map((idea) => (
+                <div key={idea.gpt_idea_id}>
+                  <IdeaCard
+                    key={idea.gpt_idea_id}
+                    id={idea.gpt_idea_id}
+                    title={idea.idea}
+                    viewsCount={idea.views}
+                    postedAt={idea.created_at}
+                    likesCount={idea.likes}
+                    claimed={idea.is_claimed}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <div className='hidden md:block pointer-events-none absolute right-0 h-10 w-full top-0 z-10 bg-gradient-to-b from-white dark:from-background'></div>
+            <div className='hidden md:block pointer-events-none absolute left-0 h-10 w-full bottom-10 z-10 bg-gradient-to-t from-white dark:from-background'></div>
+          </div>
         </div>
-        {loaderData.ideas.map((idea) => (
-          <IdeaCard
-            key={idea.gpt_idea_id}
-            id={idea.gpt_idea_id}
-            title={idea.idea}
-            viewsCount={idea.views}
-            likesCount={idea.likes}
-            postedAt={idea.created_at}
-            claimed={idea.is_claimed}
-          />
-        ))}
-      </div>
+      </BlurFade>
+
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>
