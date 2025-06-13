@@ -10,7 +10,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   //   필요한 헤더 있는지
   const headers = request.headers.get("X-POTATO");
-  if (!headers || headers !== "X-TOMATO") {
+  if (!headers || headers !== "X-POTATO") {
     return new Response("Unauthorized", { status: 401 });
   }
   await updatePromotion(adminClient);

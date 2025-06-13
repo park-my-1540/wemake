@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { NeonGradientCard } from "components/magicui/neon-gradient-card";
 
 interface ProductCardProps {
   id: number;
@@ -34,7 +33,7 @@ export function ProductCard({
   isPromoted,
 }: ProductCardProps) {
   const fetcher = useFetcher();
-  console.log(isPromoted);
+
   const optimisitcVotesCount =
     fetcher.state === "idle"
       ? votesCount
@@ -60,10 +59,14 @@ export function ProductCard({
           isPromoted ? "" : "bg-transparent hover:bg-card/50"
         )}
       >
-        <CardHeader className='w-full'>
+        <CardHeader className='w-full relative'>
+          {isPromoted ? (
+            <Badge variant={"outline"} className='absolute top-8 -right-2'>
+              Promoted
+            </Badge>
+          ) : null}
           <CardTitle className='text-2xl flex-wrap font-semibold leading-none flex justify-between w-full items-center gap-2 tracking-tight'>
             {name}{" "}
-            {isPromoted ? <Badge variant={"outline"}>Promoted</Badge> : null}
           </CardTitle>
           <CardDescription className='text-muted-foreground'>
             {description}
@@ -93,15 +96,10 @@ export function ProductCard({
     </Link>
   );
   return isPromoted ? (
-    <NeonGradientCard
-      borderSize={5}
-      neonColors={{
-        firstColor: "#fc4a1a",
-        secondColor: "#f7b733",
-      }}
-    >
+    <div className='relative p-[2px] rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
       {content}
-    </NeonGradientCard>
+      <div className='absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 blur-md opacity-30 z-0'></div>
+    </div>
   ) : (
     content
   );

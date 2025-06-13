@@ -48,16 +48,16 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
       <HeroSection
-        title='Leaderboards'
-        subTitle='The most popular products on wemake'
+        title='제품 인기 순위'
+        subTitle='wemake에서 가장 인기 있는 제품들'
       />
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid md:grid-cols-3 gap-4 grid-cols-1'>
         <div>
           <h2 className='text-3xl font-bold leading-tight tracking-tight'>
-            Daily Leaderboard
+            오늘의 인기 제품
           </h2>
           <p className='text-xl font-light text-foreground'>
-            The most popular products made by day
+            매일 wemake에서 가장 인기 있는 제품입니다.
           </p>
         </div>
         {loaderData.dailyProducts.map((product, index) => (
@@ -70,22 +70,20 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
         <Button variant='link' asChild className='text-lg self-center'>
-          <Link to='/products/leaderboards/daily'>
-            Explore all products &rarr;
-          </Link>
+          <Link to='/products/leaderboards/daily'>모든 제품 보기 &rarr;</Link>
         </Button>
       </div>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid md:grid-cols-3 gap-4 grid-cols-1'>
         <div>
           <h2 className='text-3xl font-bold leading-tight tracking-tight'>
-            Weekly Leaderboard
+            주간 인기 순위
           </h2>
           <p className='text-xl font-light text-foreground'>
-            The most popular products made by week
+            매주 wemake에서 가장 인기 있는 제품입니다.
           </p>
         </div>
         {loaderData.weeklyProducts.map((product, index) => (
@@ -98,22 +96,20 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
         <Button variant='link' asChild className='text-lg self-center'>
-          <Link to='/products/leaderboards/weekly'>
-            Explore all products &rarr;
-          </Link>
+          <Link to='/products/leaderboards/weekly'>모든 제품 보기 &rarr;</Link>
         </Button>
       </div>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid md:grid-cols-3 gap-4 grid-cols-1'>
         <div>
           <h2 className='text-3xl font-bold leading-tight tracking-tight'>
-            Monthly Leaderboard
+            월간 인기 순위
           </h2>
           <p className='text-xl font-light text-foreground'>
-            The most popular products made by month
+            매월 wemake에서 가장 인기 있는 제품입니다.
           </p>
         </div>
         {loaderData.monthlyProducts.map((product, index) => (
@@ -126,22 +122,20 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
         <Button variant='link' asChild className='text-lg self-center'>
-          <Link to='/products/leaderboards/monthly'>
-            Explore all products &rarr;
-          </Link>
+          <Link to='/products/leaderboards/monthly'>모든 제품 보기 &rarr;</Link>
         </Button>
       </div>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid md:grid-cols-3 gap-4 grid-cols-1'>
         <div>
           <h2 className='text-3xl font-bold leading-tight tracking-tight'>
-            Yearly Leaderboard
+            연간 인기 순위
           </h2>
           <p className='text-xl font-light text-foreground'>
-            The most popular products made by year
+            매년 wemake에서 가장 인기 있는 제품입니다.
           </p>
         </div>
         {loaderData.yearlyProducts.map((product, index) => (
@@ -154,13 +148,11 @@ export default function LeaderboardsPage({ loaderData }: Route.ComponentProps) {
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
         <Button variant='link' asChild className='text-lg self-center'>
-          <Link to='/products/leaderboards/yearly'>
-            Explore all products &rarr;
-          </Link>
+          <Link to='/products/leaderboards/yearly'>모든 제품 보기 &rarr;</Link>
         </Button>
       </div>
     </div>
