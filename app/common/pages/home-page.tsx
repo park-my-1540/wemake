@@ -13,6 +13,10 @@ import { getGptIdeas } from "~/features/ideas/queries";
 import { getJobs } from "~/features/jobs/queries";
 import { getTeams } from "~/features/teams/queries";
 import { makeSSRClient } from "~/supa-client";
+import { FlickeringGrid } from "../components/flickering-grid";
+import { BlurFade } from "components/magicui/blur-fade";
+import { VelocityScroll } from "components/magicui/scroll-based-velocity";
+import { Marquee } from "components/magicui/marquee";
 
 export function meta() {
   return [
@@ -22,7 +26,7 @@ export function meta() {
 }
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { client, headers } = makeSSRClient(request);
+  const { client } = makeSSRClient(request);
 
   const products = await getProductsByDateRange(client, {
     startDate: DateTime.now().startOf("day"),
@@ -42,6 +46,40 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div className='px-20 space-y-40'>
+      <div className='relative h-[500px] w-full flex justify-center items-center bg-background overflow-hidden '>
+        <FlickeringGrid
+          className='z-0 absolute inset-0 size-full'
+          squareSize={4}
+          gridGap={5}
+          color='#e11d48'
+          maxOpacity={0.5}
+          flickerChance={0.2}
+        />
+        <div className='flex flex-col text-center md:space-y-5 items-center'>
+          <BlurFade delay={0.25} duration={1} inView>
+            <h2 className='font-bold text-5xl md:text-7xl'>
+              welcome to wemake 👋
+            </h2>
+          </BlurFade>
+          <BlurFade delay={1} duration={1} inView>
+            <span className='text-2xl md:text-5xl'>
+              the home of indie makers
+            </span>
+          </BlurFade>
+        </div>
+      </div>
+
+      <div className='relative'>
+        <VelocityScroll
+          defaultVelocity={5}
+          className='font-display text-center text-5xl font-bold tracking-[-0.02em] md:leading-[5rem]'
+        >
+          code hard 💻 travel far 🌍
+        </VelocityScroll>
+        <div className='pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-background'></div>
+        <div className='pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-background'></div>
+      </div>
+
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>
@@ -61,10 +99,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             name={product.name}
             description={product.tagline}
             reviewsCount={Number(product.stats.reviews)}
-            viewsCount={product.views}
+            viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
       </div>
@@ -80,17 +118,63 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <Link to='/community'>Explore all discussions &rarr;</Link>
           </Button>
         </div>
-        {loaderData.posts.map((post) => (
-          <PostCard
-            key={post.post_id}
-            id={post.post_id}
-            title={post.title}
-            author={post.author}
-            authorAvatarUrl={post.authorAvatarUrl}
-            category={post.category}
-            postedAt={post.created_at}
-          />
-        ))}
+        <div className='relative col-span-2 flex flex-col md:[perspective:500px] md:pb-40  overflow-hidden md:*:[transform:translateZ(-0px)_rotateY(-20deg)_rotateZ(10deg)]'>
+          <Marquee
+            pauseOnHover
+            className='[--duration:40s] hidden md:flex items-stretch '
+          >
+            {loaderData.posts.map((post) => (
+              <div key={post.post_id} className='w-full max-w-sm'>
+                <PostCard
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.authorAvatarUrl}
+                  category={post.category}
+                  postedAt={post.created_at}
+                />
+              </div>
+            ))}
+          </Marquee>
+          <Marquee
+            pauseOnHover
+            reverse
+            className='[--duration:40s] flex items-stretch'
+          >
+            {loaderData.posts.map((post) => (
+              <div key={post.post_id} className='w-full max-w-sm'>
+                <PostCard
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.authorAvatarUrl}
+                  category={post.category}
+                  postedAt={post.created_at}
+                />
+              </div>
+            ))}
+          </Marquee>
+          <Marquee pauseOnHover className='[--duration:40s] flex items-stretch'>
+            {loaderData.posts.map((post) => (
+              <div
+                key={post.post_id}
+                className='w-full max-w-sm [transform_rotateY(-20deg)]'
+              >
+                <PostCard
+                  key={post.post_id}
+                  id={post.post_id}
+                  title={post.title}
+                  author={post.author}
+                  authorAvatarUrl={post.authorAvatarUrl}
+                  category={post.category}
+                  postedAt={post.created_at}
+                />
+              </div>
+            ))}
+          </Marquee>
+        </div>
       </div>
       <div className='grid grid-cols-3 gap-4'>
         <div>

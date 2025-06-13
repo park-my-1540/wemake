@@ -26,9 +26,9 @@ export const getProductsByDateRange = async (
     .select(productListSelect)
     .order("promoted_from", { ascending: true })
     .order("stats->>upvotes", { ascending: false })
-    .gte("created_at", startDate)
-    .lte("created_at", endDate)
-    .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+    .gte("created_at", startDate.toISO())
+    .lte("created_at", endDate.toISO())
+    .range((page - 1) * PAGE_SIZE, page * limit - 1);
 
   if (error) throw error;
   return data;
