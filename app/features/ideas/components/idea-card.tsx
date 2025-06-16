@@ -67,7 +67,7 @@ export function IdeaCard({
               <span>{likesCount}</span>
             </Button>
             <Button asChild>
-              <Link to={`/ideas/${id}`}>아이디어 선점하기 &rarr;</Link>
+              <Link to={`/ideas/${id}`}>선점하기 &rarr;</Link>
             </Button>
           </>
         ) : (

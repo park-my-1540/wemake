@@ -86,11 +86,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>
             Today's Products
           </h2>
-          <p className='text-xl font-light text-foreground'>
-            The best products made by our community
+          <p className='text-xl font-light text-foreground mt-5'>
+            커뮤니티가 직접 만든, 지금 주목할 제품들
           </p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/products/leaderboards'>Explore all products &rarr;</Link>
+            <Link to='/products/leaderboards'>
+              더 많은 제품 보러가기 &rarr;
+            </Link>
           </Button>
         </div>
         {loaderData.products.map((product) => (
@@ -115,15 +117,15 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               IdeasGPT
             </h2>
 
-            <p className='max-w-2xl md:text-xl font-light text-foreground'>
-              AI generated startup ideas you can build.
+            <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
+              AI가 제안하는, 지금 당장 시작할 수 있는 스타트업 아이디어
             </p>
 
             <Button variant='link' asChild className='text-lg pl-0'>
-              <Link to='/ideas'>View all ideas &rarr;</Link>
+              <Link to='/ideas'>아이디어 보러가기 &rarr;</Link>
             </Button>
           </div>
-          <div className='md:absolute w-full flex justify-between md:h-full h-[75vh]  top-0 left-0'>
+          <div className='md:absolute w-full grid grid-cols-1 md:grid-cols-4 md:h-full h-[75vh] top-0 left-0'>
             <Marquee
               pauseOnHover
               vertical
@@ -209,16 +211,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </BlurFade>
 
       <BlurFade delay={0.25} duration={1} inView>
-        <div className='grid grid-cols-3 gap-4 items-center'>
-          <div>
-            <h2 className='text-5xl font-bold leading-tight tracking-tight'>
-              Latest Discussions
+        <div className='space-y-10 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-10'>
+          <div className='self-center text-center md:text-left'>
+            <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
+              최신 커뮤니티 이야기
             </h2>
-            <p className='text-xl font-light text-foreground'>
-              The latest discussions from our community
+            <p className='max-w-2xl md:text-xl font-light text-foreground'>
+              커뮤니티에서 진행 중인 최신 토론을 확인해보세요
             </p>
             <Button variant='link' asChild className='text-lg p-0'>
-              <Link to='/community'>Explore all discussions &rarr;</Link>
+              <Link to='/community'>전체 대화 보기 &rarr;</Link>
             </Button>
           </div>
           <div className='relative col-span-2 flex flex-col md:[perspective:500px] md:pb-40  overflow-hidden md:*:[transform:translateZ(-0px)_rotateY(-20deg)_rotateZ(10deg)]'>
@@ -290,12 +292,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
                 Find a co-founder
               </h2>
-              <p className='max-w-2xl md:text-xl font-light text-foreground'>
-                Join a team looking for a co-founder.
+              <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
+                공동 창업자를 찾는 팀에 합류해보세요
               </p>
               <Button variant='link' asChild className='text-lg pl-0'>
                 <Link to='/cofounders' className='pl-0'>
-                  Find your new team &rarr;
+                  팀 합류하러 가기 &rarr;
                 </Link>
               </Button>
             </div>
@@ -323,13 +325,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className='md:-mt-44 overflow-hidden '>
           <div className='flex h-[75vh] relative flex-col z-0 justify-center items-center text-center md:text-left'>
             <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
-              Latest jobs
+              최신 채용 공고
             </h2>
-            <p className='max-w-2xl md:text-xl font-light text-foreground'>
-              Find your dream job.
+            <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
+              원하는 일을 지금 찾아보세요
             </p>
             <Button variant='link' asChild className='text-lg z-10 md:pl-0'>
-              <Link to='/jobs'>View all jobs &rarr;</Link>
+              <Link to='/jobs'>더 많은 채용 정보 보기 &rarr;</Link>
             </Button>
             <Ripple className='bg-transparent rounded-lg' />
           </div>

@@ -64,7 +64,7 @@ export default function IdeasPage({ loaderData }: Route.ComponentProps) {
         </div>
         {loaderData.ideas.is_claimed ? null : (
           <Form method='post'>
-            <Button size='lg'>아이디어 선점하기 &rarr;</Button>
+            <Button size='lg'>선점하기 &rarr;</Button>
           </Form>
         )}
       </div>
