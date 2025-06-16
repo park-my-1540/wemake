@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
-  safelist: ["animate-marquee", "animate-marquee-vertical"],
+  safelist: ["animate-marquee", "animate-marquee-vertical", "animate-ripple"],
   theme: {
     extend: {
       borderRadius: {
@@ -80,10 +80,19 @@ const config: Config = {
             transform: "translateY(calc(-100% - 10px))",
           },
         },
+        ripple: {
+          "0%, 100%": {
+            transform: "translate(-50%, -50%) scale(1)",
+          },
+          "50%": {
+            transform: "translate(-50%, -50%) scale(0.9)",
+          },
+        },
       },
       animation: {
         marquee: "marquee var(--duration) infinite linear",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+        ripple: "ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite",
       },
     },
   },

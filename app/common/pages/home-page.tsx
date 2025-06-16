@@ -17,6 +17,7 @@ import { FlickeringGrid } from "../components/flickering-grid";
 import { BlurFade } from "components/magicui/blur-fade";
 import { VelocityScroll } from "components/magicui/scroll-based-velocity";
 import { Marquee } from "components/magicui/marquee";
+import { Ripple } from "components/magicui/ripple";
 
 export function meta() {
   return [
@@ -105,76 +106,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             votesCount={Number(product.stats.upvotes)}
           />
         ))}
-      </div>
-      <div className='grid grid-cols-3 gap-4 items-center'>
-        <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
-            Latest Discussions
-          </h2>
-          <p className='text-xl font-light text-foreground'>
-            The latest discussions from our community
-          </p>
-          <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/community'>Explore all discussions &rarr;</Link>
-          </Button>
-        </div>
-        <div className='relative col-span-2 flex flex-col md:[perspective:500px] md:pb-40  overflow-hidden md:*:[transform:translateZ(-0px)_rotateY(-20deg)_rotateZ(10deg)]'>
-          <Marquee
-            pauseOnHover
-            className='[--duration:40s] hidden md:flex items-stretch '
-          >
-            {loaderData.posts.map((post) => (
-              <div key={post.post_id} className='w-full max-w-sm'>
-                <PostCard
-                  key={post.post_id}
-                  id={post.post_id}
-                  title={post.title}
-                  author={post.author}
-                  authorAvatarUrl={post.authorAvatarUrl}
-                  category={post.category}
-                  postedAt={post.created_at}
-                />
-              </div>
-            ))}
-          </Marquee>
-          <Marquee
-            pauseOnHover
-            reverse
-            className='[--duration:40s] flex items-stretch'
-          >
-            {loaderData.posts.map((post) => (
-              <div key={post.post_id} className='w-full max-w-sm'>
-                <PostCard
-                  key={post.post_id}
-                  id={post.post_id}
-                  title={post.title}
-                  author={post.author}
-                  authorAvatarUrl={post.authorAvatarUrl}
-                  category={post.category}
-                  postedAt={post.created_at}
-                />
-              </div>
-            ))}
-          </Marquee>
-          <Marquee pauseOnHover className='[--duration:40s] flex items-stretch'>
-            {loaderData.posts.map((post) => (
-              <div
-                key={post.post_id}
-                className='w-full max-w-sm [transform_rotateY(-20deg)]'
-              >
-                <PostCard
-                  key={post.post_id}
-                  id={post.post_id}
-                  title={post.title}
-                  author={post.author}
-                  authorAvatarUrl={post.authorAvatarUrl}
-                  category={post.category}
-                  postedAt={post.created_at}
-                />
-              </div>
-            ))}
-          </Marquee>
-        </div>
       </div>
 
       <BlurFade delay={0.25} duration={1} inView>
@@ -277,56 +208,157 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </BlurFade>
 
-      <div className='grid grid-cols-3 gap-4'>
-        <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
-            Latest Jobs
-          </h2>
-          <p className='text-xl font-light text-foreground'>
-            Find jobs for your dream job
-          </p>
-          <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/jobs'>Explore all discussions &rarr;</Link>
-          </Button>
+      <BlurFade delay={0.25} duration={1} inView>
+        <div className='grid grid-cols-3 gap-4 items-center'>
+          <div>
+            <h2 className='text-5xl font-bold leading-tight tracking-tight'>
+              Latest Discussions
+            </h2>
+            <p className='text-xl font-light text-foreground'>
+              The latest discussions from our community
+            </p>
+            <Button variant='link' asChild className='text-lg p-0'>
+              <Link to='/community'>Explore all discussions &rarr;</Link>
+            </Button>
+          </div>
+          <div className='relative col-span-2 flex flex-col md:[perspective:500px] md:pb-40  overflow-hidden md:*:[transform:translateZ(-0px)_rotateY(-20deg)_rotateZ(10deg)]'>
+            <Marquee
+              pauseOnHover
+              className='[--duration:40s] hidden md:flex items-stretch '
+            >
+              {loaderData.posts.map((post) => (
+                <div key={post.post_id} className='w-full max-w-sm'>
+                  <PostCard
+                    key={post.post_id}
+                    id={post.post_id}
+                    title={post.title}
+                    author={post.author}
+                    authorAvatarUrl={post.authorAvatarUrl}
+                    category={post.category}
+                    postedAt={post.created_at}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              pauseOnHover
+              reverse
+              className='[--duration:40s] flex items-stretch'
+            >
+              {loaderData.posts.map((post) => (
+                <div key={post.post_id} className='w-full max-w-sm'>
+                  <PostCard
+                    key={post.post_id}
+                    id={post.post_id}
+                    title={post.title}
+                    author={post.author}
+                    authorAvatarUrl={post.authorAvatarUrl}
+                    category={post.category}
+                    postedAt={post.created_at}
+                  />
+                </div>
+              ))}
+            </Marquee>
+            <Marquee
+              pauseOnHover
+              className='[--duration:40s] flex items-stretch'
+            >
+              {loaderData.posts.map((post) => (
+                <div
+                  key={post.post_id}
+                  className='w-full max-w-sm [transform_rotateY(-20deg)]'
+                >
+                  <PostCard
+                    key={post.post_id}
+                    id={post.post_id}
+                    title={post.title}
+                    author={post.author}
+                    authorAvatarUrl={post.authorAvatarUrl}
+                    category={post.category}
+                    postedAt={post.created_at}
+                  />
+                </div>
+              ))}
+            </Marquee>
+          </div>
         </div>
-        {loaderData.jobs.map((job) => (
-          <JobCard
-            key={job.job_id}
-            id={job.job_id}
-            companyName={job.company_name}
-            companyLogoUrl={job.company_logo}
-            jobTitle={job.position}
-            postedAt={job.created_at}
-            jobType={job.job_type}
-            locationType={job.job_location}
-            salaryRange={job.salary_range}
-            location={job.company_location}
-          />
-        ))}
-      </div>
-      <div className='grid grid-cols-3 gap-4'>
-        <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>
-            Find a team mate
-          </h2>
-          <p className='text-xl font-light text-foreground'>
-            Join a team looking for a team mate
-          </p>
-          <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/teams'>Explore all teams &rarr;</Link>
-          </Button>
+      </BlurFade>
+      <BlurFade delay={0.25} duration={1} inView>
+        <div className='rounded-lg border overflow-hidden -mt-20 shadow-xl group'>
+          <div className='relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden'>
+            <div className='flex relative z-10 w-full justify-center items-center flex-col'>
+              <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
+                Find a co-founder
+              </h2>
+              <p className='max-w-2xl md:text-xl font-light text-foreground'>
+                Join a team looking for a co-founder.
+              </p>
+              <Button variant='link' asChild className='text-lg pl-0'>
+                <Link to='/cofounders' className='pl-0'>
+                  Find your new team &rarr;
+                </Link>
+              </Button>
+            </div>
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:p-10 p-5 -mt-32 md:-mt-14  dark:bg-background bg-white'>
+            {loaderData.teams.map((team, index) => (
+              <BlurFade delay={0.1 * index} duration={0.25} inView key={index}>
+                <div className='group-hover:blur-sm h-full group-hover:hover:blur-0 group-hover:hover:grayscale-0 group-hover:grayscale group-hover:hover:scale-105 duration-300'>
+                  <TeamCard
+                    key={team.team_id}
+                    id={team.team_id}
+                    username={team.team_leader.username}
+                    userAvatarUrl={team.team_leader.avatar}
+                    roles={team.roles.split(",")}
+                    productDescription={team.productDescription}
+                  />
+                </div>
+              </BlurFade>
+            ))}
+          </div>
         </div>
-        {loaderData.teams.map((team) => (
-          <TeamCard
-            key={team.team_id}
-            id={team.team_id}
-            username={team.team_leader.username}
-            userAvatarUrl={team.team_leader.avatar}
-            roles={team.roles.split(",")}
-            productDescription={team.productDescription}
-          />
-        ))}
-      </div>
+      </BlurFade>
+
+      <BlurFade delay={0.25} duration={1} inView>
+        <div className='md:-mt-44 overflow-hidden '>
+          <div className='flex h-[75vh] relative flex-col z-0 justify-center items-center text-center md:text-left'>
+            <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
+              Latest jobs
+            </h2>
+            <p className='max-w-2xl md:text-xl font-light text-foreground'>
+              Find your dream job.
+            </p>
+            <Button variant='link' asChild className='text-lg z-10 md:pl-0'>
+              <Link to='/jobs'>View all jobs &rarr;</Link>
+            </Button>
+            <Ripple className='bg-transparent rounded-lg' />
+          </div>
+          <div className='grid grid-cols-1 relative z-10 bg-background md:grid-cols-3 gap-4 -mt-44'>
+            {loaderData.jobs.map((job, index) => (
+              <BlurFade
+                delay={0.1 * index}
+                duration={0.25}
+                inView
+                key={index}
+                className='w-full'
+              >
+                <JobCard
+                  key={job.job_id}
+                  id={job.job_id}
+                  companyName={job.company_name}
+                  companyLogoUrl={job.company_logo}
+                  jobTitle={job.position}
+                  postedAt={job.created_at}
+                  jobType={job.job_type}
+                  locationType={job.job_location}
+                  salaryRange={job.salary_range}
+                  location={job.company_location}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </BlurFade>
     </div>
   );
 }

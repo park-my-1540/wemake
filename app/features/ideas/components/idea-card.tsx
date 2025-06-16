@@ -31,7 +31,7 @@ export function IdeaCard({
   claimed,
 }: IdeaCardProps) {
   return (
-    <Card className='bg-transparent hover:bg-card/50 transition-colors'>
+    <Card className='bg-transparent hover:bg-slate-900 transition-colors'>
       <CardHeader>
         <Link to={claimed || owner ? "" : `/ideas/${id}`}>
           <CardTitle className='text-xl'>

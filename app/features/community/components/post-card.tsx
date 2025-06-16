@@ -51,7 +51,7 @@ export function PostCard({
     <Link to={`/community/${id}`} className='block'>
       <Card
         className={cn(
-          "bg-transparent hover:bg-card/50 transition-colors",
+          "bg-transparent hover:bg-slate-900 transition-colors",
           expanded ? "flex flex-row items-center justify-between" : ""
         )}
       >
