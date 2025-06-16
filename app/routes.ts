@@ -59,6 +59,7 @@ export default [
         index("features/products/pages/product-redirect-page.tsx"),
       ]),
       route("/visit", "features/products/pages/product-visit-page.tsx"),
+      route("/upvote", "features/products/pages/product-upvote-page.tsx"),
     ]),
   ]),
   ...prefix("/ideas", [

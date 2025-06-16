@@ -92,3 +92,26 @@ export const updatePromotion = async (client: SupabaseClient) => {
     .gte("promoted_to", new Date().toISOString().split("T")[0]);
   if (error) throw error;
 };
+
+export const toggleProductUpvote = async (
+  client: SupabaseClient,
+  { productId, userId }: { productId: string; userId: string }
+) => {
+  const { count } = await client
+    .from("product_upvotes")
+    .select("*", { count: "exact", head: true })
+    .eq("product_id", productId)
+    .eq("id", userId);
+
+  if (count === 0) {
+    await client
+      .from("product_upvotes")
+      .insert({ id: userId, product_id: productId });
+  } else {
+    const { data, error } = await client
+      .from("product_upvotes")
+      .delete()
+      .eq("product_id", productId)
+      .eq("id", userId);
+  }
+};

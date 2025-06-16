@@ -368,6 +368,13 @@ export type Database = {
             foreignKeyName: "notifications_product_id_products_product_id_fk"
             columns: ["product_id"]
             isOneToOne: false
+            referencedRelation: "product_list_view"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "notifications_product_id_products_product_id_fk"
+            columns: ["product_id"]
+            isOneToOne: false
             referencedRelation: "product_overview_view"
             referencedColumns: ["product_id"]
           },
@@ -584,6 +591,13 @@ export type Database = {
             foreignKeyName: "product_upvotes_product_id_products_product_id_fk"
             columns: ["product_id"]
             isOneToOne: false
+            referencedRelation: "product_list_view"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "product_upvotes_product_id_products_product_id_fk"
+            columns: ["product_id"]
+            isOneToOne: false
             referencedRelation: "product_overview_view"
             referencedColumns: ["product_id"]
           },
@@ -604,9 +618,12 @@ export type Database = {
           how_it_works: string
           icon: string
           id: string | null
+          is_promoted: boolean
           name: string
           product_id: number
           profile_id: string | null
+          promoted_from: string | null
+          promoted_to: string | null
           stats: Json
           tagline: string
           updated_at: string
@@ -619,9 +636,12 @@ export type Database = {
           how_it_works: string
           icon: string
           id?: string | null
+          is_promoted?: boolean
           name: string
           product_id?: never
           profile_id?: string | null
+          promoted_from?: string | null
+          promoted_to?: string | null
           stats?: Json
           tagline: string
           updated_at?: string
@@ -634,9 +654,12 @@ export type Database = {
           how_it_works?: string
           icon?: string
           id?: string | null
+          is_promoted?: boolean
           name?: string
           product_id?: never
           profile_id?: string | null
+          promoted_from?: string | null
+          promoted_to?: string | null
           stats?: Json
           tagline?: string
           updated_at?: string
@@ -743,6 +766,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "reviews_product_id_products_product_id_fk"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "product_list_view"
+            referencedColumns: ["product_id"]
           },
           {
             foreignKeyName: "reviews_product_id_products_product_id_fk"
@@ -908,6 +938,48 @@ export type Database = {
             referencedColumns: ["profile_id"]
           },
         ]
+      }
+      product_list_view: {
+        Row: {
+          created_at: string | null
+          is_promoted: boolean | null
+          is_upvoted: boolean | null
+          name: string | null
+          product_id: number | null
+          promoted_from: string | null
+          reviews: string | null
+          stats: Json | null
+          tagline: string | null
+          upvotes: string | null
+          views: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          is_promoted?: boolean | null
+          is_upvoted?: never
+          name?: string | null
+          product_id?: number | null
+          promoted_from?: string | null
+          reviews?: never
+          stats?: Json | null
+          tagline?: string | null
+          upvotes?: never
+          views?: never
+        }
+        Update: {
+          created_at?: string | null
+          is_promoted?: boolean | null
+          is_upvoted?: never
+          name?: string | null
+          product_id?: number | null
+          promoted_from?: string | null
+          reviews?: never
+          stats?: Json | null
+          tagline?: string | null
+          upvotes?: never
+          views?: never
+        }
+        Relationships: []
       }
       product_overview_view: {
         Row: {
