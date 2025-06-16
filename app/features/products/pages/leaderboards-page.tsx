@@ -32,13 +32,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         limit: 7,
       }),
     ]);
-
   return { dailyProducts, weeklyProducts, monthlyProducts, yearlyProducts };
 };
-
-export function action({ request }: Route.ActionArgs) {
-  return {};
-}
 
 export const meta: Route.MetaFunction = () => {
   return [{ name: "description", content: "Top products leaderboards" }];

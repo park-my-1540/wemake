@@ -1,4 +1,4 @@
-import { Link, useFetcher } from "react-router";
+import { Link, useFetcher, useNavigate, useOutletContext } from "react-router";
 import { ChevronUpIcon, EyeIcon, MessageCircleIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { Badge } from "~/components/ui/badge";
@@ -33,17 +33,25 @@ export function ProductCard({
   isPromoted,
 }: ProductCardProps) {
   const fetcher = useFetcher();
+  const navigate = useNavigate();
+  const { isLoggedIn } = useOutletContext<{ isLoggedIn: boolean }>();
 
   const optimisitcVotesCount =
     fetcher.state === "idle"
       ? votesCount
       : isUpvoted
-        ? Number(votesCount) - 1
-        : Number(votesCount) + 1;
+        ? votesCount - 1
+        : votesCount + 1;
 
   const optimisitcIsUpvoted = fetcher.state === "idle" ? isUpvoted : !isUpvoted;
+
   const absorbClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      alert("Please log in first!");
+      navigate("/auth/login");
+      return;
+    }
 
     fetcher.submit(null, {
       method: "POST",
@@ -56,7 +64,7 @@ export function ProductCard({
       <Card
         className={cn(
           "w-full flex items-center justify-between",
-          isPromoted ? "" : "bg-transparent hover:bg-card/50"
+          isPromoted ? "" : "bg-transparent hover:bg-slate-900"
         )}
       >
         <CardHeader className='w-full relative'>
@@ -84,9 +92,12 @@ export function ProductCard({
         </CardHeader>
         <CardFooter className='py-0'>
           <Button
-            variant='outline'
-            className={cn(optimisitcIsUpvoted && "", "flex flex-col h-14")}
             onClick={absorbClick}
+            variant='outline'
+            className={cn(
+              "flex flex-col h-14",
+              optimisitcIsUpvoted ? "border-primary text-primary" : ""
+            )}
           >
             <ChevronUpIcon className='size-4 shrink-0' />
             <span>{optimisitcVotesCount}</span>
@@ -96,9 +107,9 @@ export function ProductCard({
     </Link>
   );
   return isPromoted ? (
-    <div className='relative p-[2px] rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500'>
+    <div className='relative p-[1px] rounded-xl bg-gradient-to-r from-red-500 to-yellow-500'>
       {content}
-      <div className='absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 blur-md opacity-30 z-0'></div>
+      <div className='absolute inset-0 rounded-xl bg-gradient-to-r from-red-500 to-yellow-500 blur-md opacity-30 z-0'></div>
     </div>
   ) : (
     content

@@ -8,7 +8,7 @@ export const productListSelect = `
 `;
 
 export const getProductsByDateRange = async (
-  client: SupabaseClient,
+  client: SupabaseClient<Database>,
   {
     startDate,
     endDate,
@@ -22,14 +22,13 @@ export const getProductsByDateRange = async (
   }
 ) => {
   const { data, error } = await client
-    .from("products")
+    .from("product_list_view")
     .select(productListSelect)
     .order("promoted_from", { ascending: true })
-    .order("stats->>upvotes", { ascending: false })
+    .order("upvotes", { ascending: false })
     .gte("created_at", startDate.toISO())
     .lte("created_at", endDate.toISO())
     .range((page - 1) * PAGE_SIZE, page * limit - 1);
-
   if (error) throw error;
   return data;
 };

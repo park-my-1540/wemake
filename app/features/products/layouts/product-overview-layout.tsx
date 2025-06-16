@@ -48,6 +48,8 @@ interface Product {
   upvotes: number;
   how_it_works: string;
   icon: string;
+  is_promoted: boolean;
+  is_upvoted: boolean;
 }
 
 export default function ProductOverviewLayout({

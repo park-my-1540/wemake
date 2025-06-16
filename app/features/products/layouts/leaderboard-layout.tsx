@@ -1,5 +1,5 @@
 import type { Route } from "~/features/products/pages/+types/index";
-import { data } from "react-router";
+import { data, useOutletContext } from "react-router";
 import { Outlet } from "react-router";
 import { z } from "zod";
 
@@ -24,5 +24,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function LeaderboardLayout() {
-  return <Outlet />;
+  const { isLoggedIn } = useOutletContext<{
+    isLoggedIn: boolean;
+  }>();
+  return <Outlet context={{ isLoggedIn }} />;
 }

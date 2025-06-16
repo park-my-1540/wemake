@@ -73,6 +73,7 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     startDate: date.startOf("day"),
     endDate: date.endOf("day"),
   });
+
   return {
     products,
     totalPages,
@@ -131,11 +132,11 @@ export default function WeeklyLeaderboardPage({
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
+        <ProductPagination totalPages={loaderData.totalPages} />
       </div>
-      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }

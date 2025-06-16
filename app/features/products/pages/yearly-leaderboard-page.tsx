@@ -124,11 +124,11 @@ export default function WeeklyLeaderboardPage({
             viewsCount={Number(product.stats.views)}
             isPromoted={product.is_promoted}
             isUpvoted={product.is_upvoted}
-            votesCount={Number(product.upvotes)}
+            votesCount={Number(product.stats.upvotes)}
           />
         ))}
+        <ProductPagination totalPages={loaderData.totalPages} />
       </div>
-      <ProductPagination totalPages={loaderData.totalPages} />
     </div>
   );
 }
