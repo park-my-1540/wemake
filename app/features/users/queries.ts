@@ -8,7 +8,9 @@ const productListSelect = `
   tagline, 
   upvotes:stats->>upvotes,
   views:stats->>views,
-  reviews:stats->>reviews
+  reviews:stats->>reviews,
+  is_upvoted,
+  is_promoted
 `;
 export const getUserProfile = async (
   client: SupabaseClient,
@@ -46,7 +48,7 @@ export const getUserProducts = async (
   { username }: { username: string }
 ) => {
   const { data, error } = await client
-    .from("products")
+    .from("product_list_view")
     .select(
       `
       ${productListSelect},
@@ -56,6 +58,7 @@ export const getUserProducts = async (
     )
     .eq("profiles.username", username);
   if (error) throw error;
+  console.log(data);
   return data;
 };
 

@@ -59,7 +59,7 @@ export default function SearchPage({ loaderData }: Route.ComponentProps) {
         <Button type='submit'>Search</Button>
       </Form>
       <div className='space-y-5 w-full max-w-screen-md mx-auto mt-10'>
-        {loaderData.products.map((product: any) => (
+        {loaderData.products.map((product) => (
           <ProductCard
             key={product.product_id}
             id={product.product_id}

@@ -12,7 +12,10 @@ export namespace Route {
   }
 
   export interface ComponentProps {
-    loaderData: any;
+    loaderData: {
+      totalPages: number;
+      products: any[];
+    };
     actionData: any;
   }
 

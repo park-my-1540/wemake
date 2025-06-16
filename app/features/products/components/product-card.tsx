@@ -19,7 +19,7 @@ interface ProductCardProps {
   viewsCount: number;
   votesCount: number;
   isUpvoted: boolean;
-  isPromoted: string | null;
+  isPromoted: boolean;
 }
 
 export function ProductCard({

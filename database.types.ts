@@ -621,7 +621,7 @@ export type Database = {
           is_promoted: boolean
           name: string
           product_id: number
-          profile_id: string | null
+          profile_id: string
           promoted_from: string | null
           promoted_to: string | null
           stats: Json
@@ -639,11 +639,11 @@ export type Database = {
           is_promoted?: boolean
           name: string
           product_id?: never
-          profile_id?: string | null
+          profile_id: string
           promoted_from?: string | null
           promoted_to?: string | null
           stats?: Json
-          tagline: string
+          tagline?: string
           updated_at?: string
           url: string
         }
@@ -657,7 +657,7 @@ export type Database = {
           is_promoted?: boolean
           name?: string
           product_id?: never
-          profile_id?: string | null
+          profile_id?: string
           promoted_from?: string | null
           promoted_to?: string | null
           stats?: Json
@@ -946,6 +946,7 @@ export type Database = {
           is_upvoted: boolean | null
           name: string | null
           product_id: number | null
+          profile_id: string | null
           promoted_from: string | null
           reviews: string | null
           stats: Json | null
@@ -959,6 +960,7 @@ export type Database = {
           is_upvoted?: never
           name?: string | null
           product_id?: number | null
+          profile_id?: string | null
           promoted_from?: string | null
           reviews?: never
           stats?: Json | null
@@ -972,6 +974,7 @@ export type Database = {
           is_upvoted?: never
           name?: string | null
           product_id?: number | null
+          profile_id?: string | null
           promoted_from?: string | null
           reviews?: never
           stats?: Json | null
@@ -979,7 +982,22 @@ export type Database = {
           upvotes?: never
           views?: never
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "products_to_profiles"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
       }
       product_overview_view: {
         Row: {

@@ -73,6 +73,8 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     startDate: date.startOf("day"),
     endDate: date.endOf("day"),
   });
+
+  console.log(products);
   return {
     products,
     totalPages,
@@ -121,14 +123,14 @@ export default function DailyLeaderboardPage({
         {loaderData.products.map((product, index) => (
           <ProductCard
             key={product.product_id}
-            id={product.product_id}
-            name={product.name}
-            description={product.tagline}
-            reviewsCount={Number(product.stats.reviews)}
-            viewsCount={Number(product.stats.views)}
-            isPromoted={product.is_promoted}
-            isUpvoted={product.is_upvoted}
-            votesCount={Number(product.stats.upvotes)}
+            id={product.product_id ?? 0}
+            name={product.name ?? ""}
+            description={product.tagline ?? ""}
+            reviewsCount={Number(product.reviews ?? 0)}
+            viewsCount={Number(product.views ?? 0)}
+            isPromoted={product.is_promoted ?? false}
+            isUpvoted={product.is_upvoted ?? false}
+            votesCount={Number(product.upvotes ?? 0)}
           />
         ))}
         <ProductPagination totalPages={loaderData.totalPages} />

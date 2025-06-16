@@ -125,6 +125,7 @@ export default function ProfileLayout({
           context={{
             headline: loaderData.user.headline,
             bio: loaderData.user.bio,
+            isLoggedIn,
           }}
         />
       </div>

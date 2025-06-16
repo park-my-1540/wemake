@@ -27,11 +27,11 @@ export default function ProfileProductsPage({
           id={product.product_id}
           name={product.name}
           description={product.tagline}
-          reviewsCount={Number(product.stats.reviews)}
-          viewsCount={Number(product.stats.views)}
+          reviewsCount={Number(product.reviews)}
+          viewsCount={Number(product.views)}
           isPromoted={product.is_promoted}
           isUpvoted={product.is_upvoted}
-          votesCount={Number(product.stats.upvotes)}
+          votesCount={Number(product.upvotes)}
         />
       ))}
     </div>

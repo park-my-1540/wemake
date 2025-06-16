@@ -30,6 +30,8 @@ export namespace Route {
     upvotes: number;
     promoted_from: string;
     is_upvoted: boolean;
+    is_promoted: boolean;
+    isPromoted: boolean;
     stats: {
       views: number;
       reviews: number;
