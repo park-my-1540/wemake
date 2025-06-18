@@ -36,6 +36,7 @@ export default [
         ),
       ]),
     ]),
+    route("/updateDate", "features/products/api/update-createdAt.tsx"),
     ...prefix("categories", [
       index("features/products/pages/categories-page.tsx"),
       route("/:category", "features/products/pages/category-page.tsx"),
