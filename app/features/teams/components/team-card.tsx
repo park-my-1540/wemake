@@ -35,7 +35,7 @@ export function TeamCard({
               </Avatar>
             </Badge>
             <span>님이 </span>
-            <span>{productDescription}</span>
+            <span>"{productDescription}"</span>
             <span>을 함께 만들</span>
             {roles.map((position, index) => (
               <Badge key={index} className='text-sm m-1'>

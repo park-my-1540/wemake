@@ -75,7 +75,7 @@ export namespace Route {
       avatar: string;
     };
     roles: string;
-    productDescription: string;
+    product_description: string;
   }
 
   export type MetaFunction = ReactRouterMetaFunction;
