@@ -216,7 +216,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
               최신 커뮤니티 이야기
             </h2>
-            <p className='max-w-2xl md:text-xl font-light text-foreground'>
+            <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
               커뮤니티에서 진행 중인 최신 토론을 확인해보세요
             </p>
             <Button variant='link' asChild className='text-lg p-0'>

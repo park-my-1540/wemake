@@ -67,7 +67,7 @@ export default function CommunityPage({ loaderData }: Route.ComponentProps) {
     <div>
       <HeroSection
         title='Community'
-        subTitle='Ask questions, share ideas, and connect with others in the community.'
+        subTitle='커뮤니티에서 질문도 하고, 아이디어도 나누며, 서로 소통해 보세요.'
       />
       <div className='grid grid-cols-6 gap-40'>
         <div className='col-span-4 space-y-10'>
