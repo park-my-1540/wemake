@@ -64,6 +64,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   if (user && user.id) {
     const profile = await getUserProfileById(client, { id: user.id });
+    if (!profile) {
+      // 💡 프로필이 없음 = 탈퇴했거나 권한 없음
+      await client.auth.signOut(); // 로그아웃
+      return;
+    }
     const count = await countNotifications(client, { userId: user.id });
     return { user, profile, count };
   }
