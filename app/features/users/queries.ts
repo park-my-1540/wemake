@@ -23,7 +23,7 @@ export const getUserProfile = async (
         profile_id,name,username,avatar,role,headline,bio`
     )
     .eq("username", username)
-    .single();
+    .maybeSingle();
   if (error) throw error;
   return data;
 };
@@ -38,7 +38,7 @@ export const getUserProfileById = async (
         profile_id, name, username, avatar, headline, bio, role`
     )
     .eq("profile_id", id)
-    .single();
+    .maybeSingle();
   if (error) throw error;
   return data;
 };
