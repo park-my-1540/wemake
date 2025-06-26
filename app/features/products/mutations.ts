@@ -136,6 +136,8 @@ export const updateCreatedAt = async (
 
     if (!updatedDates) continue;
 
+    const kstDate = getKSTDate(updatedDates);
+
     const { error } = await client
       .from("products")
       .update({ created_at: updatedDates.toISOString() })
@@ -159,7 +161,7 @@ export const getUpdatedCreatedAt = async ({
   updateDate?: Date;
 }): Promise<Date | null> => {
   const today = new Date();
-  const currentMonth = today.getMonth();
+  const todayKST = new Date(today.getTime() + 9 * 60 * 60 * 1000);
 
   if (updateOnlyMonth) {
     const { data, error } = await client
@@ -174,11 +176,13 @@ export const getUpdatedCreatedAt = async ({
     }
 
     const original = new Date(data.created_at);
-    original.setMonth(currentMonth);
+    original.setMonth(todayKST.getMonth());
     return original;
   }
 
-  return updateDate ?? today;
+  return updateDate
+    ? new Date(updateDate.getTime() + 9 * 60 * 60 * 1000)
+    : todayKST;
 };
 
 export const updatePromotedDate = async (
@@ -221,7 +225,8 @@ export const getUpdatedPromotedDate = async ({
   productId: number;
 }): Promise<PromotedDateSet | null> => {
   const today = new Date();
-  const currentMonth = today.getMonth();
+  const todayKST = new Date(today.getTime() + 9 * 60 * 60 * 1000);
+  const currentMonth = todayKST.getMonth();
 
   const { data, error } = await client
     .from("products")
@@ -239,4 +244,8 @@ export const getUpdatedPromotedDate = async ({
   originalFrom.setMonth(currentMonth);
 
   return { originalTo, originalFrom };
+};
+
+const getKSTDate = (date = new Date()): Date => {
+  return new Date(date.getTime() + 9 * 60 * 60 * 1000);
 };
