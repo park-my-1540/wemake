@@ -74,7 +74,6 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
     endDate: date.endOf("day"),
   });
 
-  console.log(products);
   return {
     products,
     totalPages,

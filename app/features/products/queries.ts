@@ -93,7 +93,7 @@ export const getProductsByCategory = async (
   }
 ) => {
   const { data, error } = await client
-    .from("products")
+    .from("product_list_view")
     .select(productListSelect)
     .eq("category_id", categoryId)
     .order("promoted_from", { ascending: true })

@@ -58,7 +58,6 @@ export const getUserProducts = async (
     )
     .eq("profiles.username", username);
   if (error) throw error;
-  console.log(data);
   return data;
 };
 

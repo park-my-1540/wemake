@@ -59,7 +59,10 @@ export const action = async ({ request }: Route.ActionArgs) => {
 export default function SubmitJobPage({ actionData }: Route.ComponentProps) {
   return (
     <div className='space-y-20'>
-      <HeroSection title='Post a Job' subTitle='Reach out to top talent' />
+      <HeroSection
+        title='채용 공고 등록하기'
+        subTitle='뛰어난 인재를 직접 찾아보세요'
+      />
       <Form
         className='max-w-screen-xl mx-auto flex items-center flex-col gap-10'
         method='post'
