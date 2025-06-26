@@ -18,6 +18,8 @@ import { BlurFade } from "components/magicui/blur-fade";
 import { VelocityScroll } from "components/magicui/scroll-based-velocity";
 import { Marquee } from "components/magicui/marquee";
 import { Ripple } from "components/magicui/ripple";
+import { BoxReveal } from "components/magicui/box-reveal";
+import { SparklesText } from "components/magicui/sparkles-text";
 
 export function meta() {
   return [
@@ -117,7 +119,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className='space-y-10 relative md:h-[50vh] flex flex-col justify-center items-center overflow-hidden '>
           <div className='relative flex  flex-col justify-center items-center  md:p-64 z-50 md:bg-[radial-gradient(circle,hsl(var(--background))_40%,transparent_100%)] text-center md:text-left'>
             <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
-              IdeasGPT
+              <SparklesText colors={{ first: "#3b82f6", second: "#eab308" }}>
+                IdeasGemeni
+              </SparklesText>
             </h2>
 
             <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
@@ -293,16 +297,25 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <div className='relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden'>
             <div className='flex relative z-10 w-full justify-center items-center flex-col'>
               <h2 className='md:text-5xl text-3xl font-bold leading-tight tracking-tight '>
-                Find a co-founder
+                <BoxReveal boxColor={"#3B82f6"} duration={1}>
+                  <p className='text-[3.5rem] font-semibold'>
+                    Find a co-founder
+                  </p>
+                </BoxReveal>
               </h2>
-              <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
-                공동 창업자를 찾는 팀에 합류해보세요
-              </p>
-              <Button variant='link' asChild className='text-lg pl-0'>
-                <Link to='/cofounders' className='pl-0'>
-                  팀 합류하러 가기 &rarr;
-                </Link>
-              </Button>
+              <BoxReveal boxColor={"#3B82f6"} duration={1}>
+                <p className='max-w-2xl md:text-xl font-light text-foreground mt-5'>
+                  공동 창업자를 찾는 팀에 합류해보세요{" "}
+                </p>
+              </BoxReveal>
+
+              <BoxReveal boxColor={"#3B82f6"} duration={1}>
+                <Button variant='link' asChild className='text-lg pl-0'>
+                  <Link to='/cofounders' className='pl-0'>
+                    팀 합류하러 가기 &rarr;
+                  </Link>
+                </Button>
+              </BoxReveal>
             </div>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:p-10 p-5 -mt-32 md:-mt-14  dark:bg-background bg-white'>
