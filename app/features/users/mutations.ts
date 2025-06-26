@@ -198,3 +198,13 @@ export const sendMessageToRoom = async (
     content: message,
   });
 };
+
+export const deleteUser = async (client: SupabaseClient<Database>) => {
+  const { error } = await client
+    .from("profiles")
+    .delete()
+    .gte("created_at", "2025-06-25");
+  if (error) {
+    throw error;
+  }
+};

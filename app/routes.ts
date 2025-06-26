@@ -36,6 +36,7 @@ export default [
         ),
       ]),
     ]),
+    route("/deleteUser", "features/users/api/delete-data.tsx"),
     route("/updateDate", "features/products/api/update-createdAt.tsx"),
     ...prefix("categories", [
       index("features/products/pages/categories-page.tsx"),
@@ -125,6 +126,7 @@ export default [
       ]),
     ]),
   ]),
+
   ...prefix("/users/:username", [
     layout("features/users/layouts/profile-layout.tsx", [
       index("features/users/pages/profile-page.tsx"),
