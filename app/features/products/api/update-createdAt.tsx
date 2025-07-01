@@ -21,8 +21,6 @@ export const action = async ({ request }: Route.LoaderArgs) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  console.log(headers);
-  console.log(isMonthly);
   // 매일: 오늘 날짜로 갱신
   await updateCreatedAt(adminClient, {
     productIds: dailyProducts,
