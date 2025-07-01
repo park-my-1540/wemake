@@ -15,12 +15,14 @@ export const action = async ({ request }: Route.LoaderArgs) => {
     return new Response(null, { status: 404 });
   }
 
-  // //   필요한 헤더 있는지
+  //   필요한 헤더 있는지
   const headers = request.headers.get("X-POTATO");
   if (!headers || headers !== "X-POTATO") {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  console.log(headers);
+  console.log(isMonthly);
   // 매일: 오늘 날짜로 갱신
   await updateCreatedAt(adminClient, {
     productIds: dailyProducts,
