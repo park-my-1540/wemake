@@ -51,7 +51,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
-    <div className='px-20 space-y-40'>
+    <div className='space-y-40'>
       <div className='relative h-[500px] w-full flex justify-center items-center bg-background overflow-hidden '>
         <FlickeringGrid
           className='z-0 absolute inset-0 size-full'

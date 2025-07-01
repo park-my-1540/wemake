@@ -158,7 +158,13 @@ export default function Navigation({
   name: string;
 }) {
   return (
-    <nav className='flex px-20 h-16 items-center justify-between backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50'>
+    <nav className='flex px-20 h-32 items-center justify-between backdrop-blur fixed top-0 left-0 right-0 z-50 bg-background/50'>
+      <div className='w-full bg-primary absolute h-8 top-0 left-0 right-0 flex items-center justify-center'>
+        <p className='text-xs'>
+          이 사이트는 데모 버전입니다. 데이터는 하루 동안만 유지되며, 다음 날
+          모두 삭제됩니다.
+        </p>
+      </div>
       <div className='flex items-center gap-4'>
         <Link to='/' className='font-bold tracking-tighter text-lg'>
           wemake
@@ -215,7 +221,7 @@ export default function Navigation({
         </NavigationMenu>
       </div>
       {isLoggedIn ? (
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2 mt-16'>
           <Button size='icon' variant='ghost' asChild className='relative'>
             <Link to='/my/notifications'>
               <BellIcon className='w-4 h-4' />
